@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import Logo from "../../components/common/Logo";
 import "../../style/auth/Signin.css";
+import useSignin from "../../hooks/auth/useSignin";
 
 const Signin = ({ closeLoginModal, openSignupModal }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-  };
+  const {
+    email,
+    password,
+    handleEmailChange,
+    handlePasswordChange,
+    handleLogin,
+  } = useSignin();
 
   return (
     <div>
@@ -25,7 +27,7 @@ const Signin = ({ closeLoginModal, openSignupModal }) => {
             id="email"
             name="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             required
             placeholder="이메일"
           />
@@ -37,7 +39,7 @@ const Signin = ({ closeLoginModal, openSignupModal }) => {
             id="password"
             name="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
             placeholder="비밀번호"
           />
