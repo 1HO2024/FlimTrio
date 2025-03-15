@@ -1,8 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Search from "../search/Search";
 import "../../style/common/Header.css";
+import { FaUserCircle } from "react-icons/fa";
+import { useState } from "react";
 
 const Header = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  const handleIconClick = () => {
+    if (isLoggedIn) {
+      navigate("/mypage");
+    }
+  };
+
   return (
     <div className="header">
       <div className="headerContent">
@@ -10,17 +21,24 @@ const Header = () => {
           FlimTrio
         </Link>
 
-        <nav className="nav">
-          <Link to="/auth" className="navLink">
-            로그인
-          </Link>
-          <Link to="/mypage" className="navLink">
-            마이페이지
-          </Link>
-        </nav>
-
-        <div className="searchContainer">
-          <Search />
+        <div className="rightContainer">
+          <div className="searchContainer">
+            <Search />
+          </div>
+          <div className="userContainer">
+            {isLoggedIn ? (
+              <FaUserCircle className="userIcon" onClick={handleIconClick} />
+            ) : (
+              <div>
+                <Link to="/auth" className="HeaderTextItem">
+                  로그인
+                </Link>
+                <Link to="/signup" className="HeaderTextItem">
+                  회원가입
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

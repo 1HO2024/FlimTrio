@@ -8,6 +8,7 @@
   display: flex;
   width: 100%;
   align-items: center;
+  justify-content: space-between;
 }
 
 .logo {
@@ -15,29 +16,45 @@
   font-weight: bold;
   color: #007bff;
   text-decoration: none;
-} 
+}
 
 .logo:hover {
   color: #0056b3;
 }
 
-.nav {
+.rightContainer {
   display: flex;
-  margin-left: 20px;
-  gap: 10px;
-}
-
-.navLink {
-  text-decoration: none;
-  font-size: 14px;
-  color: #007bff;
-  font-weight: bold;
-}
-
-.navLink:hover {
-  color: #0056b3;
+  align-items: center;
 }
 
 .searchContainer {
-  padding-left: 900px;
+  margin-right: 60px;
+}
+
+.userContainer {
+  margin-right: 30px;
+  position: relative;
+}
+
+.userIcon {
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.userContainer div {
+  display: flex;
+  gap: 15px; 
+  font-size: 14px; 
+}
+
+.HeaderTextItem {
+  display: block;
+  padding: 6px;
+  text-align: center;
+  color: black;
+  text-decoration: none;
+}
+
+.HeaderDropItem:hover {
+   color: gray;
 }

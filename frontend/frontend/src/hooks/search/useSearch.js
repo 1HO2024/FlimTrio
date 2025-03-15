@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const useSearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const searchRef = useRef(null); 
 
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+    const value = event.target.value;
+    setSearchTerm(value);
+    setIsOpen(!!value); 
 
     const dummyResults = [
       { id: 1, name: "범죄도시" },
@@ -15,9 +19,9 @@ const useSearch = () => {
       { id: 5, name: "기생충" },
       { id: 6, name: "괴물" },
     ];
-    
+
     const filteredResults = dummyResults.filter((item) =>
-      item.name.includes(event.target.value)
+      item.name.includes(value)
     );
     setSearchResults(filteredResults);
   };
@@ -27,11 +31,32 @@ const useSearch = () => {
     console.log(searchTerm);
   };
 
+  const handleResultClick = () => {
+    setSearchTerm(""); 
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return {
     searchTerm,
     searchResults,
+    isOpen,
     handleSearchChange,
     handleSearchSubmit,
+    handleResultClick,
+    searchRef,
   };
 };
 

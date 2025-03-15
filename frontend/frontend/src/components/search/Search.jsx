@@ -1,27 +1,42 @@
 import { Link } from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
 import useSearch from "../../hooks/search/useSearch";
 import "../../style/search/Search.css";
 
 const Search = () => {
-  const { searchTerm, searchResults, handleSearchChange, handleSearchSubmit } =
-    useSearch();
+  const {
+    searchTerm,
+    searchResults,
+    isOpen,
+    handleSearchChange,
+    handleSearchSubmit,
+    handleResultClick,
+    searchRef,
+  } = useSearch();
 
   return (
-    <form className="searchForm" onSubmit={handleSearchSubmit}>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        placeholder="영화를 검색해주세요."
-        className="searchInput"
-      />
+    <form className="searchForm" onSubmit={handleSearchSubmit} ref={searchRef}>
+      <div className="searchInputWrapper">
+        <FaSearch className="searchIcon" />
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="영화를 검색해주세요."
+          className="searchInput"
+        />
+      </div>
 
-      {searchTerm && (
+      {isOpen && (
         <ul className="searchResults">
           {searchResults.length > 0 ? (
             searchResults.map((result, index) => (
               <li key={index} className="searchResultItem">
-                <Link to={`/detail/${result.id}`} className="searchLink">
+                <Link
+                  to={`/detail/${result.id}`}
+                  className="searchLink"
+                  onClick={handleResultClick}
+                >
                   {result.name}
                 </Link>
               </li>
