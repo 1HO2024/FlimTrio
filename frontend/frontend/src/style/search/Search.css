@@ -2,22 +2,56 @@
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 200px;
   margin: 0 auto;
+  position: relative;
 }
 
 .searchInput {
   width: 100%;
   padding: 10px;
-  font-size: 16px;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-right: 10px; 
+  margin-right: 10px;
   outline: none;
   transition: border-color 0.3s ease;
 }
 
 .searchInput:focus {
-  border-color: #007bff; 
+  border-color: #007bff;
 }
 
+.searchResults {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.searchResultItem {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.searchResultItem:hover {
+  background-color: #f1f1f1;
+}
+
+.searchLink {
+  text-decoration: none; 
+  color: inherit; 
+}
+
+.noResults {
+  padding: 10px;
+  color: #888;
+}
