@@ -1,12 +1,15 @@
-import { Link } from "react-router-dom";
 import "../../style/common/Logo.css";
 
 const Logo = () => {
+  const handleLogoClick = () => {
+    window.location.href = "/";
+  };
+
   return (
-    <Link to="/" className="logo">
+    <div className="logo" onClick={handleLogoClick}>
       <span>Flim</span>
       <span>Trio</span>
-    </Link>
+    </div>
   );
 };
 

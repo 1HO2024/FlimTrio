@@ -24,7 +24,9 @@ const Header = () => {
   return (
     <div className="header">
       <div className="headerContent">
-        <Logo />
+        <div style={{ marginLeft: "10px" }}>
+          <Logo />
+        </div>
 
         <div className="rightContainer">
           <div className="searchContainer">

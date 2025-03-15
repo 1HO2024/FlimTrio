@@ -28,8 +28,12 @@
 .userIcon {
   font-size: 32px;
   cursor: pointer;
+  transition: transform 0.5s ease;
 }
 
+.userIcon:hover {
+  transform: scale(1.2);
+}
 .userContainer div {
   display: flex;
   gap: 15px; 
