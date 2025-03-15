@@ -1,26 +1,30 @@
-import { Link, useNavigate } from "react-router-dom";
 import Search from "../search/Search";
 import "../../style/common/Header.css";
 import { FaUserCircle } from "react-icons/fa";
-import { useState } from "react";
+import useHeader from "../../hooks/header/useHeader";
+import Modal from "react-modal";
+import Signin from "../../components/auth/Signin";
+import Signup from "../../components/auth/Signup";
+import Logo from "../../components/common/Logo";
+
+Modal.setAppElement("#root");
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
-
-  const handleIconClick = () => {
-    if (isLoggedIn) {
-      navigate("/mypage");
-    }
-  };
+  const {
+    isLoggedIn,
+    isLoginModalOpen,
+    isSignupModalOpen,
+    handleIconClick,
+    openLoginModal,
+    closeLoginModal,
+    openSignupModal,
+    closeSignupModal,
+  } = useHeader();
 
   return (
     <div className="header">
       <div className="headerContent">
-        <Link to="/" className="logo">
-          <span>Flim</span>
-          <span>Trio</span>
-        </Link>
+        <Logo />
 
         <div className="rightContainer">
           <div className="searchContainer">
@@ -31,17 +35,40 @@ const Header = () => {
               <FaUserCircle className="userIcon" onClick={handleIconClick} />
             ) : (
               <div>
-                <Link to="/auth" className="HeaderTextItem">
+                <div onClick={openLoginModal} className="HeaderTextItem">
                   로그인
-                </Link>
-                <Link to="/signup" className="HeaderTextItem">
+                </div>
+                <div onClick={openSignupModal} className="HeaderTextSignUpItem">
                   회원가입
-                </Link>
+                </div>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={isLoginModalOpen}
+        onRequestClose={closeLoginModal}
+        contentLabel="Login Modal"
+        className="modalContent"
+        overlayClassName="modalOverlay"
+      >
+        <Signin
+          closeModal={closeLoginModal}
+          openSignupModal={openSignupModal}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={isSignupModalOpen}
+        onRequestClose={closeSignupModal}
+        contentLabel="Signup Modal"
+        className="modalContent"
+        overlayClassName="modalOverlay"
+      >
+        <Signup closeModal={closeSignupModal} />
+      </Modal>
     </div>
   );
 };

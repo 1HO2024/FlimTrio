@@ -11,32 +11,6 @@
   justify-content: space-between;
 }
 
-.logo {
-  font-size: 28px;
-  font-weight: bold;
-  text-decoration: none;
-  font-family: 'Rockwell', serif;
-
-}
-
-.logo span:first-child {
-  color: #007bff;  
-}
-
-.logo span:last-child {
-  color: #1D3C6B;  
-}
-
-.logo:hover span:first-child {
-  color: #0056b3;  
-}
-
-.logo:hover span:last-child {
-  color: #0056b3;  
-}
-
-
-
 .rightContainer {
   display: flex;
   align-items: center;
@@ -68,8 +42,50 @@
   text-align: center;
   color: gray;
   text-decoration: none;
+  cursor: pointer;
+}
+
+.HeaderTextSignUpItem {
+  display: block;
+  padding: 6px;
+  text-align: center;
+  color: gray;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid lightgray;
+  border-radius: 5px;
 }
 
 .HeaderTextItem:hover {
    color: black;
 }
+
+.HeaderTextSignUpItem:hover {
+   background-color: lightgray;
+   border: 1px solid gray;
+   color: black;
+}
+
+
+.modalContent {
+  position: relative;
+  background-color: white;
+  padding: 20px;
+  border-radius: 2px;
+  width: 300px;  
+  height: 550px; 
+  margin: auto;
+}
+
+.modalOverlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
