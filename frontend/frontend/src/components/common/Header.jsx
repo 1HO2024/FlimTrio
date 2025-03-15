@@ -18,7 +18,8 @@ const Header = () => {
     <div className="header">
       <div className="headerContent">
         <Link to="/" className="logo">
-          FlimTrio
+          <span>Flim</span>
+          <span>Trio</span>
         </Link>
 
         <div className="rightContainer">

@@ -3,7 +3,7 @@ import Header from "./components/common/Header";
 import AuthPage from "./page/auth/AuthPage";
 import MyPagePage from "./page/mypage/MyPagePage";
 import DetailPage from "./page/detail/DetailPage";
-
+import "./App.css";
 function App() {
   return (
     <Router>

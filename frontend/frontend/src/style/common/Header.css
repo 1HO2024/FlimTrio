@@ -1,6 +1,6 @@
 .header {
   background-color: #f8f9fa;
-  padding: 10px;
+  padding: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -14,13 +14,28 @@
 .logo {
   font-size: 28px;
   font-weight: bold;
-  color: #007bff;
   text-decoration: none;
+  font-family: 'Rockwell', serif;
+
 }
 
-.logo:hover {
-  color: #0056b3;
+.logo span:first-child {
+  color: #007bff;  
 }
+
+.logo span:last-child {
+  color: #1D3C6B;  
+}
+
+.logo:hover span:first-child {
+  color: #0056b3;  
+}
+
+.logo:hover span:last-child {
+  color: #0056b3;  
+}
+
+
 
 .rightContainer {
   display: flex;
@@ -51,10 +66,10 @@
   display: block;
   padding: 6px;
   text-align: center;
-  color: black;
+  color: gray;
   text-decoration: none;
 }
 
-.HeaderDropItem:hover {
-   color: gray;
+.HeaderTextItem:hover {
+   color: black;
 }
