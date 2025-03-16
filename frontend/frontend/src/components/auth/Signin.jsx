@@ -3,7 +3,8 @@ import Logo from "../../components/common/Logo";
 import "../../style/auth/Signin.css";
 import useSignin from "../../hooks/auth/useSignin";
 
-const Signin = ({ closeLoginModal, openSignupModal }) => {
+const Signin = ({ closeModal, openSignupModal }) => {
+  console.log(closeModal, openSignupModal);
   const {
     email,
     password,
@@ -57,7 +58,7 @@ const Signin = ({ closeLoginModal, openSignupModal }) => {
           <span>계정이 없으신가요?</span>
           <button
             onClick={() => {
-              closeLoginModal();
+              closeModal();
               openSignupModal();
             }}
             className="signupLink"

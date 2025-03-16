@@ -59,7 +59,7 @@ const TopHome = () => {
           <div
             className="posterGrid"
             style={{
-              transform: `translateX(-${currentIndex * 220}px)`, // poster width 220px
+              transform: `translateX(-${currentIndex * 220}px)`,
             }}
           >
             {posters.map((poster, index) => (

@@ -69,7 +69,7 @@ const Header = () => {
         className="modalContent"
         overlayClassName="modalOverlay"
       >
-        <Signup closeModal={closeSignupModal} />
+        <Signup closeModal={closeSignupModal} openLoginModal={openLoginModal} />
       </Modal>
     </div>
   );

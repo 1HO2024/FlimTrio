@@ -3,7 +3,7 @@ import Logo from "../../components/common/Logo";
 import "../../style/auth/Signup.css";
 import useSignup from "../../hooks/auth/useSignup";
 
-const Signup = ({ closeSignupModal, openLoginModal }) => {
+const Signup = ({ closeModal, openLoginModal }) => {
   const {
     email,
     password,
@@ -84,7 +84,7 @@ const Signup = ({ closeSignupModal, openLoginModal }) => {
         <span>이미 계정이 있으신가요? </span>
         <button
           onClick={() => {
-            closeSignupModal();
+            closeModal();
             openLoginModal();
           }}
           className="loginButton"
