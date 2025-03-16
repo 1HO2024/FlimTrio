@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import useSearch from "../../hooks/search/useSearch";
 import "../../style/search/Search.css";
@@ -10,8 +9,8 @@ const Search = () => {
     isOpen,
     handleSearchChange,
     handleSearchSubmit,
-    handleResultClick,
     searchRef,
+    handleResultClickWithState,
   } = useSearch();
 
   return (
@@ -32,13 +31,12 @@ const Search = () => {
           {searchResults.length > 0 ? (
             searchResults.map((result, index) => (
               <li key={index} className="searchResultItem">
-                <Link
-                  to={`/detail/${result.id}`}
+                <span
                   className="searchLink"
-                  onClick={handleResultClick}
+                  onClick={() => handleResultClickWithState(result)} // 클릭 시 상태 전달
                 >
                   {result.name}
-                </Link>
+                </span>
               </li>
             ))
           ) : (

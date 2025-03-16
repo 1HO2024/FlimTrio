@@ -6,7 +6,6 @@
 
 .homePage > * {
   flex: 0 0 40%;
-  margin-top: 30px;
   display: flex;
   justify-content: flex-start;
   align-items: center; 

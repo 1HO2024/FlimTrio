@@ -9,7 +9,7 @@ function App() {
   return (
     <Router>
       <Header />
-      <div style={{ marginTop: "50px" }}>
+      <div style={{ marginTop: "100px" }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/mypage" element={<MyPagePage />} />

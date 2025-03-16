@@ -6,6 +6,7 @@ import Logo from "../../components/common/Logo";
 import useHeader from "../../hooks/header/useHeader";
 import Search from "../search/Search";
 import "../../style/common/Header.css";
+import { useState } from "react";
 
 Modal.setAppElement("#root");
 
@@ -15,12 +16,24 @@ const Header = () => {
     isLoginModalOpen,
     isSignupModalOpen,
     isTransparent,
+    // 마이페이지 이동 함수
     handleIconClick,
     openLoginModal,
     closeLoginModal,
     openSignupModal,
     closeSignupModal,
   } = useHeader();
+
+  // 드롭다운 메뉴 상태 관리
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleDropdownEnter = () => {
+    setIsDropdownOpen(true);
+  };
+
+  const handleDropdownLeave = () => {
+    setIsDropdownOpen(false);
+  };
 
   return (
     <div className={`header ${isTransparent ? "transparent" : ""}`}>
@@ -35,9 +48,35 @@ const Header = () => {
           </div>
           <div className="userContainer">
             {isLoggedIn ? (
-              <FaUserCircle className="userIcon" onClick={handleIconClick} />
+              <div
+                className="userIconContainer"
+                onMouseEnter={handleDropdownEnter}
+                onMouseLeave={handleDropdownLeave}
+              >
+                <FaUserCircle className="userIcon" />
+                {/* 드롭다운 메뉴 */}
+                {isDropdownOpen && (
+                  <div className="dropdownMenu">
+                    <div
+                      className="dropdownItem"
+                      onClick={handleIconClick}
+                      style={{ cursor: "pointer" }}
+                    >
+                      MY
+                    </div>
+                    <div
+                      className="dropdownItem"
+                      style={{
+                        cursor: "pointer",
+                      }}
+                    >
+                      로그아웃
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
-              <div>
+              <div className="HeaderText">
                 <div onClick={openLoginModal} className="HeaderTextItem">
                   로그인
                 </div>

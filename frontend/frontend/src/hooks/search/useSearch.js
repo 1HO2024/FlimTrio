@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const useSearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const searchRef = useRef(null); 
+  const navigate = useNavigate();
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
@@ -36,6 +38,12 @@ const useSearch = () => {
     setIsOpen(false);
   };
 
+  // 디테일 페이지에 검색한 영화 정보 넘김
+  const handleResultClickWithState = (result) => {
+    navigate(`/detail/${result.id}`, { state: { result } });
+    handleResultClick();
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -56,6 +64,7 @@ const useSearch = () => {
     handleSearchChange,
     handleSearchSubmit,
     handleResultClick,
+    handleResultClickWithState,
     searchRef,
   };
 };

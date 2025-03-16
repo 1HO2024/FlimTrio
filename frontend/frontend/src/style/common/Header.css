@@ -49,10 +49,12 @@
 
 .userContainer div {
   display: flex;
-  gap: 15px; 
   font-size: 14px; 
 }
 
+.HeaderText {
+  gap: 15px;
+}
 .HeaderTextItem {
   display: block;
   padding: 6px;
@@ -108,3 +110,35 @@
   align-items: center;
   z-index: 9999; 
 }
+
+
+/* 드롭다운 css */
+.userIconContainer {
+  position: relative;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 35px; 
+  right: 0;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 2px;
+  width: 180px;
+  z-index: 1001; 
+  display: flex;
+  flex-direction: column; 
+}
+
+.dropdownItem {
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: gray;
+}
+
+.dropdownItem:hover {
+  color: black;
+}
+
