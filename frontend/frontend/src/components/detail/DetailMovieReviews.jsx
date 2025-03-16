@@ -13,12 +13,20 @@ const reviews = [
 
 const DetailMovieReviews = () => {
   return (
-    <div className="DetailMovieReviews">
-      <ul>
-        {reviews.map((review, index) => (
-          <li key={index}>{review}</li>
-        ))}
-      </ul>
+    <div
+      style={{
+        color: "white",
+        marginTop: "60px",
+      }}
+    >
+      이 영화에 대한 리뷰는 어떤 것이 있을까요 ?
+      <div className="DetailMovieReviews">
+        <ul>
+          {reviews.map((review, index) => (
+            <li key={index}>{review}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

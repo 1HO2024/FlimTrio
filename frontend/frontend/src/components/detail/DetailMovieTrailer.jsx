@@ -35,7 +35,7 @@ const DetailMovieTrailer = ({ movieName }) => {
       ></iframe>
     </div>
   ) : (
-    <p>예고편을 찾을 수 없습니다.</p>
+    <p style={{ color: "white" }}>예고편을 찾을 수 없습니다.</p>
   );
 };
 
