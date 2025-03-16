@@ -9,11 +9,13 @@ function App() {
   return (
     <Router>
       <Header />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/mypage" element={<MyPagePage />} />
-        <Route path="/detail/:id" element={<DetailPage />} />
-      </Routes>
+      <div style={{ marginTop: "50px" }}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/mypage" element={<MyPagePage />} />
+          <Route path="/detail/:id" element={<DetailPage />} />
+        </Routes>
+      </div>
     </Router>
   );
 }

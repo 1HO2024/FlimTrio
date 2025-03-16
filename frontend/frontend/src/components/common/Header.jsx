@@ -1,11 +1,11 @@
-import Search from "../search/Search";
-import "../../style/common/Header.css";
 import { FaUserCircle } from "react-icons/fa";
-import useHeader from "../../hooks/header/useHeader";
 import Modal from "react-modal";
 import Signin from "../../components/auth/Signin";
 import Signup from "../../components/auth/Signup";
 import Logo from "../../components/common/Logo";
+import useHeader from "../../hooks/header/useHeader";
+import Search from "../search/Search";
+import "../../style/common/Header.css";
 
 Modal.setAppElement("#root");
 
@@ -14,6 +14,7 @@ const Header = () => {
     isLoggedIn,
     isLoginModalOpen,
     isSignupModalOpen,
+    isTransparent,
     handleIconClick,
     openLoginModal,
     closeLoginModal,
@@ -22,7 +23,7 @@ const Header = () => {
   } = useHeader();
 
   return (
-    <div className="header">
+    <div className={`header ${isTransparent ? "transparent" : ""}`}>
       <div className="headerContent">
         <div style={{ marginLeft: "10px" }}>
           <Logo />
