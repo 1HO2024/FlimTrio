@@ -1,0 +1,9 @@
+.DetailMovieInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.DetailMovieInfo p {
+  font-size: 18px;
+  color: black;
+}

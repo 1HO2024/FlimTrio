@@ -1,0 +1,9 @@
+.DetailMoviePoster {
+  display: flex;
+  width: 300px;
+  height: 400px;
+}
+
+.DetailMoviePoster img {
+  border-radius: 10px;
+}

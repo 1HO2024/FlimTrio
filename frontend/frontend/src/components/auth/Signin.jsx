@@ -4,7 +4,6 @@ import "../../style/auth/Signin.css";
 import useSignin from "../../hooks/auth/useSignin";
 
 const Signin = ({ closeModal, openSignupModal }) => {
-  console.log(closeModal, openSignupModal);
   const {
     email,
     password,

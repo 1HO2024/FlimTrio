@@ -1,0 +1,91 @@
+.DetailModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.DetailModal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 800px;  
+  height: 580px; 
+  z-index: 1010;
+  overflow-y: auto; 
+}
+
+/* 위쪽 섹션 */
+.DetailPageMainContent {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  align-items: center;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 영화 정보 */
+.DetailPageMovieInfo {
+  flex: 7;
+  padding: 20px;
+}
+
+/* 포스터 */
+.DetailPageMoviePoster {
+  flex: 3;
+  text-align: center;
+}
+
+.DetailPageMoviePoster img {
+  width: 100%;
+  max-width: 200px; /* 포스터 이미지 크기 수정 */
+  border-radius: 10px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease-in-out;
+}
+
+.DetailPageMoviePoster img:hover {
+  transform: scale(1.05);
+}
+
+/* 아래쪽 콘텐츠 */
+.DetailPageBottomContent {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 예고편 */
+.DetailPageTrailer {
+  flex: 6;
+  text-align: center;
+  padding: 20px;
+}
+
+/* 리뷰 */
+.DetailPageReviews {
+  flex: 4;
+  padding: 20px;
+}
+
+/* 공통 카드 스타일 */
+.DetailPageMovieInfo,
+.DetailPageTrailer,
+.DetailPageReviews {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+}

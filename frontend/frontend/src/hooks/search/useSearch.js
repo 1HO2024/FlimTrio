@@ -38,9 +38,9 @@ const useSearch = () => {
     setIsOpen(false);
   };
 
-  // 디테일 페이지에 검색한 영화 정보 넘김
+  // 검색 결과 페이지에 검색한 영화 정보 넘김
   const handleResultClickWithState = (result) => {
-    navigate(`/detail/${result.id}`, { state: { result } });
+    navigate(`/searchResults/${result.id}`, { state: { result } });
     handleResultClick();
   };
 

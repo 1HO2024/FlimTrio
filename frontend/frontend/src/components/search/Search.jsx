@@ -33,7 +33,7 @@ const Search = () => {
               <li key={index} className="searchResultItem">
                 <span
                   className="searchLink"
-                  onClick={() => handleResultClickWithState(result)} // 클릭 시 상태 전달
+                  onClick={() => handleResultClickWithState(result)}
                 >
                   {result.name}
                 </span>
