@@ -31,14 +31,10 @@
 
 /* 포스터 */
 .DetailPageMoviePoster {
-  flex: 4;
-  text-align: center;
 }
 
 /* 예고편 */
 .DetailPageTrailer {
-  flex: 6;
-  text-align: center;
   padding: 20px;
 }
 
