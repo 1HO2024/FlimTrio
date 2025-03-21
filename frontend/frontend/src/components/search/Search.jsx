@@ -21,7 +21,7 @@ const Search = () => {
           type="text"
           value={searchTerm}
           onChange={handleSearchChange}
-          placeholder="영화를 검색해주세요 테스트."
+          placeholder="영화를 검색해주세요."
           className="searchInput"
         />
       </div>
