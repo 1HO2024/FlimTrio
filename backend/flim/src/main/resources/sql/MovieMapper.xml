@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.flim.mapper.MovieMapper">
+
+    <insert id="insertMovie" parameterType="com.example.flim.dto.Movie">
+        INSERT INTO movie (id, title, overview, popularity, poster_path, release_date, genre_ids)
+        VALUES (#{id}, #{title}, #{overview}, #{popularity}, #{posterPath}, #{releaseDate}, #{genreIds})
+        ON DUPLICATE KEY UPDATE
+        title = NEW.title,
+        overview = NEW.overview,
+        popularity = NEW.popularity,
+        poster_path = NEW.poster_path,
+        release_date = NEW.release_date,
+        genre_ids = NEW.genre_ids;
+    </insert>
+
+    <select id="checkMovieExists" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM movie WHERE id = #{id}
+    </select>
+
+
+
+</mapper>
