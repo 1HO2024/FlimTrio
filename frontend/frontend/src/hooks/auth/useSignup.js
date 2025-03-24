@@ -1,8 +1,10 @@
 import { useState } from "react";
 import signupApi from "../../api/auth/signup";
+import Swal from "sweetalert2";  
 
+const useSignup = (closeModal) => {  
 
-const useSignup = () => {
+  // 회원가입 관련된 함수 로직들
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -62,10 +64,18 @@ const useSignup = () => {
     setError(""); 
 
     try {
-      const result = await signupApi(nickname, email, password, phoneNumber);
-      console.log(result);
+      await signupApi(nickname, email, password, phoneNumber);
+      closeModal();
+
+      Swal.fire({
+        icon: "success",
+        title: "회원가입 완료",
+        text: "회원가입이 완료되었습니다!",
+        confirmButtonText: "확인",
+      });
+
     } catch (err) {
-      setError(err.message); 
+      setError(err.message);  
     }
   };
 

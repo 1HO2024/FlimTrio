@@ -17,7 +17,7 @@ const Signup = ({ closeModal, openLoginModal }) => {
     handleNicknameChange,
     handlePhoneNumberChange,
     handleSubmit,
-  } = useSignup();
+  } = useSignup(closeModal);
 
   return (
     <div>
