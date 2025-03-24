@@ -5,7 +5,7 @@ const useDetailMovieTrailer = ({ movieName }) => {
   const youtubeApikey = import.meta.env.VITE_YOUTUBE_API_KEY;
 
   useEffect(() => {
-    // 유튜브 트레일러 들고오는 함수
+    // 유튜브 트레일러 들고오는 함수  
     const fetchTrailer = async () => {
       try {
         const apiKey = youtubeApikey;

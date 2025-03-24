@@ -9,11 +9,13 @@ const Signup = ({ closeModal, openLoginModal }) => {
     password,
     confirmPassword,
     nickname,
+    phoneNumber,
     error,
     handleEmailChange,
     handlePasswordChange,
     handleConfirmPasswordChange,
     handleNicknameChange,
+    handlePhoneNumberChange,
     handleSubmit,
   } = useSignup();
 
@@ -23,10 +25,9 @@ const Signup = ({ closeModal, openLoginModal }) => {
         <Logo />
       </div>
 
-      {error && <div className="error">{error}</div>}
-
       <form onSubmit={handleSubmit} className="signupForm">
         <h2 className="signuph2">회원가입</h2>
+
         <div className="inputField">
           <input
             type="email"
@@ -75,10 +76,24 @@ const Signup = ({ closeModal, openLoginModal }) => {
           />
         </div>
 
+        <div className="inputField">
+          <input
+            type="text"
+            id="phoneNumber"
+            name="phoneNumber"
+            value={phoneNumber}
+            onChange={handlePhoneNumberChange}
+            required
+            placeholder="전화번호"
+          />
+        </div>
+
         <button type="submit" className="modalButton">
           회원가입
         </button>
       </form>
+
+      {error && <div className="error">{error}</div>}
 
       <div className="loginPrompt">
         <span>이미 계정이 있으신가요? </span>

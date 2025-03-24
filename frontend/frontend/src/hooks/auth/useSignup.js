@@ -1,10 +1,13 @@
 import { useState } from "react";
+import signupApi from "../../api/auth/signup";
+
 
 const useSignup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nickname, setNickname] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
 
   const handleEmailChange = (e) => {
@@ -23,11 +26,26 @@ const useSignup = () => {
     setNickname(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value;
+    // 전화번호 자동 포맷
+    const formattedPhone = value
+      .replace(/[^0-9]/g, "")
+      .replace(/^(\d{3})(\d{3,4})(\d{4})$/, "$1-$2-$3");
+    setPhoneNumber(formattedPhone);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !password || !confirmPassword || !nickname) {
-      setError("모든 필드를 입력해주세요.");
+    // 유효성 검사
+    if (!email || !password || !confirmPassword || !nickname || !phoneNumber) {
+      setError("모든 입력창을 입력해주세요.");
+      return;
+    }
+
+    if (!/^[a-zA-Z0-9]{8,15}$/.test(password)) {
+      setError("비밀번호는 8자 이상 15자 이하의 영문과 숫자 조합이어야 합니다.");
       return;
     }
 
@@ -36,8 +54,19 @@ const useSignup = () => {
       return;
     }
 
-    setError("");
-    console.log("회원가입 완료", { email, password, nickname });
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError("이메일 형식으로 입력해주세요.");
+      return;
+    }
+
+    setError(""); 
+
+    try {
+      const result = await signupApi(nickname, email, password, phoneNumber);
+      console.log(result);
+    } catch (err) {
+      setError(err.message); 
+    }
   };
 
   return {
@@ -45,11 +74,13 @@ const useSignup = () => {
     password,
     confirmPassword,
     nickname,
+    phoneNumber,
     error,
     handleEmailChange,
     handlePasswordChange,
     handleConfirmPasswordChange,
     handleNicknameChange,
+    handlePhoneNumberChange,
     handleSubmit,
   };
 };
