@@ -97,7 +97,8 @@ public class AuthService implements UserDetailsService {
 
 	public UserDTO updateProfile(String email, String nickname, String password) {
 		String hasedupdatePass = passwordEncoder.encode(password);
-		return userMapper.updateProfile(email,nickname,hasedupdatePass);
+		userMapper.updateProfile(email,nickname,hasedupdatePass);
+		return userMapper.findByEmail(email);
 	}
 
 

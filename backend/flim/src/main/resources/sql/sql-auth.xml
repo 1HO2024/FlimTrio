@@ -51,7 +51,7 @@
 	<update id="updateProfile">
 		UPDATE users  
 		SET nickname    = #{nickname},
-		    password    = #{password}
+		    password    = #{hasedupdatePass}
 		WHERE email     = #{email}
 	</update>
 	
