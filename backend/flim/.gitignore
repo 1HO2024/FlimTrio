@@ -64,13 +64,7 @@ Thumbs.db
 
 # 환경 설정 파일 (보안 관련)
 .env
-.env.local
-.env.development
-.env.production
-application.properties
-application.yml
-application-dev.properties
-application-prod.properties
+
 
 # 로그 & 캐시 파일
 /logs/
