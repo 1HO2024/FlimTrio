@@ -10,25 +10,11 @@ import lombok.Setter;
 public class ApiResponse {
     private boolean success;
     private String message;
-    private String tempPassword;
-	private UserDetails Data;
     
     public ApiResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
     }
-
-    public ApiResponse(boolean success, String message, String tempPassword) {
-    	this.success = success;
-        this.message = message;
-        this.tempPassword = tempPassword; 
-	}
-
-	public ApiResponse(boolean success , String message,  UserDetails Data) {
-		this.success = success;
-        this.message = message;
-        this.Data = Data; 
-	}
 
 
 	public boolean isSuccess() {
