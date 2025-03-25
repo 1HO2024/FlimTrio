@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,8 +12,17 @@ import io.jsonwebtoken.security.SignatureException;
 
 @Component
 public class JwtUtil {
-    private final String SECRET_KEY = "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"; // 비밀 키
+	   private final String SECRET_KEY;
 
+	    public JwtUtil() {
+	        // .env 파일에서 값 로드
+	        Dotenv dotenv = Dotenv.load();
+	        this.SECRET_KEY = dotenv.get("SECRET_KEY");
+	    }
+
+	    public String getSecretKey() {
+	        return SECRET_KEY;
+	    }
     // JWT 토큰 생성
     public String generateToken(String username) {
         return Jwts.builder()
