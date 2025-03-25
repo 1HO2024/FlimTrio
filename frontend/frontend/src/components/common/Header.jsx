@@ -56,13 +56,17 @@ const Header = () => {
                 {/* 드롭다운 메뉴 */}
                 {isDropdownOpen && (
                   <div className="dropdownMenu">
-                    <div className="dropdownItem">
-                      <span>{user?.nickname}님</span>
+                    <div className="dropdownItem2">
+                      <FaUserCircle
+                        style={{ fontSize: "32px", marginRight: "10px" }}
+                      />
+                      <div>{user?.nickname}님</div>
                     </div>
+                    <hr className="HeaderDivider" />
                     <div
                       className="dropdownItem"
                       onClick={handleIconClick}
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: "pointer", textAlign: "center" }}
                     >
                       MY
                     </div>

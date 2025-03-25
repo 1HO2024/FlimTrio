@@ -71,6 +71,7 @@ const useSignup = (closeModal) => {
         icon: "success",
         title: "회원가입 완료",
         text: "회원가입이 완료되었습니다!",
+        confirmButtonColor: "#3085d6",
         confirmButtonText: "확인",
       });
 

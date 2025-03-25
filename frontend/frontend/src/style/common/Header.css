@@ -26,6 +26,7 @@
 .rightContainer {
   display: flex;
   align-items: center;
+  margin-right: 40px;
 }
 
 .searchContainer {
@@ -131,14 +132,35 @@
 }
 
 .dropdownItem {
-  padding: 10px;
-  text-align: center;
+  padding: 12px;
+  text-align: left; 
   font-size: 14px;
   font-weight: 600;
   color: gray;
+  display: flex;
+  align-items: center; 
+}
+
+.dropdownItem2 {
+  padding: 12px;
+  text-align: left; 
+  font-size: 14px;
+  font-weight: 600;
+  color: black;
+  display: flex;
+  align-items: center; 
 }
 
 .dropdownItem:hover {
-  color: black;
+  background-color: #f0f0f0;
+  color: #333;
 }
 
+.HeaderDivider {
+  margin: 0; 
+  border: none;
+  border-top: 1px solid lightgray;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

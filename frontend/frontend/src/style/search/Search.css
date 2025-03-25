@@ -1,3 +1,27 @@
+/* 돋보기 효과 css */
+
+@keyframes fadeinLeft {
+  0% {
+    transform: translateX(20%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeinRight {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(20%);
+    opacity: 1;
+  }
+}
+
 .searchForm {
   display: flex;
   align-items: center;
@@ -9,6 +33,19 @@
 .searchInputWrapper {
   position: relative;
   width: 100%;
+  transition: width 0.3s ease, opacity 0.3s ease;
+}
+
+.searchInputWrapper.visible {
+  animation: fadeinLeft 0.5s ease-in-out forwards;
+}
+
+.searchInputWrapper.hidden {
+  animation: fadeinRight 0.3s ease-in-out forwards;
+}
+
+.searchInputWrapper.initial {
+  animation: none;
 }
 
 .searchIcon {
@@ -18,11 +55,12 @@
   transform: translateY(-50%);
   color: #999;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .searchInput {
   width: 100%;
-  padding: 10px 10px 10px 35px; 
+  padding: 10px 10px 10px 35px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 5px;

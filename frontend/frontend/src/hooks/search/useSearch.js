@@ -6,6 +6,9 @@ const useSearch = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const searchRef = useRef(null); 
+  const [isInputVisible, setIsInputVisible] = useState(false);
+  console.log(isInputVisible)
+
   const navigate = useNavigate();
 
   const handleSearchChange = (event) => {
@@ -44,6 +47,12 @@ const useSearch = () => {
     handleResultClick();
   };
 
+  // 돋보기
+  const handleIconClick = () => {
+    setIsInputVisible((prev) => !prev); 
+  };
+
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -61,10 +70,12 @@ const useSearch = () => {
     searchTerm,
     searchResults,
     isOpen,
+    isInputVisible,
     handleSearchChange,
     handleSearchSubmit,
     handleResultClick,
     handleResultClickWithState,
+    handleIconClick,
     searchRef,
   };
 };

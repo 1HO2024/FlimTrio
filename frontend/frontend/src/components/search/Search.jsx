@@ -7,23 +7,40 @@ const Search = () => {
     searchTerm,
     searchResults,
     isOpen,
+    isInputVisible,
     handleSearchChange,
     handleSearchSubmit,
+    handleIconClick,
     searchRef,
     handleResultClickWithState,
   } = useSearch();
 
   return (
     <form className="searchForm" onSubmit={handleSearchSubmit} ref={searchRef}>
-      <div className="searchInputWrapper">
-        <FaSearch className="searchIcon" />
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="영화를 검색해주세요."
-          className="searchInput"
-        />
+      <div
+        className={`searchInputWrapper ${
+          isInputVisible ? "visible" : "hidden"
+        } ${!isInputVisible ? "initial" : ""}`}
+      >
+        {isInputVisible && (
+          <>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              placeholder="영화를 검색해주세요."
+              className="searchInput"
+            />
+            <FaSearch className="searchIcon" onClick={handleIconClick} />
+          </>
+        )}
+        {!isInputVisible && (
+          <FaSearch
+            className="searchIcon"
+            style={{ fontSize: "24px" }}
+            onClick={handleIconClick}
+          />
+        )}
       </div>
 
       {isOpen && (
