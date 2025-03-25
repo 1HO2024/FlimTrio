@@ -18,5 +18,8 @@ public interface UserMapper {
 		void updateTempPassword(@Param("email") String email,
 				                @Param("phoneNumber") String phoneNumber,
 				                @Param("hashedTempPassword") String hashedTempPassword);
+		void updateProfile(@Param("email")String email, 
+				           @Param("nickname")String nickname, 
+				           @Param("hasedupdatePass")String hasedupdatePass);
 	}
 

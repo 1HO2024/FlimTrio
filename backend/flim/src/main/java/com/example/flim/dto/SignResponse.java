@@ -2,14 +2,14 @@ package com.example.flim.dto;
 
 import java.util.Map;
 
-public class LoginResponse {
+public class SignResponse {
     private boolean success;
     private String message;
     private Map<String, String> data;
     private String token;
 
     // 생성자, getter, setter
-    public LoginResponse(boolean success, String message, Map<String, String> data, String token) {
+    public SignResponse(boolean success, String message, Map<String, String> data, String token) {
         this.success = success;
         this.message = message;
         this.data = data;

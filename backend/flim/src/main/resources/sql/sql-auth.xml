@@ -48,4 +48,11 @@
 		AND phoneNumber = #{phoneNumber}
 	</update>
 	
+	<update id="updateProfile">
+		UPDATE users  
+		SET nickname    = #{nickname},
+		    password    = #{hasedupdatePass}
+		WHERE email     = #{email}
+	</update>
+	
 </mapper>

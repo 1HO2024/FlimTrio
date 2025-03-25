@@ -1,20 +1,27 @@
 package com.example.flim.dto;
 
-import org.springframework.security.core.userdetails.UserDetails;
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ApiResponse {
+public class SerachPassResponse {
     private boolean success;
     private String message;
+    private String tempPassword;
+
     
-    public ApiResponse(boolean success, String message) {
+    public SerachPassResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
     }
+
+    public SerachPassResponse(boolean success, String message, String tempPassword) {
+    	this.success = success;
+        this.message = message;
+        this.tempPassword = tempPassword; 
+	}
+
 
 
 	public boolean isSuccess() {
