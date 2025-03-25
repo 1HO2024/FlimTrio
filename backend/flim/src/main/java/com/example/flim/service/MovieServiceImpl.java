@@ -21,7 +21,7 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String apiKey = "8cddecbeaaf1e1f845bf146c6f747ee1"; // API Key 입력
+    private final String apiKey = ""; // API Key 입력
     private final String URL = "https://api.themoviedb.org/3/discover/movie?api_key=" + apiKey + "&language=ko-KR&page=";
 
     @Override
