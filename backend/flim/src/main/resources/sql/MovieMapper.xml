@@ -20,6 +20,18 @@
         SELECT COUNT(*) FROM movie WHERE id = #{id}
     </select>
 
+    <select id="getAllMovies" parameterType="com.example.flim.dto.Movie">
+        SELECT * FROM movie
+    </select>
+
+    <select id="getMovieById" parameterType="int" resultType="com.example.flim.dto.Movie">
+        SELECT * FROM movie
+        WHERE id = #{id}
+    </select>
+
+    <select id="searchMovieTitle" resultType="com.example.api.dto.Movie">
+        SELECT * FROM movie WHERE title LIKE CONCAT('%', #{title}, '%')
+    </select>
 
 
 </mapper>

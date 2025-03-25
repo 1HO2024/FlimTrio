@@ -85,4 +85,19 @@ public class MovieServiceImpl implements MovieService {
             }
         }
     }
+
+    @Override
+    public List<Movie> getAllMovies() {
+        return movieMapper.getAllMovies();
+    }
+
+    @Override
+    public Movie getMovieById(int id) {
+        return movieMapper.getMovieById(id);
+    }
+
+    @Override
+    public List<Movie> searchMoviesTitle(String title) {
+        return movieMapper.searchMovieTitle("%" + title + "%");
+    }
 }
