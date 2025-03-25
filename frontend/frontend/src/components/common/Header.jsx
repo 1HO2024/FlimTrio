@@ -16,17 +16,16 @@ const Header = () => {
     isLoginModalOpen,
     isSignupModalOpen,
     isTransparent,
-    // 마이페이지 이동 함수
+    user,
     handleIconClick,
     openLoginModal,
     closeLoginModal,
     openSignupModal,
     closeSignupModal,
+    handleLogout,
   } = useHeader();
 
-  // 드롭다운 메뉴 상태 관리
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   const handleDropdownEnter = () => {
     setIsDropdownOpen(true);
   };
@@ -57,6 +56,9 @@ const Header = () => {
                 {/* 드롭다운 메뉴 */}
                 {isDropdownOpen && (
                   <div className="dropdownMenu">
+                    <div className="dropdownItem">
+                      <span>{user?.nickname}님</span>
+                    </div>
                     <div
                       className="dropdownItem"
                       onClick={handleIconClick}
@@ -66,9 +68,8 @@ const Header = () => {
                     </div>
                     <div
                       className="dropdownItem"
-                      style={{
-                        cursor: "pointer",
-                      }}
+                      onClick={handleLogout}
+                      style={{ cursor: "pointer" }}
                     >
                       로그아웃
                     </div>

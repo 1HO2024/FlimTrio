@@ -10,7 +10,7 @@ const Signin = ({ closeModal, openSignupModal }) => {
     handleEmailChange,
     handlePasswordChange,
     handleLogin,
-  } = useSignin();
+  } = useSignin(closeModal);
 
   return (
     <div>
@@ -20,7 +20,6 @@ const Signin = ({ closeModal, openSignupModal }) => {
 
       <form onSubmit={handleLogin} className="signinForm">
         <h2 className="signinh2">로그인</h2>
-
         <div className="inputField">
           <input
             type="email"
@@ -32,7 +31,6 @@ const Signin = ({ closeModal, openSignupModal }) => {
             placeholder="이메일"
           />
         </div>
-
         <div className="inputField">
           <input
             type="password"
@@ -44,15 +42,12 @@ const Signin = ({ closeModal, openSignupModal }) => {
             placeholder="비밀번호"
           />
         </div>
-
         <button type="submit" className="modalButton">
           로그인
         </button>
-
         <div className="forgotPassword">
           <a>비밀번호를 잊어버리셨나요?</a>
         </div>
-
         <div className="signupPrompt">
           <span>계정이 없으신가요?</span>
           <button
