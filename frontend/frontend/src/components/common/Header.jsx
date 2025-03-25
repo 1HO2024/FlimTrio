@@ -1,11 +1,12 @@
-import Search from "../search/Search";
-import "../../style/common/Header.css";
 import { FaUserCircle } from "react-icons/fa";
-import useHeader from "../../hooks/header/useHeader";
 import Modal from "react-modal";
 import Signin from "../../components/auth/Signin";
 import Signup from "../../components/auth/Signup";
 import Logo from "../../components/common/Logo";
+import useHeader from "../../hooks/header/useHeader";
+import Search from "../search/Search";
+import "../../style/common/Header.css";
+import { useState } from "react";
 
 Modal.setAppElement("#root");
 
@@ -14,17 +15,31 @@ const Header = () => {
     isLoggedIn,
     isLoginModalOpen,
     isSignupModalOpen,
+    isTransparent,
+    user,
     handleIconClick,
     openLoginModal,
     closeLoginModal,
     openSignupModal,
     closeSignupModal,
+    handleLogout,
   } = useHeader();
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const handleDropdownEnter = () => {
+    setIsDropdownOpen(true);
+  };
+
+  const handleDropdownLeave = () => {
+    setIsDropdownOpen(false);
+  };
+
   return (
-    <div className="header">
+    <div className={`header ${isTransparent ? "transparent" : ""}`}>
       <div className="headerContent">
-        <Logo />
+        <div style={{ marginLeft: "10px" }}>
+          <Logo />
+        </div>
 
         <div className="rightContainer">
           <div className="searchContainer">
@@ -32,9 +47,41 @@ const Header = () => {
           </div>
           <div className="userContainer">
             {isLoggedIn ? (
-              <FaUserCircle className="userIcon" onClick={handleIconClick} />
+              <div
+                className="userIconContainer"
+                onMouseEnter={handleDropdownEnter}
+                onMouseLeave={handleDropdownLeave}
+              >
+                <FaUserCircle className="userIcon" />
+                {/* 드롭다운 메뉴 */}
+                {isDropdownOpen && (
+                  <div className="dropdownMenu">
+                    <div className="dropdownItem2">
+                      <FaUserCircle
+                        style={{ fontSize: "32px", marginRight: "10px" }}
+                      />
+                      <div>{user?.nickname}님</div>
+                    </div>
+                    <hr className="HeaderDivider" />
+                    <div
+                      className="dropdownItem"
+                      onClick={handleIconClick}
+                      style={{ cursor: "pointer", textAlign: "center" }}
+                    >
+                      MY
+                    </div>
+                    <div
+                      className="dropdownItem"
+                      onClick={handleLogout}
+                      style={{ cursor: "pointer" }}
+                    >
+                      로그아웃
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
-              <div>
+              <div className="HeaderText">
                 <div onClick={openLoginModal} className="HeaderTextItem">
                   로그인
                 </div>
@@ -67,7 +114,7 @@ const Header = () => {
         className="modalContent"
         overlayClassName="modalOverlay"
       >
-        <Signup closeModal={closeSignupModal} />
+        <Signup closeModal={closeSignupModal} openLoginModal={openLoginModal} />
       </Modal>
     </div>
   );

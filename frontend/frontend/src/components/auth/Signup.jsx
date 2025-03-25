@@ -1,31 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import Logo from "../../components/common/Logo";
 import "../../style/auth/Signup.css";
+import useSignup from "../../hooks/auth/useSignup";
 
-const Signup = ({ closeSignupModal, openLoginModal }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [error, setError] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!email || !password || !confirmPassword || !nickname) {
-      setError("모든 필드를 입력해주세요.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("비밀번호가 일치하지 않습니다.");
-      return;
-    }
-
-    setError("");
-    console.log("회원가입 완료", { email, password, nickname });
-    closeSignupModal();
-  };
+const Signup = ({ closeModal, openLoginModal }) => {
+  const {
+    email,
+    password,
+    confirmPassword,
+    nickname,
+    phoneNumber,
+    error,
+    handleEmailChange,
+    handlePasswordChange,
+    handleConfirmPasswordChange,
+    handleNicknameChange,
+    handlePhoneNumberChange,
+    handleSubmit,
+  } = useSignup(closeModal);
 
   return (
     <div>
@@ -33,17 +25,16 @@ const Signup = ({ closeSignupModal, openLoginModal }) => {
         <Logo />
       </div>
 
-      {error && <div className="error">{error}</div>}
-
       <form onSubmit={handleSubmit} className="signupForm">
         <h2 className="signuph2">회원가입</h2>
+
         <div className="inputField">
           <input
             type="email"
             id="email"
             name="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             required
             placeholder="이메일"
           />
@@ -55,7 +46,7 @@ const Signup = ({ closeSignupModal, openLoginModal }) => {
             id="password"
             name="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
             placeholder="비밀번호"
           />
@@ -67,7 +58,7 @@ const Signup = ({ closeSignupModal, openLoginModal }) => {
             id="confirmPassword"
             name="confirmPassword"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={handleConfirmPasswordChange}
             required
             placeholder="비밀번호 확인"
           />
@@ -79,9 +70,21 @@ const Signup = ({ closeSignupModal, openLoginModal }) => {
             id="nickname"
             name="nickname"
             value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            onChange={handleNicknameChange}
             required
             placeholder="닉네임"
+          />
+        </div>
+
+        <div className="inputField">
+          <input
+            type="text"
+            id="phoneNumber"
+            name="phoneNumber"
+            value={phoneNumber}
+            onChange={handlePhoneNumberChange}
+            required
+            placeholder="전화번호"
           />
         </div>
 
@@ -90,11 +93,13 @@ const Signup = ({ closeSignupModal, openLoginModal }) => {
         </button>
       </form>
 
+      {error && <div className="error">{error}</div>}
+
       <div className="loginPrompt">
-        <span>계정이 있으신가요? </span>
+        <span>이미 계정이 있으신가요? </span>
         <button
           onClick={() => {
-            closeSignupModal();
+            closeModal();
             openLoginModal();
           }}
           className="loginButton"

@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import useSearch from "../../hooks/search/useSearch";
 import "../../style/search/Search.css";
@@ -8,23 +7,40 @@ const Search = () => {
     searchTerm,
     searchResults,
     isOpen,
+    isInputVisible,
     handleSearchChange,
     handleSearchSubmit,
-    handleResultClick,
+    handleIconClick,
     searchRef,
+    handleResultClickWithState,
   } = useSearch();
 
   return (
     <form className="searchForm" onSubmit={handleSearchSubmit} ref={searchRef}>
-      <div className="searchInputWrapper">
-        <FaSearch className="searchIcon" />
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="영화를 검색해주세요."
-          className="searchInput"
-        />
+      <div
+        className={`searchInputWrapper ${
+          isInputVisible ? "visible" : "hidden"
+        } ${!isInputVisible ? "initial" : ""}`}
+      >
+        {isInputVisible && (
+          <>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              placeholder="영화를 검색해주세요."
+              className="searchInput"
+            />
+            <FaSearch className="searchIcon" onClick={handleIconClick} />
+          </>
+        )}
+        {!isInputVisible && (
+          <FaSearch
+            className="searchIcon"
+            style={{ fontSize: "24px" }}
+            onClick={handleIconClick}
+          />
+        )}
       </div>
 
       {isOpen && (
@@ -32,13 +48,12 @@ const Search = () => {
           {searchResults.length > 0 ? (
             searchResults.map((result, index) => (
               <li key={index} className="searchResultItem">
-                <Link
-                  to={`/detail/${result.id}`}
+                <span
                   className="searchLink"
-                  onClick={handleResultClick}
+                  onClick={() => handleResultClickWithState(result)}
                 >
                   {result.name}
-                </Link>
+                </span>
               </li>
             ))
           ) : (

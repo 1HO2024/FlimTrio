@@ -1,0 +1,63 @@
+.DetailModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.DetailModal {
+  background: #1B1B1E; 
+  padding: 20px;
+  border-radius: 8px;
+  width: 800px;  
+  height: 580px; 
+  z-index: 1010;
+  overflow-y: auto; 
+}
+
+/* 위쪽 섹션 */
+.DetailPageMainContent {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 20px 20px 0 20px;
+}
+
+/* 포스터 */
+.DetailPageMoviePoster {
+}
+
+/* 예고편 */
+.DetailPageTrailer {
+  padding: 20px;
+}
+
+.DetailPageMoviePoster img {
+  width: 100%;
+  max-width: 300px;
+}
+
+/* 아래쪽 콘텐츠 */
+.DetailPageBottomContent {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+/* 영화 정보 */
+.DetailPageMovieInfo {
+  flex: 7;
+}
+
+/* 리뷰 */
+.DetailPageReviews {
+  flex: 4;
+}
+
