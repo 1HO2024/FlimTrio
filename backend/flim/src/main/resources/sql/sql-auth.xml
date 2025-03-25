@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.flim.mapper.UserMapper">
+	
+   <insert id="insertUser">
+    INSERT INTO users( 
+      nickname,
+      email, 
+      password, 
+      phonenumber
+    )
+    VALUES(
+      #{nickname}, 
+      #{email},
+      #{password}, 
+      #{phoneNumber})
+    </insert>
+
+   <select id="getNickname"> 
+		SELECT nickname 
+		FROM   users 
+		WHERE  email = #{email}
+	</select>
+	
+   <select id="getPhonenumber"> 
+		SELECT phoneNumber 
+		FROM   users
+		WHERE  email = #{email}
+	</select>
+	
+	<select id="findByEmail">
+		SELECT * FROM users 
+		WHERE email = #{email}
+	</select>
+	
+	<select id="findUserByEmailPhone">
+		SELECT * FROM users 
+		WHERE email     = #{email} 
+		AND phoneNumber = #{phoneNumber}
+	</select>
+	
+	<update id="updateTempPassword">
+		UPDATE users  
+		SET password    = #{hashedTempPassword}
+		WHERE email     = #{email}
+		AND phoneNumber = #{phoneNumber}
+	</update>
+	
+</mapper>
