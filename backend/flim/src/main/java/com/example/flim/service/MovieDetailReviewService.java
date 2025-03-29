@@ -6,23 +6,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.flim.dto.MovieDetailDTO;
-import com.example.flim.mapper.MovieDetailMapper;
+import com.example.flim.mapper.MovieDetailReviewMapper;
 
 @Service
-public class MovieDetailService {
+public class MovieDetailReviewService {
 
 	@Autowired
-	private MovieDetailMapper movieDetailMapper;
+	private MovieDetailReviewMapper movieDetailReviewMapper;
 
 
 	public List<MovieDetailDTO> getReview(int ID) {
-		List<MovieDetailDTO> reviewlist = movieDetailMapper.getReview(ID);
+		List<MovieDetailDTO> reviewlist = movieDetailReviewMapper.getReview(ID);
 		return reviewlist;
 	}
-
+	
+	public boolean isWrite(MovieDetailDTO moviedetaildto, int user_idx) {
+		return  movieDetailReviewMapper.isWrite(moviedetaildto.getId(),user_idx);
+	}
 
 	public boolean writeReview(MovieDetailDTO moviedetaildto, int user_idx) {
-		int result = movieDetailMapper.writeReview(moviedetaildto.getId(),
+		int result = movieDetailReviewMapper.writeReview(moviedetaildto.getId(),
 				                                   moviedetaildto.getReview_comment(),
 				                                   moviedetaildto.getReview_rating(),
 				                                   user_idx);
@@ -31,7 +34,7 @@ public class MovieDetailService {
 
 
 	public boolean updateReview(MovieDetailDTO moviedetaildto, int user_idx) {
-		int result = movieDetailMapper.updateReview(moviedetaildto.getId(),
+		int result = movieDetailReviewMapper.updateReview(moviedetaildto.getId(),
 				                                    moviedetaildto.getReview_idx(),
                                                     moviedetaildto.getReview_comment(),
                                                     moviedetaildto.getReview_rating(),
@@ -41,11 +44,18 @@ public class MovieDetailService {
 
 
 	public boolean deleteReview(MovieDetailDTO moviedetaildto, int user_idx) {
-		int result = movieDetailMapper.deleteReview(moviedetaildto.getId(),
+		int result = movieDetailReviewMapper.deleteReview(moviedetaildto.getId(),
                                                     moviedetaildto.getReview_idx(),
 									                user_idx);
         return result > 0 ;
 	}
+
+
+
+
+
+
+
 
 
 }
