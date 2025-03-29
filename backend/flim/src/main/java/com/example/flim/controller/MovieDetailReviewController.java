@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.flim.dto.MovieDetailDTO;
 import com.example.flim.dto.MovieDetailResponse;
-import com.example.flim.dto.ProfileResponse;
 import com.example.flim.dto.ReviewResponse;
 import com.example.flim.service.AuthService;
 import com.example.flim.service.MovieDetailReviewService;

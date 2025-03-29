@@ -55,6 +55,7 @@ public class MovieDetailLikeController {
 		
 		 //좋아요 상태확인 
 	    boolean isLiked = movieDetailLikeService.isLiked(moviedetaildto.getId(), user_idx);
+	    System.out.println(isLiked);
 	    if (isLiked) {
 	        // 좋아요 o
 	    	movieDetailLikeService.deleteLike(moviedetaildto, user_idx);

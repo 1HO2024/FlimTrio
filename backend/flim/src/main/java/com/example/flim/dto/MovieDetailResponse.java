@@ -3,6 +3,7 @@ package com.example.flim.dto;
 public class MovieDetailResponse {
 	private boolean success;
     private String message;
+    
 	public MovieDetailResponse(boolean success, String message) {
 		this.setSuccess(success);
 	    this.setMessage(message);
