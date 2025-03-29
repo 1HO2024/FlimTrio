@@ -16,10 +16,10 @@ public interface MovieMapper {
     @Select("SELECT COUNT(*) FROM movie WHERE id = #{id}")
     int checkMovieExists(int id);
 
-@Select("SELECT * FROM movie")
+    @Select("SELECT * FROM movie")
     List<Movie> getAllMovies();
 
-@Select("SELECT * FROM movie WHERE id = #{id}")
+    @Select("SELECT * FROM movie WHERE id = #{id}")
     Movie getMovieById(@Param("id") int id);
 
     @Select("SELECT * FROM movie WHERE title LIKE CONCAT('%', #{title}, '%')")

@@ -44,7 +44,12 @@ public class SecurityConfig {
         // CSRF 보호 비활성화
         http.csrf().disable()
             .authorizeRequests()
-                .requestMatchers("/api/v1/signin", "/api/v1/signup","/api/v1/search-password").permitAll()  // 로그인, 회원가입은 모두 허용
+                .requestMatchers("/api/v1/signin", 
+                		"/api/v1/signup",
+                		"/api/v1/search-password",
+                		"/api/v1/movies",
+                		"/api/v1/fetch-movies",
+                		"/api/v1/movie-detail/view-reviews").permitAll()  // 로그인, 회원가입은 모두 허용
                 .anyRequest().authenticated()  // 그 외의 요청은 인증 필요
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, authService), UsernamePasswordAuthenticationFilter.class);  // 필터 추가

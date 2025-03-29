@@ -11,4 +11,5 @@ public class Movie {
     private String posterPath;
     private double popularity;
     private String releaseDate;
+    private String tagline;
 }
