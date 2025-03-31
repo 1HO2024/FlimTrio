@@ -2,6 +2,7 @@ package com.example.flim.service;
 
 
 import com.example.flim.dto.Movie;
+import com.example.flim.dto.MovieDetailResponse;
 
 import java.util.List;
 
@@ -12,7 +13,8 @@ public interface MovieService {
 
     List<Movie> getAllMovies();
 
-    Movie getMovieById(int id);
 
     List<Movie> searchMoviesTitle(String title);
+
+    MovieDetailResponse getMovieWithCastAndCrewById(int id);
 }

@@ -2,6 +2,7 @@ package com.example.flim.controller;
 
 
 import com.example.flim.dto.Movie;
+import com.example.flim.dto.MovieDetailResponse;
 import com.example.flim.dto.MovieResponse;
 import com.example.flim.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,16 @@ public class MovieController {
     }
 
 //    특정 영화 조회
-    @GetMapping("/movies/{id}")
-    public ResponseEntity<MovieResponse> getMovieById(@PathVariable int id) {
-//        List 타입이 아닌 이유는 id로 특정 영화 하나만을 검색하기 때문
-        Movie movies = movieService.getMovieById(id);
-        MovieResponse response = new MovieResponse(true,"영화 조회 성공",movies);
-        return ResponseEntity.ok(response);
+@GetMapping("/movies/{id}")
+public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable int id) {
+    MovieDetailResponse response = movieService.getMovieWithCastAndCrewById(id);
+
+    if (response == null) {
+        return ResponseEntity.notFound().build();
     }
+
+    return ResponseEntity.ok(response);
+}
 
 //    영화 제목으로 조회
     @GetMapping("/movies/search")
