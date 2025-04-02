@@ -106,7 +106,7 @@ const Header = () => {
         isOpen={isLoginModalOpen}
         onRequestClose={closeLoginModal}
         contentLabel="Login Modal"
-        className="modalContent"
+        className="modalContent loginModal"
         overlayClassName="modalOverlay"
       >
         <Signin
@@ -130,7 +130,7 @@ const Header = () => {
         isOpen={isSearchPasswordModalOpen}
         onRequestClose={closeSearchPasswordModal}
         contentLabel="PasswordSearch Modal"
-        className="modalContent"
+        className="modalContent searchPasswordModal"
         overlayClassName="modalOverlay"
       >
         <SearchPassword closeModal={closeSearchPasswordModal} />

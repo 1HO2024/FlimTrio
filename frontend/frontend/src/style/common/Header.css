@@ -99,6 +99,14 @@
   z-index: 10000;
 }
 
+.searchPasswordModal {
+  height: 400px; 
+}
+
+.loginModal {
+  height: 400px;
+}
+
 .modalOverlay {
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
