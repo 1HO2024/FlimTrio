@@ -85,7 +85,7 @@ public class SignController {
 		                .body(new SearchPassResponse(false, "사용자를 찾을 수 없습니다."));
 		    }
 
-		    return ResponseEntity.ok(new SearchPassResponse(true, "임시 비밀번호가 발급되었습니다.", tempPassword));
+		    return ResponseEntity.ok(new SearchPassResponse(true, "임시 비밀번호가 발급되었습니다. 로그인 후 꼭 변경해주세요", tempPassword));
 	   }
 	   
 	

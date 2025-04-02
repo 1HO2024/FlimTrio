@@ -54,7 +54,7 @@ public class MovieDetailReviewController {
 		    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 		        return ResponseEntity.badRequest().body(new MovieDetailResponse(false, "유효하지 않은 토큰입니다."));
 		    }
-		    String jwtToken = authorizationHeader.substring(7);  // "Bearer " 이후의 부분 추출
+		    String jwtToken = authorizationHeader.substring(7); 
 		    if (jwtToken.isEmpty()) {
 		        return ResponseEntity.badRequest().body(new MovieDetailResponse(false, "토큰이 필요합니다."));
 		    }
@@ -67,7 +67,6 @@ public class MovieDetailReviewController {
 		    if (user == null) {
 		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MovieDetailResponse(false, "사용자를 찾을 수 없습니다."));
 		    }
-		    
 		    int user_idx = authService.getUserIdx(email);
 		    
 		    boolean isWrite = movieDetailReviewService.isWrite(moviedetaildto,user_idx);
@@ -90,7 +89,7 @@ public class MovieDetailReviewController {
 	    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 		return ResponseEntity.badRequest().body(new MovieDetailResponse(false, "유효하지 않은 토큰입니다."));
 		}
-	    String jwtToken = authorizationHeader.substring(7);  // "Bearer " 이후의 부분 추출
+	    String jwtToken = authorizationHeader.substring(7);  
 		if (jwtToken.isEmpty()) {
 		return ResponseEntity.badRequest().body(new MovieDetailResponse(false, "토큰이 필요합니다."));
 	    }
@@ -103,8 +102,8 @@ public class MovieDetailReviewController {
 		if (user == null) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MovieDetailResponse(false, "사용자를 찾을 수 없습니다."));
 		}
-			
 		int user_idx = authService.getUserIdx(email);
+		
 		boolean isSuccess =  movieDetailReviewService.updateReview(moviedetaildto,user_idx);
 		
 		if (isSuccess) {
@@ -121,7 +120,7 @@ public class MovieDetailReviewController {
 		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 		return ResponseEntity.badRequest().body(new MovieDetailResponse(false, "유효하지 않은 토큰입니다."));
 		}
-		String jwtToken = authorizationHeader.substring(7);  // "Bearer " 이후의 부분 추출
+		String jwtToken = authorizationHeader.substring(7);  
 		if (jwtToken.isEmpty()) {
 		return ResponseEntity.badRequest().body(new MovieDetailResponse(false, "토큰이 필요합니다."));
 		}
@@ -129,13 +128,12 @@ public class MovieDetailReviewController {
 		if (email == null) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MovieDetailResponse(false, "유효하지 않은 토큰입니다."));
 		}
-		
 		UserDetails user = authService.loadUserByUsername(email);
 		if (user == null) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MovieDetailResponse(false, "사용자를 찾을 수 없습니다."));
 		}
-		
 		int user_idx = authService.getUserIdx(email);
+		
 		boolean isSuccess =  movieDetailReviewService.deleteReview(moviedetaildto,user_idx);
 		System.out.println(isSuccess);
 		if (isSuccess) {

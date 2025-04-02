@@ -14,7 +14,7 @@ public class SearchPassResponse {
     public SearchPassResponse(boolean success, String message, String tempPassword) {
     	this.success = success;
         this.message = message;
-        this.tempPassword = tempPassword; 
+        this.setTempPassword(tempPassword); 
 	}
 
 
@@ -34,4 +34,12 @@ public class SearchPassResponse {
     public void setMessage(String message) {
         this.message = message;
     }
+
+	public String getTempPassword() {
+		return tempPassword;
+	}
+
+	public void setTempPassword(String tempPassword) {
+		this.tempPassword = tempPassword;
+	}
 }

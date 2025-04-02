@@ -47,8 +47,7 @@ public class ProfileController {
 		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ProfileResponse(false, "유효하지 않은 토큰입니다."));
 		    }
 
-		    /* email 로 사용자 정보 조회 responsebody 에 username 에 담아서 보내는걸 
-		     email 에 담아서 보내기 위해 customyserDetail 을 config에 정의해둠*/ 
+
 		    UserDetails user = authService.loadUserByUsername(email);
 		   
 		    if (user == null) {
@@ -86,7 +85,16 @@ public class ProfileController {
 		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ProfileResponse(false, "사용자를 찾을 수 없습니다."));
 		    }
 		    
-		    //회원정보 DB 수정
+		    //회원정보 DB 수정(수정 정보 예외처리)
+		    if(userDTO.getNickname()== null) {
+		    	UserDTO getinfo = authService.searchProfile(email);
+		    	userDTO.setNickname(getinfo.getNickname());
+		    }
+		    
+		    if(userDTO.getPassword()== null) {
+		    	UserDTO getinfo = authService.searchProfile(email);
+		    	userDTO.setPassword(getinfo.getPassword());
+		    }
 		    
 		    UserDTO updatedUser = authService.updateProfile(email,userDTO.getNickname(),userDTO.getPassword());
 		     Map<String, String> userData = new HashMap<>();
