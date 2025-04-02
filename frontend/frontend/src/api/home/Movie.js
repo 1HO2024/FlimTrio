@@ -15,7 +15,7 @@ const fetchTrendingMovies = async (accessToken) => {
         },
       }
     );
-    console.log(response);
+    // console.log(response);
     return response.data.results.slice(0, 10); 
   } catch (error) {
     console.error(error);

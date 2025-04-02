@@ -7,10 +7,16 @@ const useSignin = (closeModal) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isSearchPasswordModalOpen, setIsSearchPasswordModalOpen] = useState(false);
   const login = useAuthStore((state) => state.login);
   
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
+
+
+  const openSearchPasswordModal = () => setIsSearchPasswordModalOpen(true);
+  const closeSearchPasswordModal = () => setIsSearchPasswordModalOpen(false);
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -39,16 +45,22 @@ const useSignin = (closeModal) => {
         icon: "error",
         confirmButtonColor: "#d33",
         confirmButtonText: "닫기",
-      });
+      });     
+       closeModal();
     }
   };
+
+ 
 
   return {
     email,
     password,
+    isSearchPasswordModalOpen,
     handleEmailChange,
     handlePasswordChange,
     handleLogin,
+    openSearchPasswordModal,
+    closeSearchPasswordModal,
     error,
   };
 };

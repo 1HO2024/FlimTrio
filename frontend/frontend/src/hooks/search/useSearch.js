@@ -7,7 +7,6 @@ const useSearch = () => {
   const [isOpen, setIsOpen] = useState(false);
   const searchRef = useRef(null); 
   const [isInputVisible, setIsInputVisible] = useState(false);
-  console.log(isInputVisible)
 
   const navigate = useNavigate();
 
@@ -33,7 +32,6 @@ const useSearch = () => {
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
-    console.log(searchTerm);
   };
 
   const handleResultClick = () => {

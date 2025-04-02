@@ -28,14 +28,14 @@ const useSignup = (closeModal) => {
     setNickname(e.target.value);
   };
 
-  const handlePhoneNumberChange = (e) => {
-    const value = e.target.value;
-    // 전화번호 자동 포맷
-    const formattedPhone = value
-      .replace(/[^0-9]/g, "")
-      .replace(/^(\d{3})(\d{3,4})(\d{4})$/, "$1-$2-$3");
-    setPhoneNumber(formattedPhone);
-  };
+    const handlePhoneNumberChange = (e) => {
+      const value = e.target.value;
+      // 전화번호 자동 포맷
+      const formattedPhone = value
+        .replace(/[^0-9]/g, "")
+        .replace(/^(\d{3})(\d{3,4})(\d{4})$/, "$1-$2-$3");
+      setPhoneNumber(formattedPhone);
+    };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

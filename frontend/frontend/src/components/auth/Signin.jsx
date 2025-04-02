@@ -3,7 +3,7 @@ import Logo from "../../components/common/Logo";
 import "../../style/auth/Signin.css";
 import useSignin from "../../hooks/auth/useSignin";
 
-const Signin = ({ closeModal, openSignupModal }) => {
+const Signin = ({ closeModal, openSignupModal, openSearchPasswordModal }) => {
   const {
     email,
     password,
@@ -45,7 +45,13 @@ const Signin = ({ closeModal, openSignupModal }) => {
         <button type="submit" className="modalButton">
           로그인
         </button>
-        <div className="forgotPassword">
+        <div
+          onClick={() => {
+            closeModal();
+            openSearchPasswordModal();
+          }}
+          className="forgotPassword"
+        >
           <a>비밀번호를 잊어버리셨나요?</a>
         </div>
         <div className="signupPrompt">

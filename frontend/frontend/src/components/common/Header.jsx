@@ -7,6 +7,8 @@ import useHeader from "../../hooks/header/useHeader";
 import Search from "../search/Search";
 import "../../style/common/Header.css";
 import { useState } from "react";
+import useSignin from "../../hooks/auth/useSignin";
+import SearchPassword from "../../components/auth/SearchPassword";
 
 Modal.setAppElement("#root");
 
@@ -24,6 +26,12 @@ const Header = () => {
     closeSignupModal,
     handleLogout,
   } = useHeader();
+
+  const {
+    isSearchPasswordModalOpen,
+    openSearchPasswordModal,
+    closeSearchPasswordModal,
+  } = useSignin();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const handleDropdownEnter = () => {
@@ -104,6 +112,7 @@ const Header = () => {
         <Signin
           closeModal={closeLoginModal}
           openSignupModal={openSignupModal}
+          openSearchPasswordModal={openSearchPasswordModal}
         />
       </Modal>
 
@@ -115,6 +124,16 @@ const Header = () => {
         overlayClassName="modalOverlay"
       >
         <Signup closeModal={closeSignupModal} openLoginModal={openLoginModal} />
+      </Modal>
+
+      <Modal
+        isOpen={isSearchPasswordModalOpen}
+        onRequestClose={closeSearchPasswordModal}
+        contentLabel="PasswordSearch Modal"
+        className="modalContent"
+        overlayClassName="modalOverlay"
+      >
+        <SearchPassword closeModal={closeSearchPasswordModal} />
       </Modal>
     </div>
   );
