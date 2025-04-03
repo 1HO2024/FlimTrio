@@ -24,5 +24,9 @@ public interface MovieMapper {
 
     @Select("SELECT * FROM movie WHERE title LIKE CONCAT('%', #{title}, '%')")
     List<Movie> searchMovieTitle(@Param("title") String title);
+
+    List<Movie> getMovieByGenre(String genreIds);
+
+    Movie saveUserSearchHistory(String title, String memberId);
 }
 
