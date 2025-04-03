@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -27,6 +27,8 @@ public class MovieServiceImpl implements MovieService {
     private CastMapper castMapper; // 추가된 부분: CastMapper
     @Autowired
     private CrewMapper crewMapper; // 추가된 부분: CrewMapper
+
+
 
     @Autowired
     private RestTemplate restTemplate;
@@ -161,7 +163,16 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> getAllMovies() {
-        return movieMapper.getAllMovies();
+        List<Movie> movies = movieMapper.getAllMovies();
+
+        // 🔹 디버깅 코드 추가 (DB에서 가져온 데이터 확인)
+        for (Movie movie : movies) {
+            System.out.println("🎬 영화 ID: " + movie.getId());
+            System.out.println("🎬 제목: " + movie.getTitle());
+            System.out.println("🎬 장르 원본 (DB에서 가져온 값): " + movie.getGenreIds());
+        }
+
+        return movies;
     }
 
 
@@ -176,7 +187,7 @@ public class MovieServiceImpl implements MovieService {
         }
 
         // Cast 조회
-        List<Cast> castList = castMapper.getCastByMovieId(movieId);
+        List<Cast> castList = castMapper.getCastsByMovieId(movieId);
 
         // Crew 조회
         List<Crew> crewList = crewMapper.getCrewByMovieId(movieId);
@@ -185,11 +196,43 @@ public class MovieServiceImpl implements MovieService {
         return new MovieDetailResponse(true, "영화 조회 성공", movie, castList, crewList);
     }
 
-
     @Override
-    public List<Movie> searchMoviesTitle(String title) {
-        return movieMapper.searchMovieTitle("%" + title + "%");
+    public List<Movie> searchMovies(String query) {
+        // 검색어를 LIKE 조건에 맞게 변환
+        String searchQuery = "%" + query + "%";
+        return movieMapper.searchMovies(searchQuery);
     }
 
+    @Override
+    public List<Movie> getTopGenre(String genreIds) {
+        if (genreIds == null || genreIds.isEmpty()) {
+            return new ArrayList<>(); // 빈 리스트 반환
+        }
 
+        // 장르 리스트로 변환
+        List<String> searchGenres = Arrays.asList(genreIds.split(","));
+
+        // DB에서 모든 영화 가져오기
+        List<Movie> movies = movieMapper.topgenre(genreIds);
+
+        // 장르 필터링 후 인기순 정렬 (내림차순)
+        return movies.stream()
+                .filter(movie -> {
+                    String[] genres = Optional.ofNullable(movie.getGenreIds())
+                            .map(g -> g.split(","))
+                            .orElse(new String[0]);
+                    return Arrays.stream(genres).anyMatch(searchGenres::contains);
+                })
+                .sorted(Comparator.comparing(Movie::getPopularity).reversed())
+                .limit(10) // 상위 10개만
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Movie> getTopMovie() {
+        List<Movie> movies = movieMapper.getTopMovie();
+        return movies;
+    }
 }
+
+

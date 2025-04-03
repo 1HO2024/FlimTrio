@@ -1,13 +1,18 @@
 package com.example.flim.dto;
 
 import lombok.Data;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
+import javax.persistence.Column;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
 public class Movie {
     private int id;
+    @Column(name = "genre_ids")  // 🔹 컬럼명 명시
     private String genreIds;
     private String title;
     private String tagline;
@@ -15,6 +20,10 @@ public class Movie {
     private String posterPath;
     private double popularity;
     private String releaseDate;
+
+
+    private List<Cast> castList;
+
 
     private static final Map<Integer, String> genreMap = new HashMap<>();
 
@@ -37,30 +46,16 @@ public class Movie {
         genreMap.put(878, "공상과학");
         genreMap.put(10770, "TV영화");
         genreMap.put(53, "스릴러");
-        genreMap.put(10752, "저장");
+        genreMap.put(10752, "전쟁");
         genreMap.put(37, "서부");
     }
 
-    // 장르 ID 목록을 이름으로 변환
+    // 🔹 장르 ID 목록을 이름으로 변환하여 저장
     public void setGenreIds(String genreIds) {
-        if (genreIds != null && !genreIds.isEmpty()) {
-            String[] ids = genreIds.split(",");
-            List<String> genreNames = Arrays.stream(ids)
-                    .map(id -> {
-                        try {
-                            // id가 숫자인지 체크하고, 숫자가 아니면 null 처리
-                            int genreId = Integer.parseInt(id);
-                            return genreMap.get(genreId); // 유효한 genreId를 가져옴
-                        } catch (NumberFormatException e) {
-                            // 숫자가 아니면 null 반환
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull) // null을 필터링 (유효한 ID만 변환)
-                    .collect(Collectors.toList());
+        this.genreIds = genreIds; // 변환 없이 그대로 저장
+    }
 
-            // 장르 이름을 "장르1,장르2,장르3" 형태로 변환
-            this.genreIds = String.join(",", genreNames);
-        }
+    public String getGenreIds() {
+        return this.genreIds; // 그대로 반환
     }
 }

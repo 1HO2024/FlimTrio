@@ -13,7 +13,12 @@ public interface MovieService {
 
     List<Movie> getAllMovies();
 
-    List<Movie> searchMoviesTitle(String title);
 
     MovieDetailResponse getMovieWithCastAndCrewById(int id);
+
+    List<Movie> searchMovies(String query);
+
+    List<Movie> getTopGenre(String genreIds);
+
+    List<Movie> getTopMovie();
 }

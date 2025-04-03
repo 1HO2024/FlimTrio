@@ -15,27 +15,28 @@ public class RecommendServiceImpl implements RecommendService {
     @Autowired
     private MovieMapper movieMapper;
 
-    @Override
-    public List<Movie> getMovieByGenre(int id) {
-        Movie movies = movieMapper.getMovieById(id);
-//        영화 정보 가져오기
-        if (movies == null){
-            return new ArrayList<>();
-        }
+//    @Override
+//    public List<Movie> getMovieByGenre(int id) {
+//        Movie movies = movieMapper.getMovieById(id);
+////        영화 정보 가져오기
+//        if (movies == null){
+//            return new ArrayList<>();
+//        }
+//
+//        String genreIds = movies.getGenreIds();
+//
+//        return movieMapper.getMovieByGenre(genreIds);
+//    }
 
-        String genreIds = movies.getGenreIds();
+//    @Override
+//    public List<Movie> getMoviesBySearch(String title, String memberId) {
+//        movieMapper.saveUserSearchHistory(title,memberId);
+//        return movieMapper.searchMovieTitle("%" + title + "%");
+//    }
 
-        return movieMapper.getMovieByGenre(genreIds);
-    }
-
-    @Override
-    public List<Movie> getMoviesBySearch(String title, String memberId) {
-        movieMapper.saveUserSearchHistory(title,memberId);
-        return movieMapper.searchMovieTitle("%" + title + "%");
-    }
-
-    @Override
-    public List<Movie> getMovieByFavorite(String memberId) {
-        return List.of();
-    }
+//    @Override
+//    public List<Movie> getMovieByFavorite(String memberId) {
+//        return List.of();
+//    }
 }
+

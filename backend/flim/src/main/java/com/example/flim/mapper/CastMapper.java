@@ -16,8 +16,6 @@ public interface CastMapper {
     void insertCast(Cast cast);
 
 
-    @Select(
-            "SELECT * FROM cast"
-    )
-    List<Cast> getCastByMovieId(int movieId);
+    @Select("SELECT * FROM cast WHERE movie_id = #{movieId}")
+    List<Cast> getCastsByMovieId(int movieId);
 }
