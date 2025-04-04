@@ -9,7 +9,8 @@ import "../../style/common/Header.css";
 import { useState } from "react";
 import useSignin from "../../hooks/auth/useSignin";
 import SearchPassword from "../../components/auth/SearchPassword";
-
+import UserUpdate from "../auth/userUpdate";
+import useUpdate from "../../hooks/auth/useUpdate";
 Modal.setAppElement("#root");
 
 const Header = () => {
@@ -32,6 +33,8 @@ const Header = () => {
     openSearchPasswordModal,
     closeSearchPasswordModal,
   } = useSignin();
+
+  const { isUpdateModalOpen, openUpdateModal, closeUpdateModal } = useUpdate();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const handleDropdownEnter = () => {
@@ -85,6 +88,13 @@ const Header = () => {
                     >
                       로그아웃
                     </div>
+                    <div
+                      className="dropdownItem"
+                      onClick={openUpdateModal}
+                      style={{ cursor: "pointer" }}
+                    >
+                      회원정보수정
+                    </div>
                   </div>
                 )}
               </div>
@@ -134,6 +144,16 @@ const Header = () => {
         overlayClassName="modalOverlay"
       >
         <SearchPassword closeModal={closeSearchPasswordModal} />
+      </Modal>
+
+      <Modal
+        isOpen={isUpdateModalOpen}
+        onRequestClose={closeUpdateModal}
+        contentLabel="Update Modal"
+        className="modalContent updateModal"
+        overlayClassName="modalOverlay"
+      >
+        <UserUpdate closeModal={closeUpdateModal} />
       </Modal>
     </div>
   );

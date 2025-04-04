@@ -9,7 +9,7 @@ const useSignin = (closeModal) => {
   const [error, setError] = useState(null);
   const [isSearchPasswordModalOpen, setIsSearchPasswordModalOpen] = useState(false);
   const login = useAuthStore((state) => state.login);
-  
+
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 

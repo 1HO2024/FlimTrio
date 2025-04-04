@@ -107,6 +107,10 @@
   height: 400px;
 }
 
+.updateModal {
+  height: 400px;
+}
+
 .modalOverlay {
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;

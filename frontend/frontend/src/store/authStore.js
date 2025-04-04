@@ -15,6 +15,9 @@ const useAuthStore = create(
         localStorage.removeItem("token");
         localStorage.removeItem("auth-storage");
       },
+      updateUser: (updatedUser) => {
+        set({ user: updatedUser }); 
+      },
     }),
     {
       name: "auth-storage",
