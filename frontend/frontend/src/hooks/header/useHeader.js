@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
+import Swal from "sweetalert2";
 
 const useHeader = () => {
   const { isLoggedIn, user, logout } = useAuthStore();
@@ -12,6 +13,14 @@ const useHeader = () => {
   const handleLogout = () => {
     logout(); 
     navigate("/");
+
+      Swal.fire({
+        title: "로그아웃 성공!",
+        text: `로그아웃 되었습니다.`,
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "확인",
+      })
   };
 
   const handleIconClick = () => {

@@ -6,8 +6,6 @@ const signinApi = async (email, password) => {
       email,
       password,
     });
-
-    console.log(response.data, 'gdgd'); 
     localStorage.setItem("token", response.data.token)
     return response.data;
   } catch (error) {

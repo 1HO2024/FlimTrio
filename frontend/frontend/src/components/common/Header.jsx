@@ -7,7 +7,10 @@ import useHeader from "../../hooks/header/useHeader";
 import Search from "../search/Search";
 import "../../style/common/Header.css";
 import { useState } from "react";
-
+import useSignin from "../../hooks/auth/useSignin";
+import SearchPassword from "../../components/auth/SearchPassword";
+import UserUpdate from "../auth/userUpdate";
+import useUpdate from "../../hooks/auth/useUpdate";
 Modal.setAppElement("#root");
 
 const Header = () => {
@@ -24,6 +27,14 @@ const Header = () => {
     closeSignupModal,
     handleLogout,
   } = useHeader();
+
+  const {
+    isSearchPasswordModalOpen,
+    openSearchPasswordModal,
+    closeSearchPasswordModal,
+  } = useSignin();
+
+  const { isUpdateModalOpen, openUpdateModal, closeUpdateModal } = useUpdate();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const handleDropdownEnter = () => {
@@ -77,6 +88,13 @@ const Header = () => {
                     >
                       로그아웃
                     </div>
+                    <div
+                      className="dropdownItem"
+                      onClick={openUpdateModal}
+                      style={{ cursor: "pointer" }}
+                    >
+                      회원정보수정
+                    </div>
                   </div>
                 )}
               </div>
@@ -98,12 +116,13 @@ const Header = () => {
         isOpen={isLoginModalOpen}
         onRequestClose={closeLoginModal}
         contentLabel="Login Modal"
-        className="modalContent"
+        className="modalContent loginModal"
         overlayClassName="modalOverlay"
       >
         <Signin
           closeModal={closeLoginModal}
           openSignupModal={openSignupModal}
+          openSearchPasswordModal={openSearchPasswordModal}
         />
       </Modal>
 
@@ -115,6 +134,26 @@ const Header = () => {
         overlayClassName="modalOverlay"
       >
         <Signup closeModal={closeSignupModal} openLoginModal={openLoginModal} />
+      </Modal>
+
+      <Modal
+        isOpen={isSearchPasswordModalOpen}
+        onRequestClose={closeSearchPasswordModal}
+        contentLabel="PasswordSearch Modal"
+        className="modalContent searchPasswordModal"
+        overlayClassName="modalOverlay"
+      >
+        <SearchPassword closeModal={closeSearchPasswordModal} />
+      </Modal>
+
+      <Modal
+        isOpen={isUpdateModalOpen}
+        onRequestClose={closeUpdateModal}
+        contentLabel="Update Modal"
+        className="modalContent updateModal"
+        overlayClassName="modalOverlay"
+      >
+        <UserUpdate closeModal={closeUpdateModal} />
       </Modal>
     </div>
   );

@@ -8,7 +8,6 @@ const signupApi = async (nickname, email, password, phoneNumber) => {
       password,
       phoneNumber,
     });
-
     return response.data;
   } catch (error) {
     throw new Error("회원가입 실패. 다시 시도해 주세요.");
