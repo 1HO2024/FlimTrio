@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.flim.dto.ApiResponse;
-import com.example.flim.dto.SerachPassResponse;
+import com.example.flim.dto.SearchPassResponse;
 import com.example.flim.dto.SignResponse;
 import com.example.flim.dto.UserDTO;
 import com.example.flim.service.AuthService;
@@ -77,15 +77,15 @@ public class SignController {
 	   
 	  //비밀번호 찾기
 	   @PostMapping("/search-password")
-	   public ResponseEntity<SerachPassResponse> searchPassword(@RequestBody UserDTO userDTO){
+	   public ResponseEntity<SearchPassResponse> searchPassword(@RequestBody UserDTO userDTO){
 		   String tempPassword =  authService.searchPassword(userDTO); 
 		   
 		   if (tempPassword == null) {
 		        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-		                .body(new SerachPassResponse(false, "사용자를 찾을 수 없습니다."));
+		                .body(new SearchPassResponse(false, "사용자를 찾을 수 없습니다."));
 		    }
 
-		    return ResponseEntity.ok(new SerachPassResponse(true, "임시 비밀번호가 발급되었습니다.", tempPassword));
+		    return ResponseEntity.ok(new SearchPassResponse(true, "임시 비밀번호가 발급되었습니다. 로그인 후 꼭 변경해주세요", tempPassword));
 	   }
 	   
 	

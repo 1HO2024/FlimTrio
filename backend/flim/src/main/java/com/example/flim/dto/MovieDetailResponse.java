@@ -1,5 +1,6 @@
 package com.example.flim.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -14,4 +15,5 @@ public class MovieDetailResponse {
     private Movie movie;
     private List<Cast> cast;
     private List<Crew> crew;
+
 }

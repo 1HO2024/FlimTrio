@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.flim.mapper.MovieDetailLikeMapper">
+	
+    <select id="isLike">
+	    SELECT COUNT(*) FROM wish_movie
+	    WHERE user_idx = #{user_idx}
+		AND   ID       = #{ID}
+	</select>
+	
+	<insert id="writeLike">
+		INSERT INTO wish_movie(
+		  user_idx,
+	 	  ID
+	   )
+		VALUE(
+		  #{user_idx},
+		  #{ID}
+		)
+	</insert>
+	
+	<delete id="deleteLike">
+		DELETE FROM wish_movie
+		WHERE user_idx = #{user_idx}
+		AND   ID       = #{ID}
+	</delete>
+	
+</mapper>

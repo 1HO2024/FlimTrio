@@ -24,6 +24,7 @@ public interface MovieMapper {
     @Select("SELECT COUNT(*) FROM movie WHERE id = #{id}")
     int checkMovieExists(int id);
 
+
     @Select("SELECT id, title, overview, poster_path, popularity, release_date, genre_ids FROM movie")
     @Results(id = "MovieMap", value = {
             @Result(property = "id", column = "id"),
@@ -47,6 +48,7 @@ public interface MovieMapper {
             @Result(property = "releaseDate", column = "release_date"),
             @Result(property = "genreIds", column = "genre_ids")
     })
+
     Movie getMovieById(@Param("id") int id);
 
 

@@ -59,3 +59,4 @@ public class Movie {
         return this.genreIds; // 그대로 반환
     }
 }
+
