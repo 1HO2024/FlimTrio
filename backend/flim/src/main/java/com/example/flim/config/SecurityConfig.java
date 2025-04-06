@@ -50,6 +50,8 @@ public class SecurityConfig {
             .authorizeRequests()
                 .requestMatchers("/api/v1/signin", 
                 		"/api/v1/signup",
+                        "/api/v1/movies/topmovie",
+                        "/api/v1/movies/topgenre",
                 		"/api/v1/search-password",
                 		"/api/v1/movies",
                 		"/api/v1/fetch-movies",
