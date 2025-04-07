@@ -205,13 +205,14 @@ public class MovieServiceImpl implements MovieService {
         // 검색어를 LIKE 조건에 맞게 변환
         String searchQuery = "%" + query + "%";
 
-//        로그인 상태일 때만 검색어 저장
-        if(email != null && !email.isEmpty()){
-            searchMapper.insertSearchHistory(email,query);
+        // 로그인 상태 && 검색어가 비어있지 않을 때만 검색 기록 저장
+        if (email != null && !email.isEmpty() && query != null && !query.trim().isEmpty()) {
+            searchMapper.insertSearchHistory(email, query);
         }
 
         return movieMapper.searchMovies(searchQuery);
     }
+
 
     @Override
     public List<Movie> getTopGenre(String genreIds) {
