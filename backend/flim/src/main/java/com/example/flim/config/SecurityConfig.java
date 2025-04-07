@@ -53,6 +53,7 @@ public class SecurityConfig {
                         "/api/v1/movies/topmovie",
                         "/api/v1/movies/topgenre",
                 		"/api/v1/search-password",
+                        "/api/v1/movies/related",
                         "/api/v1/movies/search",
                 		"/api/v1/movies",
                 		"/api/v1/fetch-movies",

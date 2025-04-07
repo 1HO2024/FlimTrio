@@ -1,9 +1,6 @@
 package com.example.flim.service;
 
-import com.example.flim.dto.Cast;
-import com.example.flim.dto.Crew;
-import com.example.flim.dto.Movie;
-import com.example.flim.dto.MovieDetailResponse;
+import com.example.flim.dto.*;
 import com.example.flim.mapper.CastMapper;
 import com.example.flim.mapper.CrewMapper;
 import com.example.flim.mapper.MovieMapper;
@@ -33,14 +30,11 @@ public class MovieServiceImpl implements MovieService {
     private CrewMapper crewMapper; // 추가된 부분: CrewMapper
 
 
-
     @Autowired
     private RestTemplate restTemplate;
 
     private final String apiKey = "8cddecbeaaf1e1f845bf146c6f747ee1"; // API Key 입력
     private final String URL = "https://api.themoviedb.org/3/discover/movie?api_key=" + apiKey + "&language=ko-KR&page=";
-
-
 
 
     @Override
@@ -244,6 +238,17 @@ public class MovieServiceImpl implements MovieService {
         List<Movie> movies = movieMapper.getTopMovie();
         return movies;
     }
+
+
+    @Override
+    public RelatedSearchResponse getRelatedSearchResponse(String query) {
+        List<Movie> movies = movieMapper.findRelatedMoviesByTitle(query);
+        List<String> relatedQueries = movieMapper.findRelatedQueriesFromTitle(query);
+        return new RelatedSearchResponse(query, movies, relatedQueries);
+    }
 }
+
+
+
 
 

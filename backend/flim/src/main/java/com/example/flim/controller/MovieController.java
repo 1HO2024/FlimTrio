@@ -4,6 +4,7 @@ package com.example.flim.controller;
 import com.example.flim.dto.Movie;
 import com.example.flim.dto.MovieDetailResponse;
 import com.example.flim.dto.MovieResponse;
+import com.example.flim.dto.RelatedSearchResponse;
 import com.example.flim.service.MovieService;
 import com.example.flim.service.RecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,13 @@ public ResponseEntity<MovieResponse> searchMovies(@RequestParam("query") String 
         return ResponseEntity.ok(response);
     }
 
+
+//    연관검색어
+    @GetMapping("movies/related")
+    public ResponseEntity<MovieResponse> getRelatedSearches(@RequestParam String query) {
+        RelatedSearchResponse response = movieService.getRelatedSearchResponse(query);
+        return ResponseEntity.ok(new MovieResponse(true, "연관 검색어 및 영화 조회 성공", response));
+    }
 
 //    =================================== 알고리즘 ============================
 

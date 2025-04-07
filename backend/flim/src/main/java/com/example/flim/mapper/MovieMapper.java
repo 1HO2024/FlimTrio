@@ -88,6 +88,25 @@ public interface MovieMapper {
 
     @Select("SELECT * FROM movie ORDER BY popularity DESC LIMIT 10")
     List<Movie> getTopMovie();
+
+
+    @Select("""
+        SELECT *
+        FROM movie
+        WHERE title LIKE CONCAT('%', #{query}, '%')
+        ORDER BY popularity DESC
+        LIMIT 10
+    """)
+    List<Movie> findRelatedMoviesByTitle(@Param("query") String query);
+
+    @Select("""
+        SELECT title
+        FROM movie
+        WHERE title LIKE CONCAT('%', #{query}, '%')
+        ORDER BY popularity DESC
+        LIMIT 10
+    """)
+    List<String> findRelatedQueriesFromTitle(@Param("query") String query);
 }
 
 
