@@ -7,6 +7,7 @@ import com.example.flim.dto.MovieDetailResponse;
 import com.example.flim.mapper.CastMapper;
 import com.example.flim.mapper.CrewMapper;
 import com.example.flim.mapper.MovieMapper;
+import com.example.flim.mapper.SearchMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -22,6 +23,9 @@ import java.util.stream.Collectors;
 public class MovieServiceImpl implements MovieService {
     @Autowired
     private MovieMapper movieMapper;
+
+    @Autowired
+    private SearchMapper searchMapper;
 
     @Autowired
     private CastMapper castMapper; // 추가된 부분: CastMapper
@@ -197,9 +201,15 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> searchMovies(String query) {
+    public List<Movie> searchMovies(String query, String email) {
         // 검색어를 LIKE 조건에 맞게 변환
         String searchQuery = "%" + query + "%";
+
+//        로그인 상태일 때만 검색어 저장
+        if(email != null && !email.isEmpty()){
+            searchMapper.insertSearchHistory(email,query);
+        }
+
         return movieMapper.searchMovies(searchQuery);
     }
 
