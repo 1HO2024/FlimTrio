@@ -52,6 +52,7 @@ public interface MovieMapper {
     Movie getMovieById(@Param("id") int id);
 
 
+
     @Select("""
     SELECT m.*, c.id AS cast_id, c.name AS cast_name, c.character AS cast_character, 
            c.gender AS cast_gender, c.profile_path AS cast_profilePath
