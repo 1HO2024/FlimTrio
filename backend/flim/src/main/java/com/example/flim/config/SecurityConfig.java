@@ -54,7 +54,8 @@ public class SecurityConfig {
                 		"/api/v1/movies",
                 		"/api/v1/fetch-movies",
                 		"/api/v1/movie-detail/view-reviews",
-                		"/api/v1/similarity").permitAll()  // 로그인, 회원가입은 모두 허용
+                		"/api/v1/similarity",
+                		"/api/v1/al").permitAll()  // 로그인, 회원가입은 모두 허용
                 .anyRequest().authenticated()  // 그 외의 요청은 인증 필요
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, authService), UsernamePasswordAuthenticationFilter.class);  // 필터 추가

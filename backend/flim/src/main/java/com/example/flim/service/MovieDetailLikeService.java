@@ -17,18 +17,24 @@ public class MovieDetailLikeService {
 		  return  movieDetailLikeMapper.isLike(id, user_idx);
 	}	
 
-	public boolean writeLike(MovieDetailDTO moviedetaildto, int user_idx) {
-		int result = movieDetailLikeMapper.writeLike(moviedetaildto.getId(),
-                                                 user_idx);
-        return result > 0 ;
+	public String getLikeStatus(int id, int user_idx) {
+		String status = movieDetailLikeMapper.getLikeStatus(id, user_idx);
+		return status;
+	}
+	
+	public void writeLike(MovieDetailDTO moviedetaildto, int user_idx) {
+		movieDetailLikeMapper.writeLike(moviedetaildto.getId(),user_idx);
 	}
 
-
-	public boolean deleteLike(MovieDetailDTO moviedetaildto, int user_idx) {
-		int result = movieDetailLikeMapper.deleteLike(moviedetaildto.getId(),
-                                                 user_idx);
-		return result > 0 ;
+	public void deleteLike(MovieDetailDTO moviedetaildto, int user_idx) {
+		movieDetailLikeMapper.deleteLike(moviedetaildto.getId(),user_idx);
 	}
+
+	public void updateLike(MovieDetailDTO moviedetaildto, int user_idx) {
+		 movieDetailLikeMapper.updateLike(moviedetaildto.getId(),user_idx);
+		
+	}
+
 
 
 

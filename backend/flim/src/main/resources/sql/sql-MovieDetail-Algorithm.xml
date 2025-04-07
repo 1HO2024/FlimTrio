@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.flim.mapper.MovieDetailAlgorithmMapper">
+
+<select id="getMovieforAl">
+SELECT ID,title,overview,genre_ids 
+FROM movie
+WHERE overview != ''
+	AND(
+        JSON_CONTAINS((SELECT genre_ids FROM movie WHERE ID = #{ID}), genre_ids) 
+        OR
+        JSON_CONTAINS(genre_ids, (SELECT genre_ids FROM movie WHERE ID = #{ID}))
+    )
+    AND ID != #{ID} 
+    AND genre_ids != '[]'  
+</select>
+
+<select id="getUserOverview">
+SELECT ID,title,overview,genre_ids 
+FROM movie
+WHERE ID = #{ID}
+</select>
+
+
+</mapper>

@@ -45,16 +45,17 @@
     
 	<select id="searchLike" resultMap="likeResultMap">
 		SELECT
-	      w.user_idx,
-	      w.wish_idx, 
+	      l.user_idx,
+	      l.like_idx, 
 	      u.nickname,
-	      w.ID,
+	      l.ID,
 	      m.title,
 	      m.poster_path
-		FROM  wish_movie w
-		LEFT JOIN users u ON w.user_idx = u.user_idx
-		LEFT JOIN movie m ON w.ID = m.ID 
-		WHERE w.user_idx = #{user_idx}
+		FROM like_movie l
+		LEFT JOIN users u ON l.user_idx = u.user_idx
+		LEFT JOIN movie m ON l.ID = m.ID 
+		WHERE l.user_idx = #{user_idx}
+		AND   l.like_status = "Like"
 	</select>
 
 
