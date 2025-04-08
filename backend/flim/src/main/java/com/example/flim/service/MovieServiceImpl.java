@@ -179,21 +179,10 @@ public class MovieServiceImpl implements MovieService {
     }
 
 
-
-
-
-
     @Override
     public List<Movie> getAllMovies() {
         List<Movie> movies = movieMapper.getAllMovies();
-
-        // 🔹 디버깅 코드 추가 (DB에서 가져온 데이터 확인)
-        for (Movie movie : movies) {
-            System.out.println("🎬 영화 ID: " + movie.getId());
-            System.out.println("🎬 제목: " + movie.getTitle());
-            System.out.println("🎬 장르 원본 (DB에서 가져온 값): " + movie.getGenreIds());
-        }
-
+        attachKeywordsToMovies(movies);
         return movies;
     }
 
@@ -214,6 +203,7 @@ public class MovieServiceImpl implements MovieService {
         // Crew 조회
         List<Crew> crewList = crewMapper.getCrewByMovieId(movieId);
 
+
         // MovieDetailResponse 반환
         return new MovieDetailResponse(true, "영화 조회 성공", movie, castList, crewList);
     }
@@ -223,13 +213,41 @@ public class MovieServiceImpl implements MovieService {
         // 검색어를 LIKE 조건에 맞게 변환
         String searchQuery = "%" + query + "%";
 
+        Integer searchHistoryId = null;
+
         // 로그인 상태 && 검색어가 비어있지 않을 때만 검색 기록 저장
         if (userIdx > 0 && query != null && !query.trim().isEmpty()) {
             searchMapper.insertSearchHistory(userIdx, query);
+            searchHistoryId = searchMapper.getSearchHistory(userIdx);  // 그대로 사용
         }
 
-        return movieMapper.searchMovies(searchQuery);
+        List<Movie> movies = movieMapper.searchMovies(searchQuery);
+
+        for (Movie movie : movies) {
+            // 키워드 붙이기
+            List<String> keywords = keywordMapper.getKeywordsByMovieId(movie.getId());
+            movie.setKeywords(keywords);
+
+            // 검색 결과 저장 (중복 방지)
+            if (searchHistoryId != null) {
+                int count = searchMapper.countSearchResult(searchHistoryId, movie.getId());
+                if (count == 0) {
+                    String keywordString = String.join(",", keywords);
+                    searchMapper.insertSearchResult(
+                            searchHistoryId,
+                            movie.getId(),
+                            movie.getTitle(),
+                            movie.getGenreIds(),
+                            movie.getPosterPath(),
+                            keywordString
+                    );
+                }
+            }
+        }
+
+        return movies;
     }
+
 
     @Override
     public List<Movie> getTopGenre(String genreIds) {
@@ -240,11 +258,11 @@ public class MovieServiceImpl implements MovieService {
         // 장르 리스트로 변환
         List<String> searchGenres = Arrays.asList(genreIds.split(","));
 
-        // DB에서 모든 영화 가져오기
+        // DB에서 장르별 인기 영화 가져오기
         List<Movie> movies = movieMapper.topgenre(genreIds);
 
         // 장르 필터링 후 인기순 정렬 (내림차순)
-        return movies.stream()
+        List<Movie> filtered = movies.stream()
                 .filter(movie -> {
                     String[] genres = Optional.ofNullable(movie.getGenreIds())
                             .map(g -> g.split(","))
@@ -252,13 +270,17 @@ public class MovieServiceImpl implements MovieService {
                     return Arrays.stream(genres).anyMatch(searchGenres::contains);
                 })
                 .sorted(Comparator.comparing(Movie::getPopularity).reversed())
-                .limit(10) // 상위 10개만
+                .limit(10)
                 .collect(Collectors.toList());
+
+        attachKeywordsToMovies(filtered); // 🔥 키워드 붙이기
+        return filtered;
     }
 
     @Override
     public List<Movie> getTopMovie() {
         List<Movie> movies = movieMapper.getTopMovie();
+        attachKeywordsToMovies(movies);
         return movies;
     }
 
@@ -268,6 +290,13 @@ public class MovieServiceImpl implements MovieService {
         List<Movie> movies = movieMapper.findRelatedMoviesByTitle(query);
         List<String> relatedQueries = movieMapper.findRelatedQueriesFromTitle(query);
         return new RelatedSearchResponse(query, movies, relatedQueries);
+    }
+
+    private void attachKeywordsToMovies(List<Movie> movies) {
+        for (Movie movie : movies) {
+            List<String> keywords = keywordMapper.getKeywordsByMovieId(movie.getId());
+            movie.setKeywords(keywords);
+        }
     }
 }
 

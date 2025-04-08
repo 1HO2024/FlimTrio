@@ -23,7 +23,8 @@ public class Movie {
 
 
     private List<Cast> castList;
-    private List<Keyword> keywordList;
+    private List<String> keywords;
+
 
 
     private static final Map<Integer, String> genreMap = new HashMap<>();
