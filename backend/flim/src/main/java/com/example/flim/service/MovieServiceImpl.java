@@ -145,11 +145,18 @@ public class MovieServiceImpl implements MovieService {
                         JsonObject keywordData = gson.fromJson(keywordResponse, JsonObject.class);
                         JsonArray keywordArray = keywordData.getAsJsonArray("keywords");
 
+                        List<String> keywordList = new ArrayList<>();
                         for (JsonElement keywordElement : keywordArray) {
                             JsonObject keywordObj = keywordElement.getAsJsonObject();
                             String keyword = keywordObj.get("name").getAsString();
-                            keywordMapper.insertKeyword(movieId, keyword);
+                            keywordList.add(keyword);
                         }
+
+// 🔹 쉼표로 이어붙인 문자열로 변환
+                        String keywordString = String.join(",", keywordList);
+
+// 🔹 저장
+                        keywordMapper.insertKeyword(movieId, keywordString);
 
                         // Cast와 Crew 저장
                         for (Cast cast : castList) {
