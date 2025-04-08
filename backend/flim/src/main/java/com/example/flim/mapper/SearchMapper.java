@@ -10,8 +10,8 @@ import java.util.List;
 @Mapper
 public interface SearchMapper {
 
-    @Insert("INSERT INTO search_history (email, query,created_at) VALUES (#{email},#{query},NOW())")
-    void insertSearchHistory(@Param("email") String email, @Param("query") String query);
+    @Insert("INSERT INTO search_history (user_idx, query,created_at) VALUES (#{userIdx},#{query},NOW())")
+    void insertSearchHistory(@Param("userIdx") int userIdx, @Param("query") String query);
 
 
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SearchHistory {
 private String searchId;
-private String email;
+private int userIdx;
 private String query;
 private String createdAt;
 }

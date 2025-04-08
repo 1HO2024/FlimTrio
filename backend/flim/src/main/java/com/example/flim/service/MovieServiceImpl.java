@@ -1,10 +1,7 @@
 package com.example.flim.service;
 
 import com.example.flim.dto.*;
-import com.example.flim.mapper.CastMapper;
-import com.example.flim.mapper.CrewMapper;
-import com.example.flim.mapper.MovieMapper;
-import com.example.flim.mapper.SearchMapper;
+import com.example.flim.mapper.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -28,6 +25,8 @@ public class MovieServiceImpl implements MovieService {
     private CastMapper castMapper; // 추가된 부분: CastMapper
     @Autowired
     private CrewMapper crewMapper; // 추가된 부분: CrewMapper
+    @Autowired
+    private KeywordMapper keywordMapper;
 
 
     @Autowired
@@ -102,6 +101,7 @@ public class MovieServiceImpl implements MovieService {
                         // ✅ 중복되지 않은 경우에만 INSERT 실행
                         movieMapper.insertMovie(movie);
 
+//                        ================= 영화 cast, crew 정보 저장하기 =========================================
                         // Cast와 Crew 정보를 추가로 가져와서 저장
                         String movieCreditsUrl = "https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=" + apiKey;
                         String creditsResponse = restTemplate.getForObject(movieCreditsUrl, String.class);
@@ -138,6 +138,19 @@ public class MovieServiceImpl implements MovieService {
                             crewList.add(crew);
                         }
 
+//                        키워드 저장하기
+                        String keywordUrl = "https://api.themoviedb.org/3/movie/" + movieId + "/keywords?api_key=" + apiKey;
+                        String keywordResponse = restTemplate.getForObject(keywordUrl, String.class);
+
+                        JsonObject keywordData = gson.fromJson(keywordResponse, JsonObject.class);
+                        JsonArray keywordArray = keywordData.getAsJsonArray("keywords");
+
+                        for (JsonElement keywordElement : keywordArray) {
+                            JsonObject keywordObj = keywordElement.getAsJsonObject();
+                            String keyword = keywordObj.get("name").getAsString();
+                            keywordMapper.insertKeyword(movieId, keyword);
+                        }
+
                         // Cast와 Crew 저장
                         for (Cast cast : castList) {
                             castMapper.insertCast(cast);
@@ -157,6 +170,10 @@ public class MovieServiceImpl implements MovieService {
 
         }
     }
+
+
+
+
 
 
     @Override
@@ -195,18 +212,17 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> searchMovies(String query, String email) {
+    public List<Movie> searchMovies(String query, int userIdx) {
         // 검색어를 LIKE 조건에 맞게 변환
         String searchQuery = "%" + query + "%";
 
         // 로그인 상태 && 검색어가 비어있지 않을 때만 검색 기록 저장
-        if (email != null && !email.isEmpty() && query != null && !query.trim().isEmpty()) {
-            searchMapper.insertSearchHistory(email, query);
+        if (userIdx > 0 && query != null && !query.trim().isEmpty()) {
+            searchMapper.insertSearchHistory(userIdx, query);
         }
 
         return movieMapper.searchMovies(searchQuery);
     }
-
 
     @Override
     public List<Movie> getTopGenre(String genreIds) {

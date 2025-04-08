@@ -17,7 +17,7 @@ public interface MovieService {
 
     MovieDetailResponse getMovieWithCastAndCrewById(int id);
 
-    List<Movie> searchMovies(String query,String email);
+    List<Movie> searchMovies(String query,int userIdx);
 
     List<Movie> getTopGenre(String genreIds);
 

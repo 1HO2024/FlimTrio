@@ -55,10 +55,10 @@ public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable
 //    영화 제목, 배우 이름으로 조회
 @GetMapping("/movies/search")
 public ResponseEntity<MovieResponse> searchMovies(@RequestParam("query") String query,
-                                                  @RequestParam(value ="email", required = false) String email) {
-    System.out.println("검색 요청: query=" + query + ", email=" + email);  // 추가!
+                                                  @RequestParam(value ="userIdx", required = false) int userIdx) {
+    System.out.println("검색 요청: query=" + query + ", userIdx=" + userIdx);  // 추가!
 
-    List<Movie> movies = movieService.searchMovies(query, email);
+    List<Movie> movies = movieService.searchMovies(query, userIdx);
     MovieResponse response = new MovieResponse(true, "검색 성공", movies);
     return ResponseEntity.ok(response);
 }
