@@ -230,23 +230,25 @@ public class MovieServiceImpl implements MovieService {
 
             // 검색 결과 저장 (중복 방지)
             if (searchHistoryId != null) {
-                int count = searchMapper.countSearchResult(searchHistoryId, movie.getId());
-                if (count == 0) {
-                    String keywordString = String.join(",", keywords);
-                    searchMapper.insertSearchResult(
-                            searchHistoryId,
-                            movie.getId(),
-                            movie.getTitle(),
-                            movie.getGenreIds(),
-                            movie.getPosterPath(),
-                            keywordString
-                    );
+                // 🔍 query와 title 비교: 2글자 이상 일치하는 부분이 있는 경우만 저장
+                if (isTitleMatched(query, movie.getTitle())) {
+                    int count = searchMapper.countSearchResult(searchHistoryId, movie.getId());
+                    if (count == 0) {
+                        String keywordString = String.join(",", keywords);
+                        searchMapper.insertSearchResult(
+                                searchHistoryId,
+                                movie.getId(),
+                                movie.getTitle(),
+                                movie.getGenreIds(),
+                                movie.getPosterPath(),
+                                keywordString
+                        );
+                    }
                 }
             }
         }
-
-        return movies;
-    }
+            return movies;
+        }
 
 
     @Override
@@ -297,6 +299,18 @@ public class MovieServiceImpl implements MovieService {
             List<String> keywords = keywordMapper.getKeywordsByMovieId(movie.getId());
             movie.setKeywords(keywords);
         }
+    }
+    private boolean isTitleMatched(String query, String title) {
+        if (query == null || title == null) return false;
+
+        // 2글자 이상 겹치는 부분이 있는지 확인
+        for (int i = 0; i <= query.length() - 2; i++) {
+            String sub = query.substring(i, i + 2);
+            if (title.contains(sub)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
