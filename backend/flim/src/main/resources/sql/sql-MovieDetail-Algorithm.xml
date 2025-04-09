@@ -5,23 +5,50 @@
 <mapper namespace="com.example.flim.mapper.MovieDetailAlgorithmMapper">
 
 <select id="getMovieforAl">
-SELECT ID,title,overview,genre_ids 
-FROM movie
-WHERE overview != ''
-	AND(
-        JSON_CONTAINS((SELECT genre_ids FROM movie WHERE ID = #{ID}), genre_ids) 
-        OR
-        JSON_CONTAINS(genre_ids, (SELECT genre_ids FROM movie WHERE ID = #{ID}))
-    )
-    AND ID != #{ID} 
-    AND genre_ids != '[]'  
+	SELECT DISTINCT m.ID, m.title, m.overview, m.genre_ids, COALESCE(k.keyword, '') AS keyword
+	FROM movie m
+	LEFT JOIN keywords k ON m.ID = k.movie_id
+	CROSS JOIN (
+	    SELECT 1 AS n UNION ALL 
+	    SELECT 2 UNION ALL 
+	    SELECT 3 UNION ALL 
+	    SELECT 4 UNION ALL 
+	    SELECT 5 UNION ALL 
+	    SELECT 6 UNION ALL 
+	    SELECT 7
+	) n
+	WHERE m.overview != ''
+	  AND m.genre_ids != ''
+	  AND m.genre_ids IS NOT NULL
+	  AND m.ID != #{ID}
+	  AND k.keyword != ''
+	  AND EXISTS (
+	      SELECT 1
+	      FROM movie m2
+	      WHERE m2.ID = #{ID}
+	      AND FIND_IN_SET(TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(m2.genre_ids, ',', n.n), ',', -1)), m.genre_ids) > 0
+	  )
+	LIMIT 1000;
 </select>
 
 <select id="getUserOverview">
-SELECT ID,title,overview,genre_ids 
-FROM movie
-WHERE ID = #{ID}
+    SELECT m.ID, m.title, m.overview, m.genre_ids, COALESCE(k.keyword, '') AS keyword
+    FROM movie m
+    LEFT JOIN keywords k ON m.ID = k.movie_id
+    WHERE m.ID = #{ID}
 </select>
+
+
+<select id="getMovieInfo">
+	SELECT ID,title,poster_path
+	FROM movie
+	WHERE title = #{title}
+	LIMIT 1
+</select>
+
+
+
+
 
 
 </mapper>

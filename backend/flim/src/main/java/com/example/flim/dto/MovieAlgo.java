@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 public class MovieAlgo {
+	    @Column(name = "ID")
         private int id;	
         @Column(name = "title")
 	    private String title;
@@ -25,16 +26,22 @@ public class MovieAlgo {
         @Column(name = "genre_ids")
 	    private String genre_ids;
         
+        private String keyword;
+        
+        private String poster_path;
+        
         private Double Similarity;
         
 	    // 생성자
-        public MovieAlgo(Integer id, String title, String overview, String genre_ids) {
+        public MovieAlgo(int id, String title, String overview, String genre_ids, String keyword) {
             this.id = id;
             this.title = title;
             this.overview = overview;
             this.genre_ids = genre_ids;
+            this.keyword = keyword;
         }
-
+        
+   
 	    // Getter, Setter
 	    public String getTitle() {
 	        return title;
@@ -51,6 +58,7 @@ public class MovieAlgo {
 	    public void setOverview(String overview) {
 	        this.overview = overview;
 	    }
+
 
 
 	}
