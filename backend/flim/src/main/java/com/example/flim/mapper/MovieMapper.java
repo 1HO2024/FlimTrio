@@ -110,8 +110,5 @@ public interface MovieMapper {
 }
 
 
-//    List<Movie> getMovieByGenre(String genreIds);
-//
-//    Movie saveUserSearchHistory(String title, String memberId);
 
 

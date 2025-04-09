@@ -1,10 +1,7 @@
 package com.example.flim.controller;
 
 
-import com.example.flim.dto.Movie;
-import com.example.flim.dto.MovieDetailResponse;
-import com.example.flim.dto.MovieResponse;
-import com.example.flim.dto.RelatedSearchResponse;
+import com.example.flim.dto.*;
 import com.example.flim.service.MovieService;
 import com.example.flim.service.RecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +85,11 @@ public ResponseEntity<MovieResponse> searchMovies(@RequestParam("query") String 
     }
 
 //    =================================== 알고리즘 ============================
+    @GetMapping("/recommend/{userIdx}")
+    public ResponseEntity<MovieResponse> getRecommend(@PathVariable int userIdx) {
+        List<RecommendedMovieResponse> recommendMovie = recommendService.recommendMovie(userIdx);
+        return ResponseEntity.ok(new MovieResponse(true,"알고리즘",recommendMovie));
+    }
 
 
 

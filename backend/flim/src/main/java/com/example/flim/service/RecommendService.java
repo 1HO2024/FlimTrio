@@ -1,13 +1,10 @@
 package com.example.flim.service;
 
-import com.example.flim.dto.Movie;
+import com.example.flim.dto.RecommendedMovieResponse;
 
 import java.util.List;
 
 public interface RecommendService {
-//    List<Movie> getMovieByGenre(int id);
+    List<RecommendedMovieResponse> recommendMovie(int userIdx);
 
-//    List<Movie> getMoviesBySearch(String title, String memberId);
-
-//    List<Movie> getMovieByFavorite(String memberId);
 }
