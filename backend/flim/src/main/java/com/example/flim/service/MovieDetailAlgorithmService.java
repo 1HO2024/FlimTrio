@@ -1,4 +1,4 @@
-package com.example.flim.controller;
+package com.example.flim.service;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,24 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.example.flim.dto.MovieAlgo;
 import com.example.flim.dto.MovieAlgoResponse;
 import com.example.flim.dto.MovieDetailDTO;
 import com.example.flim.mapper.MovieDetailAlgorithmMapper;
 
-@RestController
-@RequestMapping("/api/v1")
-public class MovieDetailAlgorithmController {
+@Service
+public class MovieDetailAlgorithmService {
 
     @Autowired
     MovieDetailAlgorithmMapper movieDetailAlMapper;
 
-    @PostMapping("/al")
     public List<MovieAlgoResponse> algorithmshoot(@RequestBody MovieDetailDTO movieDetailDTO) {
 
     	//유저가 선택한 영화 데이터
@@ -122,3 +118,4 @@ public class MovieDetailAlgorithmController {
         return movieTitles;
     }
 }
+

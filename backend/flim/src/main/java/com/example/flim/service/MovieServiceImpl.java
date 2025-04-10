@@ -1,22 +1,37 @@
 package com.example.flim.service;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.example.flim.dto.Cast;
 import com.example.flim.dto.Crew;
 import com.example.flim.dto.Movie;
+import com.example.flim.dto.MovieAlgo;
+import com.example.flim.dto.MovieAlgoResponse;
+import com.example.flim.dto.MovieDetailDTO;
 import com.example.flim.dto.MovieDetailResponse;
 import com.example.flim.mapper.CastMapper;
 import com.example.flim.mapper.CrewMapper;
+import com.example.flim.mapper.MovieDetailAlgorithmMapper;
 import com.example.flim.mapper.MovieMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -25,15 +40,18 @@ public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private CastMapper castMapper; // 추가된 부분: CastMapper
+    
     @Autowired
     private CrewMapper crewMapper; // 추가된 부분: CrewMapper
-
+    
+    @Autowired
+    private MovieDetailAlgorithmService MovieDetailAlgorithmService;
 
 
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String apiKey = "8cddecbeaaf1e1f845bf146c6f747ee1"; // API Key 입력
+    private final String apiKey = ""; // API Key 입력
     private final String URL = "https://api.themoviedb.org/3/discover/movie?api_key=" + apiKey + "&language=ko-KR&page=";
 
 
@@ -185,15 +203,20 @@ public class MovieServiceImpl implements MovieService {
         if (movie == null) {
             return null;
         }
-
         // Cast 조회
         List<Cast> castList = castMapper.getCastsByMovieId(movieId);
-
         // Crew 조회
         List<Crew> crewList = crewMapper.getCrewByMovieId(movieId);
+        
+       //여기서 부터 추가 4.10
+        MovieDetailDTO dto = new MovieDetailDTO();
+        dto.setId(movieId); 
 
-        // MovieDetailResponse 반환
-        return new MovieDetailResponse(true, "영화 조회 성공", movie, castList, crewList);
+        List<MovieAlgoResponse> recommendedMovies = MovieDetailAlgorithmService.algorithmshoot(dto);
+        MovieDetailResponse response = new MovieDetailResponse(true, "영화 조회 성공", movie, castList, crewList, recommendedMovies);
+        response.setRecommendedMovies(recommendedMovies); 
+        
+        return new MovieDetailResponse(true, "영화 조회 성공", movie, castList, crewList,recommendedMovies);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.flim.controller;
 
 
 import com.example.flim.dto.Movie;
+import com.example.flim.dto.MovieAlgoResponse;
 import com.example.flim.dto.MovieDetailResponse;
 import com.example.flim.dto.MovieResponse;
 import com.example.flim.service.MovieService;
@@ -40,13 +41,13 @@ public class MovieController {
 
 //    특정 영화 조회
 @GetMapping("/movies/{id}")
-public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable int id) {
+public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable("id") int id) {
     MovieDetailResponse response = movieService.getMovieWithCastAndCrewById(id);
 
     if (response == null) {
         return ResponseEntity.notFound().build();
     }
-
+    //이다음에 진행
     return ResponseEntity.ok(response);
 }
 
