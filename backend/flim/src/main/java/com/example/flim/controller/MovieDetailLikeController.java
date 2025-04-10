@@ -70,9 +70,6 @@ public class MovieDetailLikeController {
 	    		movieDetailLikeService.updateLike(moviedetaildto, user_idx);	
 	    		return ResponseEntity.ok(new ApiResponse(true, "다시 좋아요 성공"));
 	    	}
-
-	    	movieDetailLikeService.deleteLike(moviedetaildto, user_idx);
-	        return ResponseEntity.ok(new ApiResponse(true, "좋아요 취소 성공"));
 	    } else {
 	        // 좋아요 x 
 	    	movieDetailLikeService.writeLike(moviedetaildto, user_idx);

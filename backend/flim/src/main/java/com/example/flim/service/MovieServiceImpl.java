@@ -244,11 +244,6 @@ public class MovieServiceImpl implements MovieService {
         
         return new MovieDetailResponse(true, "영화 조회 성공", movie, castList, crewList,recommendedMovies);
 
-
-
-        // MovieDetailResponse 반환
-        return new MovieDetailResponse(true, "영화 조회 성공", movie, castList, crewList);
-
     }
 
     @Override

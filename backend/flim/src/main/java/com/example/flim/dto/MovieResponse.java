@@ -12,7 +12,13 @@ public class MovieResponse {
         this.data = data;
     }
 
-    public boolean isSuccess() {
+    //4.10 일 추가 
+    public MovieResponse(boolean success, String message) {
+    	this.success = success;
+        this.message = message;
+	}
+
+	public boolean isSuccess() {
         return success;
     }
 
