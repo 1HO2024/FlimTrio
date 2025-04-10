@@ -2,17 +2,16 @@ package com.example.flim.controller;
 
 
 
-import com.example.flim.dto.Movie;
-import com.example.flim.dto.MovieAlgoResponse;
-import com.example.flim.dto.MovieDetailResponse;
-import com.example.flim.dto.MovieResponse;
-
 import com.example.flim.dto.*;
-
+import com.example.flim.service.AuthService;
 import com.example.flim.service.MovieService;
 import com.example.flim.service.RecommendService;
+import com.example.flim.util.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +26,15 @@ public class MovieController {
 
     @Autowired
     private RecommendService recommendService;
-
-
+    
+    //4.10 일 추가
+    @Autowired
+	private  AuthService authService;
+    
+	@Autowired
+	private JwtUtil jwtUtil;
+	  
+    
     @GetMapping("/fetch-movies")
     public String fetchMovies() {
         movieService.fetchMoviesFromApiAndSave();
@@ -55,12 +61,45 @@ public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable
     return ResponseEntity.ok(response);
 }
 
-// 로그인 한 email 이 있으면 검색기록 저장 , 아니면 저장안함
-//    영화 제목, 배우 이름으로 조회
+// 4.10 일 토큰로직 추가 
+//로그인 한 email 이 있으면 검색기록 저장 , 아니면 저장안함
+//영화 제목, 배우 이름으로 조회
 @GetMapping("/movies/search")
-public ResponseEntity<MovieResponse> searchMovies(@RequestParam("query") String query,
-                                                  @RequestParam(value ="userIdx", required = false) int userIdx) {
-    System.out.println("검색 요청: query=" + query + ", userIdx=" + userIdx);  // 추가!
+public ResponseEntity<MovieResponse> searchMovies(@RequestHeader("Authorization") String authorizationHeader,
+		                                          @RequestParam("query") String query) {
+
+	// 토큰 인증 후 예외처리 
+	int userIdx = 0;  // 기본값 0 
+    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+    	List<Movie> movies = movieService.searchMovies(query, userIdx);
+    	MovieResponse response = new MovieResponse(true, "검색 성공", movies);
+    	return ResponseEntity.ok(response);
+    }
+
+    String jwtToken = authorizationHeader.substring(7); 
+    if (jwtToken.isEmpty()) {
+    	List<Movie> movies = movieService.searchMovies(query, userIdx);
+    	MovieResponse response = new MovieResponse(true, "검색 성공", movies);
+    	return ResponseEntity.ok(response);
+    }
+
+    String email = jwtUtil.extractUsername(jwtToken);
+    if (email == null) {
+    	List<Movie> movies = movieService.searchMovies(query, userIdx);
+    	MovieResponse response = new MovieResponse(true, "검색 성공", movies);
+    	return ResponseEntity.ok(response);
+    }
+
+    UserDetails user = authService.loadUserByUsername(email);
+    if (user != null) {
+        userIdx = authService.getUserIdx(email);  // 인증 성공 시 userIdx 설정
+    } else {
+    	List<Movie> movies = movieService.searchMovies(query, userIdx);
+    	MovieResponse response = new MovieResponse(true, "검색 성공", movies);
+    	return ResponseEntity.ok(response);
+    }
+	
+	System.out.println("검색 요청: query=" + query + ", userIdx=" + userIdx);  // 추가!
 
     List<Movie> movies = movieService.searchMovies(query, userIdx);
     MovieResponse response = new MovieResponse(true, "검색 성공", movies);
@@ -92,20 +131,35 @@ public ResponseEntity<MovieResponse> searchMovies(@RequestParam("query") String 
     }
 
 //    =================================== 알고리즘 ============================
-    @GetMapping("/recommend/{userIdx}")
-    public ResponseEntity<MovieResponse> getRecommend(@PathVariable int userIdx) {
+    @GetMapping("/recommend")
+    public ResponseEntity<MovieResponse> getRecommend(@RequestHeader("Authorization") String authorizationHeader) {
+    	 	
+    	    // 토큰 인증 과정 
+    	    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+		        return ResponseEntity.badRequest().body(new MovieResponse(false, "비로그인/로그인 실패 알고리즘 없음"));
+		    }
+		    String jwtToken = authorizationHeader.substring(7); 
+		    if (jwtToken.isEmpty()) {
+		        return ResponseEntity.badRequest().body(new MovieResponse(false, "비로그인/로그인 실패 알고리즘 없음"));
+		    }
+		    String email = jwtUtil.extractUsername(jwtToken);
+		    if (email == null) {
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MovieResponse(false, "비로그인/로그인 실패 알고리즘 없음"));
+		    }
+		    UserDetails user = authService.loadUserByUsername(email);
+		    if (user == null) {
+		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MovieResponse(false, "비로그인/로그인 실패 알고리즘 없음"));
+		    }
+		    int userIdx = authService.getUserIdx(email);
+		    
+		    //확인용 System.out.println(email);
+		    
         List<RecommendedMovieResponse> recommendMovie = recommendService.recommendMovie(userIdx);
         return ResponseEntity.ok(new MovieResponse(true,"알고리즘",recommendMovie));
-    }
-
-
-
-
-
-
-
+      }
 
     }
+
 
 
 
