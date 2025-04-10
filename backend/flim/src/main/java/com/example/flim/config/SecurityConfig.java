@@ -50,8 +50,13 @@ public class SecurityConfig {
             .authorizeRequests()
                 .requestMatchers("/api/v1/signin", 
                 		"/api/v1/signup",
+                        "/api/v1/movies/topmovie",
+                        "/api/v1/recommend/**",
+                        "/api/v1/movies/topgenre",
                 		"/api/v1/search-password",
-                		"/api/v1/movies",
+                        "/api/v1/movies/related",
+                        "/api/v1/movies/search",
+                		"/api/v1/movies/**",
                 		"/api/v1/fetch-movies",
                 		"/api/v1/movie-detail/view-reviews",
                 		"/api/v1/similarity").permitAll()  // 로그인, 회원가입은 모두 허용

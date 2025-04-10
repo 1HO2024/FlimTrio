@@ -1,9 +1,7 @@
 package com.example.flim.controller;
 
 
-import com.example.flim.dto.Movie;
-import com.example.flim.dto.MovieDetailResponse;
-import com.example.flim.dto.MovieResponse;
+import com.example.flim.dto.*;
 import com.example.flim.service.MovieService;
 import com.example.flim.service.RecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +38,7 @@ public class MovieController {
 
 //    특정 영화 조회
 @GetMapping("/movies/{id}")
-public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable int id) {
+public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable("id") int id) {
     MovieDetailResponse response = movieService.getMovieWithCastAndCrewById(id);
 
     if (response == null) {
@@ -50,13 +48,17 @@ public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable
     return ResponseEntity.ok(response);
 }
 
+// 로그인 한 email 이 있으면 검색기록 저장 , 아니면 저장안함
 //    영화 제목, 배우 이름으로 조회
-    @GetMapping("/movies/search")
-    public ResponseEntity<MovieResponse> searchMovies(@RequestParam("query") String query) {
-        List<Movie> movies = movieService.searchMovies(query);
-        MovieResponse response = new MovieResponse(true,"영화 조회 성공",movies);
-        return ResponseEntity.ok(response);
-    }
+@GetMapping("/movies/search")
+public ResponseEntity<MovieResponse> searchMovies(@RequestParam("query") String query,
+                                                  @RequestParam(value ="userIdx", required = false) int userIdx) {
+    System.out.println("검색 요청: query=" + query + ", userIdx=" + userIdx);  // 추가!
+
+    List<Movie> movies = movieService.searchMovies(query, userIdx);
+    MovieResponse response = new MovieResponse(true, "검색 성공", movies);
+    return ResponseEntity.ok(response);
+}
 
 //    장르별 인기 영화 조회
     @GetMapping("movies/topgenre")
@@ -75,27 +77,20 @@ public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable
     }
 
 
+//    연관검색어
+    @GetMapping("movies/related")
+    public ResponseEntity<MovieResponse> getRelatedSearches(@RequestParam String query) {
+        RelatedSearchResponse response = movieService.getRelatedSearchResponse(query);
+        return ResponseEntity.ok(new MovieResponse(true, "연관 검색어 및 영화 조회 성공", response));
+    }
+
 //    =================================== 알고리즘 ============================
-//    사용자가 특정 영화를 클릭하면 해당 영화의 장르를 기반으로 추천
-//    @GetMapping("/genre/{id}")
-//    public MovieResponse getMovieByGenre(@PathVariable int id) {
-//        List<Movie> movies = recommendService.getMovieByGenre(id);
-//        return new MovieResponse(true,"장르 기반 영화 추천", movies);
-//    }
-//
-////    사용자가 검색한 영화 제목을 기반으로 추천
-//    @GetMapping("/search")
-//    public MovieResponse getMovieBySearch(@RequestParam("title") String title,@RequestParam("memberId")String memberId) {
-//        List<Movie> movies = recommendService.getMoviesBySearch(title, memberId);
-//        return new MovieResponse(true, "검색어 기반 영화 추천", movies);
-//    }
-//
-////    로그인한 사용자의 최근 검색기록과 선호 장르르 반영한 맞춤형 추천
-//    @GetMapping("/favorite")
-//    public MovieResponse getMovieByFavorite(@RequestParam String memberId) {
-//        List<Movie> movies = recommendService.getMovieByFavorite(memberId);
-//        return new MovieResponse(true,"사용자 맞춤 추천 목록",movies);
-//    }
+    @GetMapping("/recommend/{userIdx}")
+    public ResponseEntity<MovieResponse> getRecommend(@PathVariable int userIdx) {
+        List<RecommendedMovieResponse> recommendMovie = recommendService.recommendMovie(userIdx);
+        return ResponseEntity.ok(new MovieResponse(true,"알고리즘",recommendMovie));
+    }
+
 
 
 

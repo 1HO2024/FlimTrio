@@ -1,42 +1,64 @@
 package com.example.flim.service;
 
-import com.example.flim.dto.Movie;
-import com.example.flim.mapper.MovieMapper;
-import org.checkerframework.checker.units.qual.A;
+import com.example.flim.dto.RecommendedMovieResponse;
+import com.example.flim.dto.SearchResult;
+import com.example.flim.mapper.RecommendMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RecommendServiceImpl implements RecommendService {
 
     @Autowired
-    private MovieMapper movieMapper;
+    private RecommendMapper recommendMapper;
 
-//    @Override
-//    public List<Movie> getMovieByGenre(int id) {
-//        Movie movies = movieMapper.getMovieById(id);
-////        영화 정보 가져오기
-//        if (movies == null){
-//            return new ArrayList<>();
-//        }
-//
-//        String genreIds = movies.getGenreIds();
-//
-//        return movieMapper.getMovieByGenre(genreIds);
-//    }
+    @Override
+    public List<RecommendedMovieResponse> recommendMovie(int userIdx) {
+        List<SearchResult> recentResult = recommendMapper.recentRecommend(userIdx, 2);
+        List<SearchResult> pastResult = recommendMapper.pastRecommend(userIdx, 2);
 
-//    @Override
-//    public List<Movie> getMoviesBySearch(String title, String memberId) {
-//        movieMapper.saveUserSearchHistory(title,memberId);
-//        return movieMapper.searchMovieTitle("%" + title + "%");
-//    }
 
-//    @Override
-//    public List<Movie> getMovieByFavorite(String memberId) {
-//        return List.of();
-//    }
+        Map<String, Integer> genreScore = new HashMap<>();
+        Map<String, Integer> keywordScore = new HashMap<>();
+
+        applyScores(recentResult, genreScore, keywordScore, 10); // 최근 검색 가중치
+        applyScores(pastResult, genreScore, keywordScore, 1);   // 과거 검색 가중치
+
+        List<String> topGenre = getTopKeys(genreScore,10 );
+        List<String> topKeyword = getTopKeys(keywordScore, 3);
+
+        System.out.println("Top Genres: " + topGenre);
+        System.out.println("Top Keywords: " + topKeyword);
+        System.out.println("Recommended: " + recommendMapper.recommendMovie(topGenre, topKeyword));
+
+        return recommendMapper.recommendMovie(topGenre, topKeyword);
+
+    }
+
+    private void applyScores(List<SearchResult> results, Map<String, Integer> genreScore, Map<String, Integer> keywordScore, int weight) {
+        for (SearchResult result : results) {
+            if (result.getGenreIds() != null) {
+                for (String genre : result.getGenreIds().split(",")) {
+                    genreScore.put(genre, genreScore.getOrDefault(genre, 0) + weight);
+                }
+            }
+
+            if (result.getKeyword() != null) {
+                for (String keyword : result.getKeyword().split(",")) {
+                    keywordScore.put(keyword, keywordScore.getOrDefault(keyword, 0) + weight);
+                }
+            }
+        }
+    }
+
+    private List<String> getTopKeys(Map<String, Integer> map, int limit) {
+        return map.entrySet().stream()
+                .sorted((a, b) -> b.getValue() - a.getValue())
+                .limit(limit)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
 }
-

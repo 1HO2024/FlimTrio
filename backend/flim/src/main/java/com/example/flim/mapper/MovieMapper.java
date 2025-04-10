@@ -52,6 +52,7 @@ public interface MovieMapper {
     Movie getMovieById(@Param("id") int id);
 
 
+
     @Select("""
     SELECT m.*, c.id AS cast_id, c.name AS cast_name, c.character AS cast_character, 
            c.gender AS cast_gender, c.profile_path AS cast_profilePath
@@ -87,11 +88,27 @@ public interface MovieMapper {
 
     @Select("SELECT * FROM movie ORDER BY popularity DESC LIMIT 10")
     List<Movie> getTopMovie();
+
+
+    @Select("""
+        SELECT *
+        FROM movie
+        WHERE title LIKE CONCAT('%', #{query}, '%')
+        ORDER BY popularity DESC
+        LIMIT 10
+    """)
+    List<Movie> findRelatedMoviesByTitle(@Param("query") String query);
+
+    @Select("""
+        SELECT title
+        FROM movie
+        WHERE title LIKE CONCAT('%', #{query}, '%')
+        ORDER BY popularity DESC
+        LIMIT 10
+    """)
+    List<String> findRelatedQueriesFromTitle(@Param("query") String query);
 }
 
 
-//    List<Movie> getMovieByGenre(String genreIds);
-//
-//    Movie saveUserSearchHistory(String title, String memberId);
 
 
