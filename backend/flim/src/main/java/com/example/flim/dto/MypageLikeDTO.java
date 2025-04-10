@@ -6,7 +6,7 @@ import lombok.Data;
 public class MypageLikeDTO {
 	private int     user_idx;
 	private String  nickname;
-	private int     wish_idx;
+	private int     like_idx;
     private int     ID;
     private String  title;
     private String  poster_path;

@@ -15,5 +15,5 @@ public class MovieDetailResponse {
     private Movie movie;
     private List<Cast> cast;
     private List<Crew> crew;
-
+    private List<MovieAlgoResponse> recommendedMovies;         //추천 영화 목록들
 }

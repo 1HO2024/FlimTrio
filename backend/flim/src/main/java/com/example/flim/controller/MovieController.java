@@ -1,7 +1,14 @@
 package com.example.flim.controller;
 
 
+
+import com.example.flim.dto.Movie;
+import com.example.flim.dto.MovieAlgoResponse;
+import com.example.flim.dto.MovieDetailResponse;
+import com.example.flim.dto.MovieResponse;
+
 import com.example.flim.dto.*;
+
 import com.example.flim.service.MovieService;
 import com.example.flim.service.RecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +51,7 @@ public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable
     if (response == null) {
         return ResponseEntity.notFound().build();
     }
-
+    //이다음에 진행
     return ResponseEntity.ok(response);
 }
 

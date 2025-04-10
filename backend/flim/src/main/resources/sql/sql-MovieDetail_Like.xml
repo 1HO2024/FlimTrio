@@ -5,26 +5,44 @@
 <mapper namespace="com.example.flim.mapper.MovieDetailLikeMapper">
 	
     <select id="isLike">
-	    SELECT COUNT(*) FROM wish_movie
+	    SELECT COUNT(*)
+	    FROM like_movie
+	    WHERE user_idx = #{user_idx}
+		AND   ID       = #{ID}
+	</select>
+	
+	<select id="getLikeStatus">
+	    SELECT like_status
+	    FROM like_movie
 	    WHERE user_idx = #{user_idx}
 		AND   ID       = #{ID}
 	</select>
 	
 	<insert id="writeLike">
-		INSERT INTO wish_movie(
+		INSERT INTO like_movie(
 		  user_idx,
-	 	  ID
+	 	  ID,
+	 	  like_status
 	   )
 		VALUE(
 		  #{user_idx},
-		  #{ID}
+		  #{ID},
+		  "Like"
 		)
 	</insert>
 	
-	<delete id="deleteLike">
-		DELETE FROM wish_movie
+	<update id="deleteLike">
+		UPDATE like_movie
+		SET like_status = "UnLike"
 		WHERE user_idx = #{user_idx}
 		AND   ID       = #{ID}
-	</delete>
+	</update>
+
+	<update id="updateLike">
+		UPDATE like_movie
+		SET like_status = "Like"
+		WHERE user_idx = #{user_idx}
+		AND   ID       = #{ID}
+	</update>
 	
 </mapper>

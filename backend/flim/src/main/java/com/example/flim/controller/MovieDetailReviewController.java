@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.flim.dto.MovieDetailDTO;
-import com.example.flim.dto.MovieDetailResponse;
+import com.example.flim.dto.ApiResponse;
 import com.example.flim.dto.ReviewResponse;
 import com.example.flim.service.AuthService;
 import com.example.flim.service.MovieDetailReviewService;
@@ -51,7 +51,8 @@ public class MovieDetailReviewController {
 	  //리뷰 작성
 	  @PostMapping("/write-review")
 	  public ResponseEntity<ApiResponse> writeReviews(@RequestHeader("Authorization") String authorizationHeader,
-													  @RequestBody MovieDetailDTO moviedetaildto) {
+													                          @RequestBody MovieDetailDTO moviedetaildto) {
+
 		    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 		        return ResponseEntity.badRequest().body(new ApiResponse(false, "유효하지 않은 토큰입니다."));
 		    }
