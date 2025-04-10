@@ -56,7 +56,7 @@ public class SecurityConfig {
                 		"/api/v1/search-password",
                         "/api/v1/movies/related",
                         "/api/v1/movies/search",
-                		"/api/v1/movies",
+                		"/api/v1/movies/**",
                 		"/api/v1/fetch-movies",
                 		"/api/v1/movie-detail/view-reviews",
                 		"/api/v1/similarity").permitAll()  // 로그인, 회원가입은 모두 허용

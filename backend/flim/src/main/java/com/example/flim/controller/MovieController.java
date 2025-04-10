@@ -38,7 +38,7 @@ public class MovieController {
 
 //    특정 영화 조회
 @GetMapping("/movies/{id}")
-public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable int id) {
+public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable("id") int id) {
     MovieDetailResponse response = movieService.getMovieWithCastAndCrewById(id);
 
     if (response == null) {

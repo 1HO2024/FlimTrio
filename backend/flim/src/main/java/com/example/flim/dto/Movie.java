@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @Data
 public class Movie {
     private int id;
-    @Column(name = "genre_ids")  // 🔹 컬럼명 명시
     private String genreIds;
     private String title;
     private String tagline;
