@@ -2,6 +2,7 @@ package com.example.flim.controller;
 
 import java.util.List;
 
+import com.example.flim.dto.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,8 @@ public class MovieDetailReviewController {
 	  //리뷰 작성
 	  @PostMapping("/write-review")
 	  public ResponseEntity<ApiResponse> writeReviews(@RequestHeader("Authorization") String authorizationHeader,
-			                                                  @RequestBody MovieDetailDTO moviedetaildto) {
+													                          @RequestBody MovieDetailDTO moviedetaildto) {
+
 		    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 		        return ResponseEntity.badRequest().body(new ApiResponse(false, "유효하지 않은 토큰입니다."));
 		    }

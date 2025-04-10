@@ -1,5 +1,6 @@
 package com.example.flim.controller;
 
+import com.example.flim.dto.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +60,7 @@ public class MovieDetailLikeController {
 	    boolean isLiked = movieDetailLikeService.isLiked(moviedetaildto.getId(), user_idx);
 	    if (isLiked) {
 	        // 좋아요 o
+
 	    	String likestatus = movieDetailLikeService.getLikeStatus(moviedetaildto.getId(), user_idx);
 	    	System.out.println(likestatus);
 	    	if(likestatus.equals("Like")) {
@@ -68,7 +70,9 @@ public class MovieDetailLikeController {
 	    		movieDetailLikeService.updateLike(moviedetaildto, user_idx);	
 	    		return ResponseEntity.ok(new ApiResponse(true, "다시 좋아요 성공"));
 	    	}
-	    	
+
+	    	movieDetailLikeService.deleteLike(moviedetaildto, user_idx);
+	        return ResponseEntity.ok(new ApiResponse(true, "좋아요 취소 성공"));
 	    } else {
 	        // 좋아요 x 
 	    	movieDetailLikeService.writeLike(moviedetaildto, user_idx);

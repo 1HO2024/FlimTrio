@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @Data
 public class Movie {
     private int id;
-    @Column(name = "genre_ids")  // 🔹 컬럼명 명시
     private String genreIds;
     private String title;
     private String tagline;
@@ -23,6 +22,8 @@ public class Movie {
 
 
     private List<Cast> castList;
+    private List<String> keywords;
+
 
 
     private static final Map<Integer, String> genreMap = new HashMap<>();
@@ -50,13 +51,39 @@ public class Movie {
         genreMap.put(37, "서부");
     }
 
-    // 🔹 장르 ID 목록을 이름으로 변환하여 저장
     public void setGenreIds(String genreIds) {
-        this.genreIds = genreIds; // 변환 없이 그대로 저장
-    }
+        if (genreIds != null && genreIds.startsWith("[") && genreIds.endsWith("]")) {
+            try {
+                Gson gson = new Gson();
+                List<Integer> idList = gson.fromJson(genreIds, new TypeToken<List<Integer>>() {
+                }.getType());
+                this.genreIds = idList.stream()
+                        .map(id -> genreMap.getOrDefault(id, "알 수 없음"))
+                        .collect(Collectors.joining(", "));
+                return;
+            } catch (JsonSyntaxException e) {
+                this.genreIds = genreIds;
+                return;
+            }
+        }
 
-    public String getGenreIds() {
-        return this.genreIds; // 그대로 반환
+        // 숫자 ID 문자열 (예: "28,12")도 처리
+        if (genreIds != null && genreIds.matches("^(\\d+,?)+$")) {
+            this.genreIds = Arrays.stream(genreIds.split(","))
+                    .map(String::trim)
+                    .map(idStr -> {
+                        try {
+                            int id = Integer.parseInt(idStr);
+                            return genreMap.getOrDefault(id, "알 수 없음");
+                        } catch (NumberFormatException e) {
+                            return "알 수 없음";
+                        }
+                    })
+                    .collect(Collectors.joining(", "));
+            return;
+        }
+
+        // 그 외는 그냥 저장
+        this.genreIds = genreIds;
     }
 }
-

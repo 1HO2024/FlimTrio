@@ -1,5 +1,6 @@
 package com.example.flim.service;
 
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -28,6 +29,10 @@ import com.example.flim.mapper.CastMapper;
 import com.example.flim.mapper.CrewMapper;
 import com.example.flim.mapper.MovieDetailAlgorithmMapper;
 import com.example.flim.mapper.MovieMapper;
+
+import com.example.flim.dto.*;
+import com.example.flim.mapper.*;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -39,13 +44,21 @@ public class MovieServiceImpl implements MovieService {
     private MovieMapper movieMapper;
 
     @Autowired
+    private SearchMapper searchMapper;
+
+    @Autowired
     private CastMapper castMapper; // 추가된 부분: CastMapper
     
     @Autowired
     private CrewMapper crewMapper; // 추가된 부분: CrewMapper
+
     
     @Autowired
     private MovieDetailAlgorithmService MovieDetailAlgorithmService;
+
+    @Autowired
+    private KeywordMapper keywordMapper;
+
 
 
     @Autowired
@@ -53,8 +66,6 @@ public class MovieServiceImpl implements MovieService {
 
     private final String apiKey = ""; // API Key 입력
     private final String URL = "https://api.themoviedb.org/3/discover/movie?api_key=" + apiKey + "&language=ko-KR&page=";
-
-
 
 
     @Override
@@ -122,6 +133,7 @@ public class MovieServiceImpl implements MovieService {
                         // ✅ 중복되지 않은 경우에만 INSERT 실행
                         movieMapper.insertMovie(movie);
 
+//                        ================= 영화 cast, crew 정보 저장하기 =========================================
                         // Cast와 Crew 정보를 추가로 가져와서 저장
                         String movieCreditsUrl = "https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=" + apiKey;
                         String creditsResponse = restTemplate.getForObject(movieCreditsUrl, String.class);
@@ -158,6 +170,26 @@ public class MovieServiceImpl implements MovieService {
                             crewList.add(crew);
                         }
 
+//                        키워드 저장하기
+                        String keywordUrl = "https://api.themoviedb.org/3/movie/" + movieId + "/keywords?api_key=" + apiKey;
+                        String keywordResponse = restTemplate.getForObject(keywordUrl, String.class);
+
+                        JsonObject keywordData = gson.fromJson(keywordResponse, JsonObject.class);
+                        JsonArray keywordArray = keywordData.getAsJsonArray("keywords");
+
+                        List<String> keywordList = new ArrayList<>();
+                        for (JsonElement keywordElement : keywordArray) {
+                            JsonObject keywordObj = keywordElement.getAsJsonObject();
+                            String keyword = keywordObj.get("name").getAsString();
+                            keywordList.add(keyword);
+                        }
+
+// 🔹 쉼표로 이어붙인 문자열로 변환
+                        String keywordString = String.join(",", keywordList);
+
+// 🔹 저장
+                        keywordMapper.insertKeyword(movieId, keywordString);
+
                         // Cast와 Crew 저장
                         for (Cast cast : castList) {
                             castMapper.insertCast(cast);
@@ -182,14 +214,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> getAllMovies() {
         List<Movie> movies = movieMapper.getAllMovies();
-
-        // 🔹 디버깅 코드 추가 (DB에서 가져온 데이터 확인)
-        for (Movie movie : movies) {
-            System.out.println("🎬 영화 ID: " + movie.getId());
-            System.out.println("🎬 제목: " + movie.getTitle());
-            System.out.println("🎬 장르 원본 (DB에서 가져온 값): " + movie.getGenreIds());
-        }
-
+        attachKeywordsToMovies(movies);
         return movies;
     }
 
@@ -207,6 +232,7 @@ public class MovieServiceImpl implements MovieService {
         List<Cast> castList = castMapper.getCastsByMovieId(movieId);
         // Crew 조회
         List<Crew> crewList = crewMapper.getCrewByMovieId(movieId);
+
         
        //여기서 부터 추가 4.10
         MovieDetailDTO dto = new MovieDetailDTO();
@@ -217,14 +243,56 @@ public class MovieServiceImpl implements MovieService {
         response.setRecommendedMovies(recommendedMovies); 
         
         return new MovieDetailResponse(true, "영화 조회 성공", movie, castList, crewList,recommendedMovies);
+
+
+
+        // MovieDetailResponse 반환
+        return new MovieDetailResponse(true, "영화 조회 성공", movie, castList, crewList);
+
     }
 
     @Override
-    public List<Movie> searchMovies(String query) {
+    public List<Movie> searchMovies(String query, int userIdx) {
         // 검색어를 LIKE 조건에 맞게 변환
         String searchQuery = "%" + query + "%";
-        return movieMapper.searchMovies(searchQuery);
-    }
+
+        Integer searchHistoryId = null;
+
+        // 로그인 상태 && 검색어가 비어있지 않을 때만 검색 기록 저장
+        if (userIdx > 0 && query != null && !query.trim().isEmpty()) {
+            searchMapper.insertSearchHistory(userIdx, query);
+            searchHistoryId = searchMapper.getSearchHistory(userIdx);  // 그대로 사용
+        }
+
+        List<Movie> movies = movieMapper.searchMovies(searchQuery);
+
+        for (Movie movie : movies) {
+            // 키워드 붙이기
+            List<String> keywords = keywordMapper.getKeywordsByMovieId(movie.getId());
+            movie.setKeywords(keywords);
+
+            // 검색 결과 저장 (중복 방지)
+            if (searchHistoryId != null) {
+                // 🔍 query와 title 비교: 2글자 이상 일치하는 부분이 있는 경우만 저장
+                if (isTitleMatched(query, movie.getTitle())) {
+                    int count = searchMapper.countSearchResult(searchHistoryId, movie.getId());
+                    if (count == 0) {
+                        String keywordString = String.join(",", keywords);
+                        searchMapper.insertSearchResult(
+                                searchHistoryId,
+                                movie.getId(),
+                                movie.getTitle(),
+                                movie.getGenreIds(),
+                                movie.getPosterPath(),
+                                keywordString
+                        );
+                    }
+                }
+            }
+        }
+            return movies;
+        }
+
 
     @Override
     public List<Movie> getTopGenre(String genreIds) {
@@ -235,11 +303,11 @@ public class MovieServiceImpl implements MovieService {
         // 장르 리스트로 변환
         List<String> searchGenres = Arrays.asList(genreIds.split(","));
 
-        // DB에서 모든 영화 가져오기
+        // DB에서 장르별 인기 영화 가져오기
         List<Movie> movies = movieMapper.topgenre(genreIds);
 
         // 장르 필터링 후 인기순 정렬 (내림차순)
-        return movies.stream()
+        List<Movie> filtered = movies.stream()
                 .filter(movie -> {
                     String[] genres = Optional.ofNullable(movie.getGenreIds())
                             .map(g -> g.split(","))
@@ -247,15 +315,49 @@ public class MovieServiceImpl implements MovieService {
                     return Arrays.stream(genres).anyMatch(searchGenres::contains);
                 })
                 .sorted(Comparator.comparing(Movie::getPopularity).reversed())
-                .limit(10) // 상위 10개만
+                .limit(10)
                 .collect(Collectors.toList());
+
+        attachKeywordsToMovies(filtered); // 🔥 키워드 붙이기
+        return filtered;
     }
 
     @Override
     public List<Movie> getTopMovie() {
         List<Movie> movies = movieMapper.getTopMovie();
+        attachKeywordsToMovies(movies);
         return movies;
     }
+
+
+    @Override
+    public RelatedSearchResponse getRelatedSearchResponse(String query) {
+        List<Movie> movies = movieMapper.findRelatedMoviesByTitle(query);
+        List<String> relatedQueries = movieMapper.findRelatedQueriesFromTitle(query);
+        return new RelatedSearchResponse(query, movies, relatedQueries);
+    }
+
+    private void attachKeywordsToMovies(List<Movie> movies) {
+        for (Movie movie : movies) {
+            List<String> keywords = keywordMapper.getKeywordsByMovieId(movie.getId());
+            movie.setKeywords(keywords);
+        }
+    }
+    private boolean isTitleMatched(String query, String title) {
+        if (query == null || title == null) return false;
+
+        // 2글자 이상 겹치는 부분이 있는지 확인
+        for (int i = 0; i <= query.length() - 2; i++) {
+            String sub = query.substring(i, i + 2);
+            if (title.contains(sub)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
+
+
+
 
 
