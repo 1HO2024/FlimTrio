@@ -62,4 +62,10 @@
 		WHERE email     = #{email}
 	</update>
 	
+	<update id="updateProfileNopass">
+		UPDATE users  
+		SET nickname    = #{nickname}
+		WHERE email     = #{email}
+	</update>
+	
 </mapper>

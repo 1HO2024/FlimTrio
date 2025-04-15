@@ -92,8 +92,12 @@ public class ProfileController {
 		    }
 		    
 		    if(userDTO.getPassword()== null) {
-		    	UserDTO getinfo = authService.searchProfile(email);
-		    	userDTO.setPassword(getinfo.getPassword());
+		    	UserDTO updatedUser = authService.updateProfileNopass(email,userDTO.getNickname());
+		    	Map<String, String> userData = new HashMap<>();
+			    userData.put("nickname",   updatedUser.getNickname()); 
+			    userData.put("email"   ,   updatedUser.getEmail()); 
+			    userData.put("phoneNumber",updatedUser.getPhoneNumber()); 
+		    	return ResponseEntity.ok(new ProfileResponse(true, "회원 정보 수정 성공(비번변경 x)", userData));
 		    }
 		    
 		    UserDTO updatedUser = authService.updateProfile(email,userDTO.getNickname(),userDTO.getPassword());
@@ -101,6 +105,8 @@ public class ProfileController {
 		     userData.put("nickname", updatedUser.getNickname()); 
 		     userData.put("email",updatedUser.getEmail()); 
 		     userData.put("phoneNumber",updatedUser.getPhoneNumber()); 
+		     System.out.println("닉네임:"+ userDTO.getNickname() +
+		                        "비번:"+ userDTO.getPassword());
 		    
 		    return ResponseEntity.ok(new ProfileResponse(true, "회원 정보 수정 성공", userData));
 		}
