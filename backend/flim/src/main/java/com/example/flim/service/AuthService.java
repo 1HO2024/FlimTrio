@@ -100,6 +100,11 @@ public class AuthService implements UserDetailsService {
 		return idx;
 	}
 
+	public UserDTO updateProfileNopass(String email, String nickname) {
+		authMapper.updateProfileNopass(email,nickname);
+		return authMapper.findByEmail(email);
+	}
+
 
 	
 }

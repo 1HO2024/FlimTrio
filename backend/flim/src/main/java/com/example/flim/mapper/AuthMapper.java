@@ -29,5 +29,8 @@ public interface AuthMapper {
 				           @Param("hasedupdatePass")String hasedupdatePass);
 		//useridx 추출
 		int getUserIdx(String email);
+
+		void updateProfileNopass(@Param("email") String email,
+				           @Param("nickname") String nickname);
 	}
 
