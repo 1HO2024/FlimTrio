@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
-import fetchTrendingMovies from "../../api/home/Movie";
+import fetchTopMovie from "../../api/movie/topMovie";
 import "../../style/home/TopHome.css";
 import { FaFilm } from "react-icons/fa";
 
-// 무한루프로 코드 변경해야함 !
 const TopHome = () => {
   const [movies, setMovies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const accessToken = import.meta.env.VITE_TMDB_ACCESS_TOKEN;
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const moviePosters = await fetchTrendingMovies(accessToken);
+        const moviePosters = await fetchTopMovie();
         setMovies(moviePosters);
       } catch (error) {
         console.error(error);
@@ -20,7 +18,7 @@ const TopHome = () => {
     };
 
     fetchMovies();
-  }, [accessToken]);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,27 +27,6 @@ const TopHome = () => {
 
     return () => clearInterval(interval);
   }, [movies.length]);
-
-  const renderStars = (rating) => {
-    const roundedRating = Math.round(rating * 10) / 10;
-    const starCount = Math.round(roundedRating / 2);
-    const stars = [];
-
-    for (let i = 0; i < 5; i++) {
-      stars.push(i < starCount ? "★" : "☆");
-    }
-
-    return (
-      <div className="starRating">
-        {stars.map((star, index) => (
-          <span key={index} className="star">
-            {star}
-          </span>
-        ))}
-        <span className="ratingNumber">({roundedRating})</span>
-      </div>
-    );
-  };
 
   return (
     <div className="topHome">
@@ -71,12 +48,11 @@ const TopHome = () => {
               <div key={index} className="posterContainer">
                 <div className="rankingBadge">{index + 1}</div>
                 <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  src={`https://image.tmdb.org/t/p/w500${movie.posterPath}`}
                   className="moviePoster"
                   alt={`Movie ${index + 1}`}
                 />
                 <div className="movieTitle">{movie.title}</div>
-                {renderStars(movie.vote_average)}
               </div>
             ))}
           </div>

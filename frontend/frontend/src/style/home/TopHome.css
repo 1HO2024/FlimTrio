@@ -83,7 +83,12 @@
   font-size: 14px;
   font-weight: bold;
   margin-top: 5px;
+  width: 220px; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
 
 .posterContainer:hover {
   transform: scale(1.05);
