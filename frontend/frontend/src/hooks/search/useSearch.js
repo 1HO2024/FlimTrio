@@ -1,33 +1,29 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import fetchSearchResults from "../../api/search/search"; 
 
 const useSearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const searchRef = useRef(null); 
+  const searchRef = useRef(null);
   const [isInputVisible, setIsInputVisible] = useState(false);
 
   const navigate = useNavigate();
+  const token = localStorage.getItem("token"); 
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
     setIsOpen(!!value); 
 
-    const dummyResults = [
-      { id: 1, name: "범죄도시" },
-      { id: 2, name: "국가대표" },
-      { id: 3, name: "미키17" },
-      { id: 4, name: "어벤져스" },
-      { id: 5, name: "기생충" },
-      { id: 6, name: "괴물" },
-    ];
-
-    const filteredResults = dummyResults.filter((item) =>
-      item.name.includes(value)
-    );
-    setSearchResults(filteredResults);
+    if (value) {
+      fetchSearchResults(value, token).then((results) => {
+        setSearchResults(results); 
+      });
+    } else {
+      setSearchResults([]); 
+    }
   };
 
   const handleSearchSubmit = (event) => {
@@ -39,17 +35,14 @@ const useSearch = () => {
     setIsOpen(false);
   };
 
-  // 검색 결과 페이지에 검색한 영화 정보 넘김
   const handleResultClickWithState = (result) => {
-    navigate(`/searchResults/${result.id}`, { state: { result } });
+    navigate(`/searchResults/${result.movieId}`, { state: { result } });
     handleResultClick();
   };
 
-  // 돋보기
   const handleIconClick = () => {
-    setIsInputVisible((prev) => !prev); 
+    setIsInputVisible((prev) => !prev);
   };
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {

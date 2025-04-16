@@ -6,11 +6,12 @@ import { FaFilm } from "react-icons/fa";
 const ActionTopGenre = () => {
   const [genreMovies, setGenreMovies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [genreName, setGenreName] = useState("액션");
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const movies = await fetchTopGenre("액션");
+        const movies = await fetchTopGenre(genreName);
         setGenreMovies(movies);
       } catch (error) {
         console.error(error);
@@ -18,7 +19,7 @@ const ActionTopGenre = () => {
     };
 
     fetchMovies();
-  }, []);
+  }, [genreName]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,7 +33,9 @@ const ActionTopGenre = () => {
     <div className="topHome">
       <div className="titleContainer">
         <FaFilm className="titleIcon" />
-        <div className="titleText">액션 Top {genreMovies.length} 영화</div>
+        <div className="titleText">
+          {genreName} Top {genreMovies.length} 영화
+        </div>
       </div>
       <div
         className="posterGrid"

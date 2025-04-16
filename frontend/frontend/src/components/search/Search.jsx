@@ -10,13 +10,13 @@ const Search = () => {
     isInputVisible,
     handleSearchChange,
     handleSearchSubmit,
+    handleResultClickWithState,
     handleIconClick,
     searchRef,
-    handleResultClickWithState,
   } = useSearch();
 
   return (
-    <form className="searchForm" onSubmit={handleSearchSubmit} ref={searchRef}>
+    <form className="searchForm" onSubmit={handleSearchSubmit}>
       <div
         className={`searchInputWrapper ${
           isInputVisible ? "visible" : "hidden"
@@ -52,7 +52,7 @@ const Search = () => {
                   className="searchLink"
                   onClick={() => handleResultClickWithState(result)}
                 >
-                  {result.name}
+                  {result.title}
                 </span>
               </li>
             ))
