@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.flim.config.CustomUserDetails;
 import com.example.flim.dto.UserDTO;
-import com.example.flim.mapper.UserMapper;
+import com.example.flim.mapper.AuthMapper;
 
 @Service
 public class AuthService implements UserDetailsService {
@@ -25,7 +25,7 @@ public class AuthService implements UserDetailsService {
 	
 	 
 	@Autowired
-	private UserMapper userMapper;
+	private AuthMapper authMapper;
 	
 	@Autowired
 	@Lazy //순환의존성 방지
@@ -38,25 +38,24 @@ public class AuthService implements UserDetailsService {
 	public void registerUser(UserDTO userDTO) {
 		 // 비밀번호를 BCrypt로 암호화
 	    String hashedPassword =  passwordEncoder.encode(userDTO.getPassword());  // 비밀번호 암호화
-	    // 암호화된 비밀번호를 UserDTO에 설정
 	    userDTO.setPassword(hashedPassword);
-		userMapper.insertUser(userDTO);
+		authMapper.insertUser(userDTO);
 	}
 	
 	// 이메일로 (닉네임,비번 가져오기)
 	public String getNickname(String email) {
-	 String nickname = userMapper.getNickname(email);
+	 String nickname = authMapper.getNickname(email);
 		return nickname;
 	}
 	public String getPhonenumber(String email) {
-	 String phoneNumber = userMapper.getPhonenumber(email);
+	 String phoneNumber = authMapper.getPhonenumber(email);
 		return phoneNumber;
 	}
 	
 	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-	    UserDTO userDTO = userMapper.findByEmail(email); // 이메일로 조회
+	    UserDTO userDTO = authMapper.findByEmail(email); 
 	    if (userDTO == null) {
 	        throw new UsernameNotFoundException("이메일에 해당되는 유저 찾지못함: " + email);
 	    }
@@ -67,8 +66,7 @@ public class AuthService implements UserDetailsService {
 	 
 	  // 이메일과 비밀번호로 인증
     public boolean authenticateUser(String email, String password) {
-        // 이메일로 사용자 조회
-        UserDTO user = userMapper.findByEmail(email);
+        UserDTO user = authMapper.findByEmail(email);
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             return true;
         }
@@ -77,28 +75,29 @@ public class AuthService implements UserDetailsService {
 
     // 비번찾기
 	public String searchPassword(UserDTO userDTO) {
-		//사용자 확인(이메일,전화번호)
-	    UserDTO isUser = userMapper.findUserByEmailPhone(userDTO);
+	    UserDTO isUser = authMapper.findUserByEmailPhone(userDTO);
 		if (isUser != null) {
-			 //임시 비밀번호 생성, 리턴 
 			 String tempPassword =	UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
-			 //임시 비밀번호 암호화
 			 String hashedTempPassword = passwordEncoder.encode(tempPassword);  
-			 //임시 비밀번호 db저장
-			 userMapper.updateTempPassword(isUser.getEmail(),isUser.getPhoneNumber(),hashedTempPassword);
+			 authMapper.updateTempPassword(isUser.getEmail(),isUser.getPhoneNumber(),hashedTempPassword);
 			 return tempPassword;
 		}
 		return null;
 	}
 
 	public UserDTO searchProfile(String email) {
-		return userMapper.findByEmail(email);
+		return authMapper.findByEmail(email);
 	}
 
 	public UserDTO updateProfile(String email, String nickname, String password) {
 		String hasedupdatePass = passwordEncoder.encode(password);
-		userMapper.updateProfile(email,nickname,hasedupdatePass);
-		return userMapper.findByEmail(email);
+		authMapper.updateProfile(email,nickname,hasedupdatePass);
+		return authMapper.findByEmail(email);
+	}
+
+	public int getUserIdx(String email) {
+		int idx = authMapper.getUserIdx(email);
+		return idx;
 	}
 
 

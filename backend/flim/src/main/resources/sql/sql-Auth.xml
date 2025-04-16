@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.flim.mapper.UserMapper">
+<mapper namespace="com.example.flim.mapper.AuthMapper">
 	
    <insert id="insertUser">
     INSERT INTO users( 
@@ -15,9 +15,16 @@
       #{nickname}, 
       #{email},
       #{password}, 
-      #{phoneNumber})
+      #{phoneNumber}
+      )
     </insert>
 
+   <select id="getUserIdx"> 
+		SELECT user_idx 
+		FROM   users 
+		WHERE  email = #{email}
+	</select>
+	
    <select id="getNickname"> 
 		SELECT nickname 
 		FROM   users 
