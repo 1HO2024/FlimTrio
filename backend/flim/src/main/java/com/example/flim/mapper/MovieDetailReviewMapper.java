@@ -18,13 +18,13 @@ public interface MovieDetailReviewMapper {
 	
 	int writeReview(@Param("ID")int id, 
 			        @Param("review_comment")String review_comment, 
-			        @Param("review_rating")int review_rating, 
+			        @Param("review_rating")float review_rating, 
 			        @Param("user_idx")int user_idx);
 
 	int updateReview(@Param("ID")int id, 
            			 @Param("review_idx")int review_idx, 
            			 @Param("review_comment")String review_comment,
-           			 @Param("review_rating")int review_rating,
+           			 @Param("review_rating")float review_rating,
 			         @Param("user_idx")int user_idx);
 
 	int deleteReview(@Param("ID")int id, 

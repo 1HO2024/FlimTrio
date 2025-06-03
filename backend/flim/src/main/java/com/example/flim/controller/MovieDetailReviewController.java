@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.flim.dto.MovieDetailDTO;
 import com.example.flim.dto.ApiResponse;
@@ -39,8 +40,9 @@ public class MovieDetailReviewController {
 	
 	  //리뷰 조회
 	  @GetMapping("/view-reviews")
-	  public ResponseEntity<ReviewResponse> getReviews(@RequestBody MovieDetailDTO moviedetaildto) {
-		 List<MovieDetailDTO> data = movieDetailReviewService.getReview(moviedetaildto.getId());
+	  public ResponseEntity<ReviewResponse> getReviews(@RequestParam(name = "id") int id) {
+		  System.out.println("뭐가왔니?"+ id);
+		 List<MovieDetailDTO> data = movieDetailReviewService.getReview(id);
 		    if (data != null && !data.isEmpty()) {
 		        return ResponseEntity.ok(new ReviewResponse(true, "리뷰 조회 성공", data));
 		    } else {

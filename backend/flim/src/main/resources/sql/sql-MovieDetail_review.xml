@@ -31,7 +31,7 @@
 	
 	
 	<select id="isWrite">
-	    SELECT * FROM review
+	    SELECT COUNT(*) > 0 FROM review
 	    WHERE user_idx  = #{user_idx}
 	    AND ID          = #{ID}
     </select>

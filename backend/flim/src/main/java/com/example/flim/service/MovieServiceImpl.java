@@ -64,7 +64,7 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String apiKey = ""; // API Key 입력
+    private final String apiKey = "8cddecbeaaf1e1f845bf146c6f747ee1"; // API Key 입력
     private final String URL = "https://api.themoviedb.org/3/discover/movie?api_key=" + apiKey + "&language=ko-KR&page=";
 
 
@@ -307,7 +307,9 @@ public class MovieServiceImpl implements MovieService {
                     String[] genres = Optional.ofNullable(movie.getGenreIds())
                             .map(g -> g.split(","))
                             .orElse(new String[0]);
-                    return Arrays.stream(genres).anyMatch(searchGenres::contains);
+                    // 이부분 수정함 (5/5일) 장르중 검색한 장르가 하나라도 포함된다면 으로 바꿈 
+                    return Arrays.stream(genres).anyMatch(genre -> searchGenres.contains(genre.trim()));
+               
                 })
                 .sorted(Comparator.comparing(Movie::getPopularity).reversed())
                 .limit(10)

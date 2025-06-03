@@ -80,7 +80,7 @@ public interface MovieMapper {
 
     @Select("""
         SELECT * FROM movie
-        WHERE genre_ids LIKE CONCAT('%', #{genreIds}, '%')
+        WHERE genre_ids LIKE CONCAT('%' , #{genreIds}, '%')
         ORDER BY popularity DESC
         LIMIT 10
     """)

@@ -1,47 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; 
-import fetchTopGenre from "../../api/movie/topGenre";
+import fetchRecommendTop from "../../api/movie/topRecommend";
 import "../../style/home/TopHome.css";
 import { FaFilm } from "react-icons/fa";
 
-const FantasyTopGenre = () => {
-  const [genreMovies, setGenreMovies] = useState([]);
+const RecommendTop = () => {
+  const [recommendMovies, setRecommendMovies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [genreName, setGenreName] = useState("판타지");
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const movies = await fetchTopGenre(genreName);
-        setGenreMovies(movies);
+        const movies = await fetchRecommendTop();
+        setRecommendMovies(movies);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false); // 로딩 완료 처리
       }
     };
 
     fetchMovies();
-  }, [genreName]);
+  }, []);
 
   useEffect(() => {
+    if (recommendMovies.length === 0) return;
+
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => {
-        if (prevIndex >= genreMovies.length - 6) {
-          return 0; // 10번이 보일때쯤 다시 처음으로 
-        }
-        return prevIndex + 1;
-      });
+      setCurrentIndex((prevIndex) =>
+        prevIndex >= recommendMovies.length - 5 ? 0 : prevIndex + 1
+      );
     }, 1500);
 
     return () => clearInterval(interval);
-  }, [genreMovies]);
+  }, [recommendMovies]);
+
+  if (!token || loading || recommendMovies.length === 0) {
+    return null; // 로딩 중이거나 데이터가 없거나 로그인 안 되어 있을 때는 렌더링 X
+  }
 
   return (
     <div className="topHome">
       <div className="titleContainer">
         <FaFilm className="titleIcon" />
         <div className="titleText">
-          {genreName} Top {genreMovies.length} 영화
+          사용자 기반 TOP{recommendMovies.length} 영화
         </div>
       </div>
       <div
@@ -50,11 +56,11 @@ const FantasyTopGenre = () => {
           transform: `translateX(-${currentIndex * 220}px)`,
         }}
       >
-        {genreMovies.map((movie, index) => (
+        {recommendMovies.map((movie, index) => (
           <div
             key={index}
             className="posterContainer"
-            onClick={() => navigate("/detail", { state: { result:{...movie, movieId: movie.id}} })}
+            onClick={() => navigate("/detail", { state: { result: movie } })}
           >
             <div className="rankingBadge">{index + 1}</div>
             {movie.posterPath ? (
@@ -74,4 +80,5 @@ const FantasyTopGenre = () => {
   );
 };
 
-export default FantasyTopGenre;
+
+export default RecommendTop;

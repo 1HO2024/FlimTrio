@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import fetchTopMovie from "../../api/movie/topMovie";
 import "../../style/home/TopHome.css";
 import { FaFilm } from "react-icons/fa";
@@ -6,6 +7,7 @@ import { FaFilm } from "react-icons/fa";
 const TopHome = () => {
   const [movies, setMovies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -21,10 +23,17 @@ const TopHome = () => {
   }, []);
 
   useEffect(() => {
+    if (movies.length === 0) return;
+  
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % movies.length);
+      setCurrentIndex((prevIndex) => {
+        if (prevIndex >= movies.length - 6) {
+          return 0; // 10번이 보일때쯤 다시 처음으로 
+        }
+        return prevIndex + 1;
+      });
     }, 1500);
-
+  
     return () => clearInterval(interval);
   }, [movies.length]);
 
@@ -45,7 +54,11 @@ const TopHome = () => {
             }}
           >
             {movies.map((movie, index) => (
-              <div key={index} className="posterContainer">
+              <div
+              key={index}
+              className="posterContainer"
+              onClick={() => navigate("/detail", { state: { result:{...movie, movieId: movie.id}} })}
+              >
                 <div className="rankingBadge">{index + 1}</div>
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.posterPath}`}

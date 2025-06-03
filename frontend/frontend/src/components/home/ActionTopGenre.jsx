@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import fetchTopGenre from "../../api/movie/topGenre";
 import "../../style/home/TopHome.css";
 import { FaFilm } from "react-icons/fa";
@@ -7,6 +8,7 @@ const ActionTopGenre = () => {
   const [genreMovies, setGenreMovies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [genreName, setGenreName] = useState("액션");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -23,7 +25,12 @@ const ActionTopGenre = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % genreMovies.length);
+      setCurrentIndex((prevIndex) => {
+        if (prevIndex >= genreMovies.length - 6) {
+          return 0; // 10번이 보일때쯤 다시 처음으로 
+        }
+        return prevIndex + 1;
+      });
     }, 1500);
 
     return () => clearInterval(interval);
@@ -44,7 +51,11 @@ const ActionTopGenre = () => {
         }}
       >
         {genreMovies.map((movie, index) => (
-          <div key={index} className="posterContainer">
+          <div
+            key={index}
+            className="posterContainer"
+            onClick={() => navigate("/detail", { state: { result:{...movie, movieId: movie.id}} })}
+          >
             <div className="rankingBadge">{index + 1}</div>
             {movie.posterPath ? (
               <img

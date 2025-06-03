@@ -107,15 +107,15 @@ public ResponseEntity<MovieResponse> searchMovies(@RequestHeader("Authorization"
 }
 
 //    장르별 인기 영화 조회
-    @GetMapping("movies/topgenre")
-    public ResponseEntity<MovieResponse> getTopGenre(@RequestParam String genreIds) {
+    @GetMapping("/movies/topgenre")
+    public ResponseEntity<MovieResponse> getTopGenre(@RequestParam(name = "genreIds") String genreIds) {
         List<Movie> movies = movieService.getTopGenre(genreIds);
         MovieResponse response = new MovieResponse(true,"장르 top10",movies);
         return ResponseEntity.ok(response);
     }
 
 //    영화 추천 (인기도 top 10)
-    @GetMapping("movies/topmovie")
+    @GetMapping("/movies/topmovie")
     public ResponseEntity<MovieResponse> getTopMovie() {
         List<Movie> movies = movieService.getTopMovie();
         MovieResponse response = new MovieResponse(true,"인기 영화",movies);
@@ -124,14 +124,14 @@ public ResponseEntity<MovieResponse> searchMovies(@RequestHeader("Authorization"
 
 
 //    연관검색어
-    @GetMapping("movies/related")
+    @GetMapping("/movies/related")
     public ResponseEntity<MovieResponse> getRelatedSearches(@RequestParam String query) {
         RelatedSearchResponse response = movieService.getRelatedSearchResponse(query);
         return ResponseEntity.ok(new MovieResponse(true, "연관 검색어 및 영화 조회 성공", response));
     }
 
 //    =================================== 알고리즘 ============================
-    @GetMapping("/recommend")
+    @GetMapping("/movies/recommend")
     public ResponseEntity<MovieResponse> getRecommend(@RequestHeader("Authorization") String authorizationHeader) {
     	 	
     	    // 토큰 인증 과정 

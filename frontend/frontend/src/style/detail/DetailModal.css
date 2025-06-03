@@ -12,7 +12,7 @@
 }
 
 .DetailModal {
-  background: #1B1B1E; 
+  background: white; 
   padding: 20px;
   border-radius: 8px;
   width: 800px;  
@@ -43,21 +43,165 @@
   max-width: 300px;
 }
 
-/* 아래쪽 콘텐츠 */
-.DetailPageBottomContent {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  border-radius: 12px;
-}
 
 /* 영화 정보 */
-.DetailPageMovieInfo {
-  flex: 7;
+.DetailPageMovieInfoSection {
+  padding: 20px;
+  width: 680px;
+  
+}
+
+
+/*배우 포스터*/
+.DetailCastSection {
+  padding: 20px;
+}
+
+.DetailCastSectionHeader {
+  display: flex;
+  align-items: center; 
+  justify-content: space-between; 
+  margin-bottom : 10px;
+}
+
+
+.DetailCastGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+
+.CastCard {
+  width: 100px;
+  text-align: center;
+}
+
+.CastCard img {
+  width: 100px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 /* 리뷰 */
 .DetailPageReviews {
-  flex: 4;
+  padding: 20px;
 }
 
+.DetailPageReviewsHeader {
+  display: flex;
+  align-items: center; 
+  justify-content: space-between; 
+  margin-bottom : 10px;
+}
+
+.DetailPageReviewsGrid{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.ReviewCard {
+  text-align: center;
+  width: 195px;
+  height: 150px;
+  object-fit: cover;
+  padding: 10px;
+  border: 2px solid ghostwhite;
+  border-radius: 8px;
+}
+
+
+/*추천 영화*/
+.Recommend {
+  padding:50px 20px;
+  height: 200px;
+}
+
+.DetailRecommendHeader {
+  display: flex;
+  align-items: center; 
+  justify-content: space-between; 
+  margin-bottom : 10px;
+}
+
+.RecommendGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.RecommendCard {
+   width: 125px;
+   text-align: center;
+}
+
+.RecommendCard img {
+  width: 125px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+
+.RecommendCard:hover{
+  cursor: pointer;
+}
+
+
+/*버튼---------------------------------------------------------------------------------------*/
+button:hover{
+font-size: 1.1em; 
+}
+
+/*좋아요 버튼*/
+.Canclelike-icon {
+  font-size: 24px; 
+  margin-right: 3px; 
+}
+
+.like-icon {
+  font-size: 24px; 
+  margin-right:3px; 
+}
+
+/*더보기 버튼 */
+.ShowMoreButton {
+  margin-right:  70px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/*리뷰 버튼 */
+.ReviewButton{
+margin-right: 70px;
+}
+
+.ReviewWriteButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.ShowMoreReviewButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.DetailLikeButton{
+  background-color: transparent;
+  border: none; 
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+  margin-left: 20px;
+}

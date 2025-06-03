@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -23,7 +25,6 @@ public class MovieDetailAlgorithmService {
 
     @Autowired
     MovieDetailAlgorithmMapper movieDetailAlMapper;
-
     public List<MovieAlgoResponse> algorithmshoot(@RequestBody MovieDetailDTO movieDetailDTO) {
 
     	//유저가 선택한 영화 데이터
@@ -55,6 +56,7 @@ public class MovieDetailAlgorithmService {
     }
 
     // 파이썬 시작
+    @Async
     private List<MovieAlgoResponse> callPythonScript(List<String> userMovieOverview, List<String> movieOverview) {
         List<String> recommendedMovies = new ArrayList<>();
         try {
