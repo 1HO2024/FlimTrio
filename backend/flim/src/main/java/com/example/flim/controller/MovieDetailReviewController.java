@@ -53,7 +53,7 @@ public class MovieDetailReviewController {
 	  //리뷰 작성
 	  @PostMapping("/write-review")
 	  public ResponseEntity<ApiResponse> writeReviews(@RequestHeader("Authorization") String authorizationHeader,
-													                          @RequestBody MovieDetailDTO moviedetaildto) {
+													  @RequestBody MovieDetailDTO moviedetaildto) {
 
 		    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 		        return ResponseEntity.badRequest().body(new ApiResponse(false, "유효하지 않은 토큰입니다."));
@@ -89,7 +89,7 @@ public class MovieDetailReviewController {
 	  //리뷰 수정
 	  @PatchMapping("/update-review")
       public ResponseEntity<ApiResponse> updateReviews(@RequestHeader("Authorization") String authorizationHeader,
-                                                                   @RequestBody MovieDetailDTO moviedetaildto) {
+                                                       @RequestBody MovieDetailDTO moviedetaildto) {
 	    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 		return ResponseEntity.badRequest().body(new ApiResponse(false, "유효하지 않은 토큰입니다."));
 		}
@@ -120,7 +120,7 @@ public class MovieDetailReviewController {
 	  //리뷰 삭제
 	  @DeleteMapping("/delete-review")
 	  public ResponseEntity<ApiResponse> deleteReviews(@RequestHeader("Authorization") String authorizationHeader,
-                                                               @RequestBody MovieDetailDTO moviedetaildto) {
+                                                       @RequestParam(name = "review_idx") int review_idx) {
 		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 		return ResponseEntity.badRequest().body(new ApiResponse(false, "유효하지 않은 토큰입니다."));
 		}
@@ -138,8 +138,12 @@ public class MovieDetailReviewController {
 		}
 		int user_idx = authService.getUserIdx(email);
 		
-		boolean isSuccess =  movieDetailReviewService.deleteReview(moviedetaildto,user_idx);
+		System.out.println(user_idx);
+		System.out.println(review_idx);
+		boolean isSuccess =  movieDetailReviewService.deleteReview(review_idx,user_idx);
+		
 		System.out.println(isSuccess);
+		
 		if (isSuccess) {
 		    return ResponseEntity.ok(new ApiResponse(true, "리뷰 삭제 성공"));
 		} else {

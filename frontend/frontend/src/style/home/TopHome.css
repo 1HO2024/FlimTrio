@@ -73,7 +73,9 @@
 }
 
 .moviePoster {
-  width: 220px;
+  width: 217px;
+  height: 320px;
+  border: 1px solid ghostwhite;
   border-radius: 3px;
   margin-right: 20px;
   cursor: pointer;

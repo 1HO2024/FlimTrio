@@ -54,26 +54,23 @@ public interface MovieMapper {
 
 
     @Select("""
-    SELECT m.*, c.id AS cast_id, c.name AS cast_name, c.character AS cast_character, 
-           c.gender AS cast_gender, c.profile_path AS cast_profilePath
-    FROM movie m
-    LEFT JOIN cast c ON m.id = c.movie_id
-    WHERE m.title LIKE #{query} OR c.name LIKE #{query}
-""")
-    @Results({
-            @Result(property = "id", column = "id"),
-            @Result(property = "title", column = "title"),
-            @Result(property = "overview", column = "overview"),
-            @Result(property = "posterPath", column = "poster_path"),
-            @Result(property = "popularity", column = "popularity"),
-            @Result(property = "releaseDate", column = "release_date"),
-            @Result(property = "genreIds", column = "genre_ids"),
-            // 🔥 배우 정보 매핑
-            @Result(property = "castList", javaType = List.class, column = "id",
-                    many = @Many(select = "com.example.flim.mapper.CastMapper.getCastsByMovieId"))
-    })
-    List<Movie> searchMovies(@Param("query") String query);
-
+    	    SELECT DISTINCT m.*
+    	    FROM movie m
+    	    WHERE m.title LIKE #{query} OR EXISTS (
+    	        SELECT 1 FROM cast c WHERE c.movie_id = m.id AND c.name LIKE #{query}
+    	    )
+    	    ORDER BY m.popularity DESC
+    	""")
+    	@Results({
+    	    @Result(property = "id", column = "id"),
+    	    @Result(property = "title", column = "title"),
+    	    @Result(property = "overview", column = "overview"),
+    	    @Result(property = "posterPath", column = "poster_path"),
+    	    @Result(property = "popularity", column = "popularity"),
+    	    @Result(property = "releaseDate", column = "release_date"),
+    	    @Result(property = "genreIds", column = "genre_ids")
+    	})
+    	List<Movie> searchMovies(@Param("query") String query);
 
 
 

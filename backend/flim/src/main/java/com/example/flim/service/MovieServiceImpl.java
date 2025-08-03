@@ -245,34 +245,40 @@ public class MovieServiceImpl implements MovieService {
         return new MovieDetailResponse(true, "영화 조회 성공", movie, castList, crewList,recommendedMovies);
 
     }
-
+    //6.16 수정 -> 정확하게 검색한것만
     @Override
     public List<Movie> searchMovies(String query, int userIdx) {
-        // 검색어를 LIKE 조건에 맞게 변환
-        String searchQuery = "%" + query + "%";
-
+        
+        String searchQuery = "%"+query+"%";
+        
         Integer searchHistoryId = null;
-
-        // 로그인 상태 && 검색어가 비어있지 않을 때만 검색 기록 저장
+        boolean checkquery = searchMapper.checkIfMovieExists(query);
+        
         if (userIdx > 0 && query != null && !query.trim().isEmpty()) {
+        	
             searchMapper.insertSearchHistory(userIdx, query);
-            searchHistoryId = searchMapper.getSearchHistory(userIdx);  // 그대로 사용
+            searchHistoryId = searchMapper.getSearchHistory(userIdx); 
+        	
         }
-
+        
         List<Movie> movies = movieMapper.searchMovies(searchQuery);
 
         for (Movie movie : movies) {
-            // 키워드 붙이기
+            
+        	
             List<String> keywords = keywordMapper.getKeywordsByMovieId(movie.getId());
             movie.setKeywords(keywords);
 
-            // 검색 결과 저장 (중복 방지)
-            if (searchHistoryId != null) {
-                // 🔍 query와 title 비교: 2글자 이상 일치하는 부분이 있는 경우만 저장
+           
+            if (searchHistoryId != null && checkquery) {
                 if (isTitleMatched(query, movie.getTitle())) {
                     int count = searchMapper.countSearchResult(searchHistoryId, movie.getId());
+                    
                     if (count == 0) {
                         String keywordString = String.join(",", keywords);
+                        
+                        String SaveBeforeCheckQuery = query;
+                        if (movie.getTitle().equals(SaveBeforeCheckQuery)) {
                         searchMapper.insertSearchResult(
                                 searchHistoryId,
                                 movie.getId(),
@@ -280,7 +286,8 @@ public class MovieServiceImpl implements MovieService {
                                 movie.getGenreIds(),
                                 movie.getPosterPath(),
                                 keywordString
-                        );
+                        ); 
+                       }
                     }
                 }
             }

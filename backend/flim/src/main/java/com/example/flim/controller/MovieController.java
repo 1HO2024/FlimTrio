@@ -65,7 +65,7 @@ public ResponseEntity<MovieDetailResponse> getMovieWithCastAndCrew(@PathVariable
 //로그인 한 email 이 있으면 검색기록 저장 , 아니면 저장안함
 //영화 제목, 배우 이름으로 조회
 @GetMapping("/movies/search")
-public ResponseEntity<MovieResponse> searchMovies(@RequestHeader("Authorization") String authorizationHeader,
+public ResponseEntity<MovieResponse> searchMovies(@RequestHeader(value = "Authorization", required = false) String authorizationHeader,
 		                                          @RequestParam("query") String query) {
 
 	// 토큰 인증 후 예외처리 
@@ -100,7 +100,6 @@ public ResponseEntity<MovieResponse> searchMovies(@RequestHeader("Authorization"
     }
 	
 	System.out.println("검색 요청: query=" + query + ", userIdx=" + userIdx);  // 추가!
-
     List<Movie> movies = movieService.searchMovies(query, userIdx);
     MovieResponse response = new MovieResponse(true, "검색 성공", movies);
     return ResponseEntity.ok(response);
@@ -125,7 +124,7 @@ public ResponseEntity<MovieResponse> searchMovies(@RequestHeader("Authorization"
 
 //    연관검색어
     @GetMapping("/movies/related")
-    public ResponseEntity<MovieResponse> getRelatedSearches(@RequestParam String query) {
+    public ResponseEntity<MovieResponse> getRelatedSearches(@RequestParam ("query") String query) {
         RelatedSearchResponse response = movieService.getRelatedSearchResponse(query);
         return ResponseEntity.ok(new MovieResponse(true, "연관 검색어 및 영화 조회 성공", response));
     }

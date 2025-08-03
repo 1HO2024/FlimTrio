@@ -18,20 +18,21 @@
   	
   	<select id="searchReview" resultMap="reviewResultMap">
 		SELECT
-		  r.review_idx, 
-	      r.user_idx, 
-	      u.nickname,
-	      r.ID,
-	      m.title,
-	      m.poster_path,
-	      r.review_rating, 
-	      r.write_date, 
-	      r.review_comment, 
-	      r.update_date
-		FROM  review r
+	    r.review_idx, 
+	    r.user_idx, 
+	    u.nickname,
+	    r.ID,
+	    m.title,
+	    m.poster_path,
+	    r.review_rating, 
+	    r.write_date, 
+	    r.review_comment, 
+	    r.update_date
+		FROM review r
 		LEFT JOIN users u ON r.user_idx = u.user_idx
 		LEFT JOIN movie m ON r.ID = m.ID 
 		WHERE r.user_idx = #{user_idx}
+		ORDER BY COALESCE(r.update_date, r.write_date) DESC;
 	</select>
 	
 	 <resultMap id="likeResultMap" type="com.example.flim.dto.MypageLikeDTO">
@@ -56,6 +57,7 @@
 		LEFT JOIN movie m ON l.ID = m.ID 
 		WHERE l.user_idx = #{user_idx}
 		AND   l.like_status = "Like"
+		ORDER BY l.like_idx DESC;
 	</select>
 
 

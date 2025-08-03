@@ -3,6 +3,7 @@ package com.example.flim.util;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
@@ -28,11 +29,37 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1시간 동안 유효
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15)) 
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
+	 // JWTUtil 클래스에서 리프레시 토큰 생성
+	    public String generateRefreshToken(String username) {
+	        return Jwts.builder()
+	                .setSubject(username)
+	                .setIssuedAt(new Date())
+	                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 45))
+	                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+	                .compact();
+	    }
+	    
+	    // 리프레시 토큰으로 새로운 액세스 토큰 발급
+	    public String refreshAccessToken(String authorizationHeader) {
+	        // 1. 리프레시 토큰 검증
+	        if (!validateToken(authorizationHeader)) {
+	            throw new RuntimeException("Invalid or expired refresh token");
+	        }
+
+	        // 2. 리프레시 토큰에서 사용자 정보 추출
+	        String username = extractUsername(authorizationHeader);
+
+	        // 3. 새로운 액세스 토큰 생성
+	        return generateToken(username); // 새로운 액세스 토큰 생성
+	    }
+
+	    
+	    
     // JWT 토큰에서 사용자 이름 추출
     public String extractUsername(String token) {
         return Jwts.parser()

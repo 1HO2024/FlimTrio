@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
 
-const useDetailMovieTrailer = ({ movieName }) => {
+const useDetailMovieTrailer = ({ movieName,releaseDate}) => {
+  
   const [trailerUrl, setTrailerUrl] = useState("");  
   const youtubeApikey = import.meta.env.VITE_YOUTUBE_API_KEY;
+  const year = releaseDate.slice(0, 4);
+
+
 
   useEffect(() => {
+    
     // 유튜브 트레일러 들고오는 함수  
     const fetchTrailer = async () => {
+
+       if (!movieName || !releaseDate) return;
+
       try {
         const apiKey = youtubeApikey;
         const response = await fetch(
-          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${movieName}+trailer&type=video&key=${apiKey}`
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent( movieName +"("+year+")"+ "official trailer")}&type=video&key=${apiKey}`
         );
         const data = await response.json();
         const videoId = data.items[0]?.id?.videoId;
@@ -29,7 +37,7 @@ const useDetailMovieTrailer = ({ movieName }) => {
     if (movieName) {
       fetchTrailer();
     }
-  }, [movieName]);
+  },[movieName, releaseDate]);
 
   // trailerUrl 상태를 반환
   return { trailerUrl };

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.flim.dto.MovieDetailDTO;
 import com.example.flim.mapper.MovieDetailReviewMapper;
@@ -43,10 +44,9 @@ public class MovieDetailReviewService {
 	}
 
 
-	public boolean deleteReview(MovieDetailDTO moviedetaildto, int user_idx) {
-		int result = movieDetailReviewMapper.deleteReview(moviedetaildto.getId(),
-                                                    moviedetaildto.getReview_idx(),
-									                user_idx);
+	public boolean deleteReview(int review_idx, int user_idx) {
+		int result = movieDetailReviewMapper.deleteReview(review_idx,
+									                      user_idx);
         return result > 0 ;
 	}
 

@@ -6,14 +6,16 @@ public class SignResponse {
     private boolean success;
     private String message;
     private Map<String, String> data;
-    private String token;
+    private String accessToken;
+    private String refreshToken;
 
     // 생성자, getter, setter
-    public SignResponse(boolean success, String message, Map<String, String> data, String token) {
+    public SignResponse(boolean success, String message, Map<String, String> data, String accessToken, String refreshToken) {
         this.success = success;
         this.message = message;
         this.data = data;
-        this.token = token;
+        this.accessToken = accessToken;
+        this.refreshToken =refreshToken;
     }
 
     public boolean isSuccess() {
@@ -40,11 +42,21 @@ public class SignResponse {
         this.data = data;
     }
 
-    public String getToken() {
-        return token;
-    }
+	public String getAccessToken() {
+		return accessToken;
+	}
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+	public void setAccessToken(String accesstoken) {
+		this.accessToken = accesstoken;
+	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+
 }

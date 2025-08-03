@@ -24,11 +24,12 @@ public class RecommendServiceImpl implements RecommendService {
         Map<String, Integer> genreScore = new HashMap<>();
         Map<String, Integer> keywordScore = new HashMap<>();
 
-        applyScores(recentResult, genreScore, keywordScore, 10); // 최근 검색 가중치
-        applyScores(pastResult, genreScore, keywordScore, 1);   // 과거 검색 가중치
+        applyScores(recentResult, genreScore, keywordScore, 68); // 최근 검색 가중치
+        applyScores(pastResult, genreScore, keywordScore, 22);   // 과거 검색 가중치
 
-        List<String> topGenre = getTopKeys(genreScore,10 );
-        List<String> topKeyword = getTopKeys(keywordScore, 3);
+        List<String> topGenre = getTopKeys(genreScore, 2);
+        System.out.println("Top Genres: " + topGenre);
+        List<String> topKeyword = getTopKeys(keywordScore,8);
 
         System.out.println("Top Genres: " + topGenre);
         System.out.println("Top Keywords: " + topKeyword);

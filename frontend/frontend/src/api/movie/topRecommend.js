@@ -1,15 +1,9 @@
 import axiosInstance from "../config/axiosConfig";
 
 const fetchRecommendTop = async () => {
-  const token = localStorage.getItem("token");
   try {
     const response = await axiosInstance.get(
-      "/api/v1/movies/recommend",
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
+      "/api/v1/movies/recommend"
     );
 
     console.log(response)

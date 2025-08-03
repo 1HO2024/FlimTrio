@@ -41,13 +41,13 @@ public interface RecommendMapper {
     FROM movie m
     LEFT JOIN keywords k ON m.id = k.movie_id
     WHERE (
-        <foreach item="genre" collection="genres" open="(" separator="OR" close=")">
+        <foreach item="genre" collection="genres" open="(" separator="AND" close=")">
             m.genre_ids LIKE CONCAT('%', #{genre}, '%')
         </foreach>
     )
     <if test="keywords != null and keywords.size() > 0">
         AND (
-            <foreach item="keyword" collection="keywords" open="(" separator="OR" close=")">
+            <foreach item="keyword" collection="keywords" open="(" separator="or" close=")">
                 k.keyword LIKE CONCAT('%', #{keyword}, '%')
             </foreach>
         )

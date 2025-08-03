@@ -17,13 +17,13 @@ public class MypageService {
 	
 	public List<MypageReviewDTO> searchReview(int user_idx) {
 		List<MypageReviewDTO> data = mypageMapper.searchReview(user_idx);
-		System.out.println(data);
+		//System.out.println(data);
 		return data;
 	}
 
 	public List<MypageLikeDTO> searchLike(int user_idx) {
 		List<MypageLikeDTO> data = mypageMapper.searchLike(user_idx);
-		System.out.println(data);
+		//System.out.println(data);
 		return data;
 	}
 

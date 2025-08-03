@@ -2,7 +2,7 @@ import axiosInstance from "../config/axiosConfig";
 
 const fetchTopMovie = async () => {
   try {
-    const response = await axiosInstance.get("/api/v1/movies/topmovie");
+    const response = await axiosInstance.get("/api/v1/movies/topmovie",{authRequired: false});
     console.log(response)
     return response.data.data; 
   } catch (error) {

@@ -33,7 +33,7 @@ const RecommendTop = () => {
       setCurrentIndex((prevIndex) =>
         prevIndex >= recommendMovies.length - 5 ? 0 : prevIndex + 1
       );
-    }, 1500);
+    }, 1250);
 
     return () => clearInterval(interval);
   }, [recommendMovies]);

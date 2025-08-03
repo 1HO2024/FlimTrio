@@ -64,7 +64,7 @@ public class MypageController {
 		int user_idx = authService.getUserIdx(email);
 		 //(해당유저)리뷰 가져오기
 	    List<MypageReviewDTO> data = mypageService.searchReview(user_idx);
-	    System.out.println(data);
+	    //System.out.println(data);
 	    
 	    if (data != null && !data.isEmpty()) {
 	        return ResponseEntity.ok(new MypageReviewResponse(true, "조회 성공", data));
@@ -98,7 +98,7 @@ public class MypageController {
 		 int user_idx = authService.getUserIdx(email);
 		 //(해당유저)좋아요 가져오기
 		 List<MypageLikeDTO> data = mypageService.searchLike(user_idx);
-		 System.out.println(data);
+		 //System.out.println(data);
 		 
 		 if (data != null && !data.isEmpty()) {
 			 return ResponseEntity.ok(new MypageLikeResponse(true, "좋아요 조회 성공", data));

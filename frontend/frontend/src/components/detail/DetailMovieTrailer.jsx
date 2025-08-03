@@ -1,8 +1,8 @@
 import "../../style/detail/DetailMovieTrailer.css";
 import useDetailMovieTrailer from "../../hooks/detail/useDetailMovieTrailer";
 
-const DetailMovieTrailer = ({ movieName }) => {
-  const { trailerUrl } = useDetailMovieTrailer({ movieName });
+const DetailMovieTrailer = ({ movieName,releaseDate }) => {
+  const { trailerUrl } = useDetailMovieTrailer({ movieName,releaseDate });
 
   return trailerUrl ? (
     <div className="DetailMovieTrailer">

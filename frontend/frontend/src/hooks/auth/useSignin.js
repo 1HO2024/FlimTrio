@@ -24,7 +24,6 @@ const useSignin = (closeModal) => {
 
     try {
       const response = await signinApi(email, password);
-      console.log("로그인 성공!", response);
 
       login(response.data); 
       closeModal();

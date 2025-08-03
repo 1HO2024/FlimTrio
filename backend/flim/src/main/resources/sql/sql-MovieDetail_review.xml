@@ -55,7 +55,8 @@
 	    UPDATE review
 	    SET 
 	     review_rating    = #{review_rating}, 
-	     review_comment   = #{review_comment} 
+	     review_comment   = #{review_comment},
+	     update_date =  NOW()
 	    WHERE  review_idx = #{review_idx}
 	    AND  user_idx     = #{user_idx}
 	    AND  ID           = #{ID}
@@ -65,7 +66,6 @@
 		DELETE FROM review
 		WHERE review_idx   = #{review_idx}
 	    AND user_idx       = #{user_idx}
-	    AND ID             = #{ID}
 	</delete>
 	
    

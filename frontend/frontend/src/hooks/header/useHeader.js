@@ -13,7 +13,9 @@ const useHeader = () => {
   const handleLogout = () => {
     logout(); 
     navigate("/");
-
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    
       Swal.fire({
         title: "로그아웃 성공!",
         text: `로그아웃 되었습니다.`,

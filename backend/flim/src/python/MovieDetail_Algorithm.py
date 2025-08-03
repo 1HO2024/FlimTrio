@@ -5,10 +5,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
-# 표준 출력을 UTF-8로 설정
 sys.stdout.reconfigure(encoding='utf-8')
 
-# 한글 불용어 리스트 (기본적인 예시)
+# 한글 불용어 리스트 
 KOREAN_STOPWORDS = ['이', '그', '저', '것', '등', '도', '은', '는', '이랑', '랑', '들', '가', '을', '를', '에', '에서', '와', '과']
 
 # 형태소 분석기를 위한 함수 (Okt 사용)
@@ -155,7 +154,7 @@ if __name__ == "__main__":
     title_similarities = analyze_titles(user_title, movie_titles)
     content_similarities = analyze_text(processed_user_movie, processed_movies)
 
-    # 가중치 키워드 4할 제목 2할 줄거리4할
+    # 가중치 키워드 4 : 제목 2 : 줄거리4
     final_similarities = 0.4 * keyword_similarities + 0.2 * title_similarities + 0.4 * content_similarities
 
     # 높은순
