@@ -54,8 +54,8 @@ public class SignController {
     }
 	
 
-	
-	//로그인
+	// jwt필터 관련 깃 작성
+	//로그인 
 	@PostMapping("/signin")
 	public ResponseEntity<SignResponse> signin(@RequestBody UserDTO userDTO, HttpServletResponse response) {		
 		 String email = userDTO.getEmail();
