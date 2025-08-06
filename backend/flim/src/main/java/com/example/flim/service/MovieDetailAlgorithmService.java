@@ -22,7 +22,7 @@ import com.example.flim.mapper.MovieDetailAlgorithmMapper;
 
 @Service
 public class MovieDetailAlgorithmService {
-
+     //깃 할거
     @Autowired
     MovieDetailAlgorithmMapper movieDetailAlMapper;
     public List<MovieAlgoResponse> algorithmshoot(@RequestBody MovieDetailDTO movieDetailDTO) {
