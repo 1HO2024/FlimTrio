@@ -130,7 +130,7 @@ const DetailModal = ({ closeModal }) => {
   };
 
 
-    if (loading) return <div>로딩중...</div>;
+    if (loading) return;
     if (error || !movieData) return <div>{error || "데이터 없음"}</div>;
     const { movie, cast, crew, recommendedMovies } = movieData;
     const displayedCast = showAllCast ? cast : cast.slice(0, 6);

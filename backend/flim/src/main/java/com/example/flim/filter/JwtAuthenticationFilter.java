@@ -2,8 +2,10 @@ package com.example.flim.filter;
 
 import java.io.IOException;
 
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.flim.service.AuthService;
@@ -26,10 +28,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 요청에서 JWT 토큰 추출
         String jwtToken = extractJwtFromRequest(request);
 
+        
         // 토큰이 유효하고, 인증된 사용자가 있으면
-        if (jwtToken != null && jwtUtil.validateToken(jwtToken)) {
-            String username = jwtUtil.extractUsername(jwtToken);  // 토큰에서 이메일 가져옴
-            var userDetails = authService.loadUserByUsername(username);  // 사용자 정보
+        if (jwtToken != null && jwtUtil.validateToken(jwtToken)) { 
+        	String username = jwtUtil.extractUsername(jwtToken);
+
+            
+            UserDetails userDetails = authService.loadUserByUsername(username);  // 사용자 정보
 
             // 사용자 인증 객체 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -44,14 +49,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String extractJwtFromRequest(jakarta.servlet.http.HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
 
-        // "Authorization" 헤더에서 "Bearer "로 시작하는 JWT 토큰 추출
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);  //토큰 값 반환
-        }
+    	 if (request.getCookies() != null) {
+    	        for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
+    	            if ("accessToken".equals(cookie.getName())) {  // 쿠키 이름 정확히
+    	                return cookie.getValue();
+    	            }
+    	        }
+    	    }
 
+        // 없으면 null 반환
         return null;
     }
-
 }

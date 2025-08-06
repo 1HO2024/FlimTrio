@@ -3,6 +3,7 @@ package com.example.flim.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.flim.dto.ApiResponse;
 import com.example.flim.dto.MovieDetailDTO;
+import com.example.flim.dto.MypageLikeResponse;
+import com.example.flim.dto.MypageReviewResponse;
 import com.example.flim.service.AuthService;
 import com.example.flim.service.MovieDetailLikeService;
 import com.example.flim.util.JwtUtil;
@@ -33,73 +36,41 @@ public class MovieDetailLikeController {
 	  
 	
 	@GetMapping("is-like")
-	 public ResponseEntity<ApiResponse> islike(@RequestHeader("Authorization") String authorizationHeader,
+	 public ResponseEntity<ApiResponse> islike(@AuthenticationPrincipal UserDetails user,
                                                @RequestParam (name = "id")int id) {
 
-		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-		return ResponseEntity.badRequest().body(new ApiResponse(false, "유효하지 않은 토큰입니다."));
-		}
-	
-		String jwtToken = authorizationHeader.substring(7);  
-		if (jwtToken.isEmpty()) {
-		return ResponseEntity.badRequest().body(new ApiResponse(false, "토큰이 필요합니다."));
-		}
-		
-		String email = jwtUtil.extractUsername(jwtToken);
-		if (email == null) {
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "유효하지 않은 토큰입니다."));
-		}
-		
-		UserDetails user = authService.loadUserByUsername(email);
-		if (user == null) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "사용자를 찾을 수 없습니다."));
-		}
-		
+	    if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiResponse(false, "인증 정보가 없습니다."));
+        }
+
+        String email = user.getUsername();
 		int user_idx = authService.getUserIdx(email);
 		
 		 //좋아요 상태확인 
-
-	    	String likestatus = movieDetailLikeService.getLikeStatus(id, user_idx);
-	    	System.out.println(likestatus);
+	    String likestatus = movieDetailLikeService.getLikeStatus(id, user_idx);
+	    System.out.println(likestatus);
 	    	
-	    	return ResponseEntity.ok(new ApiResponse(true, likestatus));
+	    return ResponseEntity.ok(new ApiResponse(true, likestatus));
 	    }
    
 
-	
-	
-	
 	  //좋아요 
 	  @PostMapping("toggle-like")
-	 public ResponseEntity<ApiResponse> toggleLike(@RequestHeader("Authorization") String authorizationHeader,
+	 public ResponseEntity<ApiResponse> toggleLike(@AuthenticationPrincipal UserDetails user,
                                                                 @RequestBody MovieDetailDTO moviedetaildto) {
-
-		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-		return ResponseEntity.badRequest().body(new ApiResponse(false, "유효하지 않은 토큰입니다."));
-		}
-	
-		String jwtToken = authorizationHeader.substring(7);  
-		if (jwtToken.isEmpty()) {
-		return ResponseEntity.badRequest().body(new ApiResponse(false, "토큰이 필요합니다."));
-		}
-		
-		String email = jwtUtil.extractUsername(jwtToken);
-		if (email == null) {
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "유효하지 않은 토큰입니다."));
-		}
-		
-		UserDetails user = authService.loadUserByUsername(email);
-		if (user == null) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "사용자를 찾을 수 없습니다."));
-		}
-		
+	    if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiResponse(false, "인증 정보가 없습니다."));
+        }
+		  
+		String email = user.getUsername();
 		int user_idx = authService.getUserIdx(email);
 		
 		 //좋아요 상태확인 
 	    boolean isLiked = movieDetailLikeService.isLiked(moviedetaildto.getId(), user_idx);
 	    if (isLiked) {
 	        // 좋아요 o
-
 	    	String likestatus = movieDetailLikeService.getLikeStatus(moviedetaildto.getId(), user_idx);
 	    	System.out.println(likestatus);
 	    	if(likestatus.equals("Like")) {

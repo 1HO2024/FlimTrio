@@ -53,14 +53,14 @@ const MyReviews = () => {
 
 
   if (loading) {
-    return <div>로딩 중...</div>;
+    return;
   }
 
   if (reviews.length === 0) {
     return (
-      <div>
-        <h3>내가 작성한 리뷰</h3>
-        <strong>작성한 리뷰가 없습니다.</strong>
+      <div className="MyPageReviews" style={{marginTop:"150px"}}>
+        <h2 className="MyReviewsHeader"><FaFilm className="MytitleIcon" />내가 작성한 리뷰</h2>
+         <h5 style={{marginLeft:"35px"}}>현재 작성한 리뷰가 없습니다.</h5>
       </div>
     );
   }

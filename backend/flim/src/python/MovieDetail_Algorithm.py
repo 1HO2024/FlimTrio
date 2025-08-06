@@ -7,12 +7,13 @@ import numpy as np
 
 sys.stdout.reconfigure(encoding='utf-8')
 
+okt = Okt()
 # 한글 불용어 리스트 
 KOREAN_STOPWORDS = ['이', '그', '저', '것', '등', '도', '은', '는', '이랑', '랑', '들', '가', '을', '를', '에', '에서', '와', '과']
 
 # 형태소 분석기를 위한 함수 (Okt 사용)
 def preprocess_korean_text(text):
-    okt = Okt()
+
     # 텍스트에서 한글과 공백만 남기기
     text = re.sub(r'[^ㄱ-ㅎㅏ-ㅣ가-힣\s]', '', text)
     
@@ -155,7 +156,7 @@ if __name__ == "__main__":
     content_similarities = analyze_text(processed_user_movie, processed_movies)
 
     # 가중치 키워드 4 : 제목 2 : 줄거리4
-    final_similarities = 0.4 * keyword_similarities + 0.2 * title_similarities + 0.4 * content_similarities
+    final_similarities = 0.4 * keyword_similarities + 0.3 * title_similarities + 0.3 * content_similarities
 
     # 높은순
     top_10_indices = np.argsort(final_similarities)[::-1][:10]

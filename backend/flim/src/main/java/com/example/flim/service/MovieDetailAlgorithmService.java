@@ -50,7 +50,7 @@ public class MovieDetailAlgorithmService {
         //디버깅: System.out.println(" 영화줄거리:" + movieOverview);
         
         
-        //파이썬 호출
+        //파이썬 호출tr
         List<MovieAlgoResponse> similarMovies = callPythonScript(userMovieOverview, movieOverview);
         return similarMovies;  
     }

@@ -5,8 +5,7 @@ const fetchSearchResults = async (query) => {
   try {
     const response = await axiosInstance.get(
       "/api/v1/movies/related",{
-        authRequired: token ? true : false,
-        params: { query },  
+        params: { query }
       }
       
     );

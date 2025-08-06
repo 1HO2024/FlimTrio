@@ -8,7 +8,6 @@ const RecommendTop = () => {
   const [recommendMovies, setRecommendMovies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
-  const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,7 +37,7 @@ const RecommendTop = () => {
     return () => clearInterval(interval);
   }, [recommendMovies]);
 
-  if (!token || loading || recommendMovies.length === 0) {
+  if ( loading || recommendMovies.length === 0) {
     return null; // 로딩 중이거나 데이터가 없거나 로그인 안 되어 있을 때는 렌더링 X
   }
 

@@ -234,7 +234,7 @@ public class MovieServiceImpl implements MovieService {
         List<Crew> crewList = crewMapper.getCrewByMovieId(movieId);
 
         
-       //여기서 부터 추가 4.10
+       //여기서 부터 추가 4.10 (비슷한 영화 알고리즘 작동)
         MovieDetailDTO dto = new MovieDetailDTO();
         dto.setId(movieId); 
 

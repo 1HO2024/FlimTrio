@@ -5,7 +5,6 @@ const fetchTopGenre = async (genreIds) => {
     const response = await axiosInstance.get(
       "/api/v1/movies/topgenre",
       {
-        authRequired: false,
         params: { genreIds },
       }
     );

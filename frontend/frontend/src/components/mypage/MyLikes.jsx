@@ -36,11 +36,14 @@ const MyLikes = () => {
   };
 
   if (loading) {
-    return <div>로딩 중...</div>;
+    return;
   }
 
   if (likedMovies.length === 0) {
-    return <div><h3>좋아요</h3><strong>좋아요 없음</strong></div>;
+    return <div className="MyPageLikes">
+             <h2 className="MyLikesHeader"><FaFilm className="MytitleIcon" />좋아요 표시한 영화</h2>
+              <h5 style={{marginLeft:"35px"}}>좋아요 표시한 영화가 없습니다</h5>
+             </div>;
   }
 
   return (

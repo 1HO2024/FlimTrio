@@ -4,10 +4,7 @@ const ToggleLike = async (movieId) => {
   try {
     const response = await axiosInstance.post(
       "/api/v1/movie-detail/toggle-like",
-      { id: movieId },
-      {
-        authRequired: true,  
-      }
+      { id: movieId }
     );
 
     console.log(response);

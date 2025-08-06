@@ -1,13 +1,18 @@
 package com.example.flim.controller;
 
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -17,8 +22,12 @@ import com.example.flim.dto.ApiResponse;
 import com.example.flim.dto.SearchPassResponse;
 import com.example.flim.dto.SignResponse;
 import com.example.flim.dto.UserDTO;
+import com.example.flim.entity.RefreshTokenEntity;
 import com.example.flim.service.AuthService;
+import com.example.flim.service.RefreshTokenService;
 import com.example.flim.util.JwtUtil;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/api/v1")
@@ -26,6 +35,9 @@ public class SignController {
 	
 	@Autowired
 	private  AuthService authService;
+	
+	@Autowired
+	private RefreshTokenService refreshTokenService;
 	
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -45,8 +57,8 @@ public class SignController {
 	
 	//로그인
 	@PostMapping("/signin")
-	public ResponseEntity<SignResponse> signin(@RequestBody UserDTO userDTO) {		
-		 String username = userDTO.getEmail();
+	public ResponseEntity<SignResponse> signin(@RequestBody UserDTO userDTO, HttpServletResponse response) {		
+		 String email = userDTO.getEmail();
 		 
 		 // 이메일과 비밀번호 검증
 	     boolean isValidUser = authService.authenticateUser(userDTO.getEmail(), userDTO.getPassword());
@@ -57,44 +69,165 @@ public class SignController {
 	   }
 	     
 	     //토큰 생성
-		 String accessToken  = jwtUtil.generateToken(userDTO.getEmail()); 
-		 String refreshToken = jwtUtil.generateRefreshToken(username);
+		 String accessToken  = jwtUtil.generateToken(email); 
+		 String refreshToken = jwtUtil.generateRefreshToken(email);
+		 LocalDateTime refreshExpireAt = LocalDateTime.now().plusDays(7);
+		 
+		 
+		 
+		 // DB에 리프레시 토큰 저장
+		 refreshTokenService.saveRefreshToken(email, refreshToken, refreshExpireAt);
+		    
+		 
+		 // 쿠키에 access token 저장 (15분)
+		 ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+		            .httpOnly(true)
+		            .secure(true) // HTTPS 환경일 때만 전송
+		            .path("/")
+		            .sameSite("Strict") // 또는 "Lax"
+		            .maxAge(15 * 60)
+		            .build();
+		
+		 // 쿠키에 refresh token 저장 (7일)
+		 ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+		            .httpOnly(true)
+		            .secure(true)
+		            .path("/")
+		            .sameSite("Strict")
+		            .maxAge(7 * 24 * 60 * 60)
+		            .build();
+		 
+		// 쿠키를 응답에 추가
+		 response.addHeader("Set-Cookie", accessCookie.toString());
+		 response.addHeader("Set-Cookie", refreshCookie.toString());
 		 
 		 
 		 //정보 가져오기(닉네임,전번)
 	     String nickname     = authService.getNickname(userDTO.getEmail());
-	     String phoneNumber  = authService.getPhonenumber(userDTO.getEmail());
-	        
+	     String phoneNumber  = authService.getPhonenumber(userDTO.getEmail());	     
 	     
 	     Map<String, String> userData = new HashMap<>();
 	     userData.put("nickname", nickname); 
 	     userData.put("email", userDTO.getEmail());
 	     userData.put("phoneNumber", phoneNumber); 
 
-	     SignResponse response = new SignResponse(true, "로그인 성공", userData, accessToken, refreshToken );
-	     return ResponseEntity.ok(response); 
+	     
+	     
+	     
+	     return ResponseEntity.ok(new SignResponse(true, "로그인 성공", userData, null, null));
 	   }
 	
 		 // 리프레시 토큰을 사용하여 액세스 토큰 재발급
-	    @PostMapping("/refresh")
-	    public ResponseEntity<SignResponse> refreshAccessToken(@RequestHeader("Authorization") String authorizationHeader) {
-	        try {
-	            // 리프레시 토큰으로 새로운 액세스 토큰 발급
-	        	String refreshToken = authorizationHeader.substring(7);
-	            
-	        	System.out.println(refreshToken);
-	            String newAccessToken = jwtUtil.refreshAccessToken(refreshToken);
-	            String username = jwtUtil.extractUsername(refreshToken);
-	            String newRefreshToken = jwtUtil.generateRefreshToken(username); 
-	            
-	            // 응답으로 새로운 액세스 토큰을 반환
-	            return ResponseEntity.ok(new SignResponse(true, "액세스 토큰 재발급 성공", null, newAccessToken, newRefreshToken));
-	        } catch (RuntimeException e) {
-	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	                    .body(new SignResponse(false, "리프레시 토큰이 유효하지 않거나 만료되었습니다.", null, null, null));
-	        }
+	@PostMapping("/refresh")
+	public ResponseEntity<SignResponse> refreshAccessToken(@CookieValue(value = "refreshToken", required = false) String refreshToken,
+	                                                       HttpServletResponse response) {
+	    if (refreshToken == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	                .body(new SignResponse(false, "리프레시 토큰이 없습니다.", null, null, null));
 	    }
+
+	    try {
+	        String email = jwtUtil.extractUsername(refreshToken);
+	        if (!jwtUtil.validateToken(refreshToken)) {
+	            throw new Exception("유효하지 않은 토큰");
+	        }
+
+	        RefreshTokenEntity storedToken = refreshTokenService.findByRefreshToken(refreshToken)
+	                                         .orElseThrow(() -> new Exception("DB에 리프레시 토큰이 없습니다"));
+
+	        if (!storedToken.getEmail().equals(email)) {
+	            throw new Exception("사용자와 토큰 불일치");
+	        }
+
+	        String newAccessToken = jwtUtil.generateToken(email);
+	        String newRefreshToken = jwtUtil.generateRefreshToken(email);
+	        LocalDateTime refreshExpireAt = LocalDateTime.now().plusDays(7);
+
+	        refreshTokenService.saveRefreshToken(email, newRefreshToken, refreshExpireAt);
+
+	        ResponseCookie newAccessCookie = ResponseCookie.from("accessToken", newAccessToken)
+	            .httpOnly(true)
+	            .secure(true)
+	            .path("/")
+	            .sameSite("Strict")
+	            .maxAge(15 * 60)
+	            .build();
+
+	        ResponseCookie newRefreshCookie = ResponseCookie.from("refreshToken", newRefreshToken)
+	            .httpOnly(true)
+	            .secure(true)
+	            .path("/")
+	            .sameSite("Strict")
+	            .maxAge(7 * 24 * 60 * 60)
+	            .build();
+
+	        response.addHeader("Set-Cookie", newAccessCookie.toString());
+	        response.addHeader("Set-Cookie", newRefreshCookie.toString());
+
+	        return ResponseEntity.ok(new SignResponse(true, "액세스 토큰 재발급 성공", null, null, null));
+
+	    } catch (Exception e) {
+	        // 강제 로그아웃 쿠키 삭제
+	        ResponseCookie deleteAccess = ResponseCookie.from("accessToken", "")
+	            .httpOnly(true)
+	            .secure(true)
+	            .path("/")
+	            .sameSite("Strict")
+	            .maxAge(0)
+	            .build();
+
+	        ResponseCookie deleteRefresh = ResponseCookie.from("refreshToken", "")
+	            .httpOnly(true)
+	            .secure(true)
+	            .path("/")
+	            .sameSite("Strict")
+	            .maxAge(0)
+	            .build();
+
+	        response.addHeader("Set-Cookie", deleteAccess.toString());
+	        response.addHeader("Set-Cookie", deleteRefresh.toString());
+
+	        // 로그아웃 메시지 직접 반환
+	        return ResponseEntity.status(498)
+	        	    .body(new SignResponse(false, "리프레시 토큰이 유효하지 않습니다. 로그아웃 처리되었습니다.", null, null, null));
+	    }
+	}
+
 	
+	@PostMapping("/signout")
+	public ResponseEntity<ApiResponse> logout(@AuthenticationPrincipal UserDetails userDetails,
+			                                   HttpServletResponse response) {
+		
+		  if (userDetails == null) {
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+		                .body(new ApiResponse(false, "로그인 상태가 아닙니다."));
+		    }
+
+		    String email = userDetails.getUsername(); 	    
+		    refreshTokenService.deleteByEmail(email); 
+		    
+	    // accessToken & refreshToken 쿠키 제거 (만료 처리)
+	    ResponseCookie deleteAccess = ResponseCookie.from("accessToken", "")
+	        .httpOnly(true)
+	        .secure(true)
+	        .path("/")
+	        .sameSite("Strict")
+	        .maxAge(0)  // 즉시 만료
+	        .build();
+
+	    ResponseCookie deleteRefresh = ResponseCookie.from("refreshToken", "")
+	        .httpOnly(true)
+	        .secure(true)
+	        .path("/")
+	        .sameSite("Strict")
+	        .maxAge(0)
+	        .build();
+
+	    response.addHeader("Set-Cookie", deleteAccess.toString());
+	    response.addHeader("Set-Cookie", deleteRefresh.toString());
+
+	    return ResponseEntity.ok().body(new ApiResponse(true, "로그아웃 성공"));
+	}
 	
 
 	  //비밀번호 찾기

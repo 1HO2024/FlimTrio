@@ -34,7 +34,9 @@ const useSignin = (closeModal) => {
         icon: "success",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "확인",
-      });
+      }).then(() => {
+        window.location.reload();  // 확인 누르면 새로고침
+      });;
 
     } catch (err) {
       setError(err.message);

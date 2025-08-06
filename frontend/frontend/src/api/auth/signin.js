@@ -6,10 +6,6 @@ const signinApi = async (email, password) => {
       email,
       password,
     });
-     // 액세스 토큰과 리프레시 토큰을 로컬 스토리지에 저장
-    localStorage.setItem("token", response.data.accessToken);
-    localStorage.setItem("refreshToken", response.data.refreshToken);
-
 
     return response.data;
 

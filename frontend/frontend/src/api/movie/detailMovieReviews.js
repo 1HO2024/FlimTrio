@@ -5,8 +5,7 @@ const fetchMovieReviews = async (movieId) => {
   try {
     const response = await axiosInstance.get(
       `/api/v1/movie-detail/view-reviews`,
-       {authRequired: false,
-        params:{ id:movieId }},
+       {params:{ id:movieId }},
     );
     console.log("리뷰 api 실행후:", response);
     return response.data.data; 
