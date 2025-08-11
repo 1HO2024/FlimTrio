@@ -17,9 +17,13 @@ public class RecommendServiceImpl implements RecommendService {
 
     @Override
     public List<RecommendedMovieResponse> recommendMovie(int userIdx) {
+    	
         List<SearchResult> recentResult = recommendMapper.recentRecommend(userIdx, 2);
         List<SearchResult> pastResult = recommendMapper.pastRecommend(userIdx, 2);
-
+        
+        if (recentResult.isEmpty() && pastResult.isEmpty()) {
+            return Collections.emptyList(); // 빈 리스트 반환  8.11 일 추가(로그인시 추천영화가 없을때 강제 로그아웃 막기위해서)
+        }
 
         Map<String, Integer> genreScore = new HashMap<>();
         Map<String, Integer> keywordScore = new HashMap<>();

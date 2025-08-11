@@ -4,6 +4,7 @@ package com.example.flim.controller;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,11 @@ import com.example.flim.dto.ApiResponse;
 import com.example.flim.dto.SearchPassResponse;
 import com.example.flim.dto.SignResponse;
 import com.example.flim.dto.UserDTO;
+import com.example.flim.dto.VerificationRequestDTO;
 import com.example.flim.entity.RefreshTokenEntity;
 import com.example.flim.service.AuthService;
+import com.example.flim.service.EmailService;
+import com.example.flim.service.EmailVerificationService;
 import com.example.flim.service.RefreshTokenService;
 import com.example.flim.util.JwtUtil;
 
@@ -36,6 +40,11 @@ public class SignController {
 	@Autowired
 	private  AuthService authService;
 	
+	@Autowired
+	private EmailService emailService;
+	
+	@Autowired
+	private EmailVerificationService emailVerificationService;
 	@Autowired
 	private RefreshTokenService refreshTokenService;
 	
@@ -73,8 +82,7 @@ public class SignController {
 		 String refreshToken = jwtUtil.generateRefreshToken(email);
 		 LocalDateTime refreshExpireAt = LocalDateTime.now().plusDays(7);
 		 
-		 
-		 
+				 
 		 // DB에 리프레시 토큰 저장
 		 refreshTokenService.saveRefreshToken(email, refreshToken, refreshExpireAt);
 		    
@@ -187,7 +195,7 @@ public class SignController {
 	        response.addHeader("Set-Cookie", deleteAccess.toString());
 	        response.addHeader("Set-Cookie", deleteRefresh.toString());
 
-	        // 로그아웃 메시지 직접 반환
+	        // 로그아웃 메시지 직접 반환(498코드 = 강제 로그아웃 코드로 지정함)
 	        return ResponseEntity.status(498)
 	        	    .body(new SignResponse(false, "리프레시 토큰이 유효하지 않습니다. 로그아웃 처리되었습니다.", null, null, null));
 	    }
@@ -212,7 +220,7 @@ public class SignController {
 	        .secure(true)
 	        .path("/")
 	        .sameSite("Strict")
-	        .maxAge(0)  // 즉시 만료
+	        .maxAge(0)  
 	        .build();
 
 	    ResponseCookie deleteRefresh = ResponseCookie.from("refreshToken", "")
@@ -231,8 +239,11 @@ public class SignController {
 	
 
 	  //비밀번호 찾기
+	/*
 	   @PostMapping("/search-password")
 	   public ResponseEntity<SearchPassResponse> searchPassword(@RequestBody UserDTO userDTO){
+		  
+		   
 		   String tempPassword =  authService.searchPassword(userDTO); 
 		   
 		   if (tempPassword == null) {
@@ -242,7 +253,72 @@ public class SignController {
 
 		    return ResponseEntity.ok(new SearchPassResponse(true, "임시 비밀번호가 발급되었습니다. 로그인 후 꼭 변경해주세요", tempPassword));
 	   }
+	*/
+	    
+	@PostMapping("/search-password/send-code")
+	public ResponseEntity<SearchPassResponse> sendVerificationCode(@RequestBody UserDTO userDTO) {
+	    
+		// 1.유저 확인 
+	    boolean userExists = emailVerificationService.checkUserByPhoneNumberAndEmail(userDTO.getPhoneNumber(), userDTO.getEmail());
+	    if (!userExists) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(new SearchPassResponse(false, "사용자를 찾을 수 없습니다."));
+	    }
+
+	    // 2.인증번호 발급
+	    String verificationCode = String.format("%06d", (int) (Math.random() * 1000000));
+
+	    // 3.인증번호 저장
+	     boolean saved  = emailVerificationService.saveVerificationCode(userDTO.getEmail(),
+	    		                                       verificationCode , "비밀번호 찾기");
+	     
+	    if (!saved) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	            .body(new SearchPassResponse(false, "인증코드 저장 실패"));
+	    }
+	    
+	    // 4.이메일 발송
+	    try {
+	        String html = "<div style='font-family: Arial, sans-serif; padding: 20px;'>"
+	            + "<h2>\r\n"
+	            + "<span style=\"color: #1E90FF;  font-size: 32px; \">FLIM</span><span style=\"color: black;  font-size: 32px;\">TRIO</span>\r\n"
+	            + "</h2>"
+	            + "<h2>필름트리오 비밀번호 찾기를 위한 인증번호입니다.</h2>"
+	            + "<p>인증번호: <strong style='font-size: 24px; color: #1E90FF;'>" + verificationCode + "</strong></p>"
+	            + "<p>인증번호를 확인하여 이메일 주소 인증을 완료해 주세요.</p>"
+	            + "</div>";
+	        emailService.sendHtmlEmail(userDTO.getEmail(), "[FLIMTRIO] 비밀번호 찾기 인증번호 ", html);
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(new SearchPassResponse(false, "이메일 발송에 실패했습니다."));
+	    }
+
+	    return ResponseEntity.ok(new SearchPassResponse(true, "인증코드가 이메일로 발송되었습니다."));
+	}
 	   
-	
+	   
+	   @PostMapping("/search-password/verify-code")
+	   public ResponseEntity<SearchPassResponse> verifyCodeAndResetPassword(@RequestBody VerificationRequestDTO request) {
+	       
+		   //검증
+	       boolean isValid = emailVerificationService.verifyCode(request.getEmail(), request.getCode(),"비밀번호 찾기");
+	      
+	       if (!isValid) {
+	           return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                   .body(new SearchPassResponse(false, "인증코드가 유효하지 않거나 만료되었습니다."));
+	       }
+
+	       //임시 비번 제공 및 DB 업데이트
+	       String tempPassword = emailVerificationService.resetPasswordToTemporary(request.getEmail());
+
+	       return ResponseEntity.ok(new SearchPassResponse(true, 
+	           "임시 비밀번호가 발급되었습니다. 로그인 후 꼭 변경해주세요", tempPassword));
+	   }
+	   
+	   
+	   
+	   
 	   
 }

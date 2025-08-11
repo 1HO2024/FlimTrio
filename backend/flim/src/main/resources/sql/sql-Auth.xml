@@ -42,18 +42,6 @@
 		WHERE email = #{email}
 	</select>
 	
-	<select id="findUserByEmailPhone">
-		SELECT * FROM users 
-		WHERE email     = #{email} 
-		AND phoneNumber = #{phoneNumber}
-	</select>
-	
-	<update id="updateTempPassword">
-		UPDATE users  
-		SET password    = #{hashedTempPassword}
-		WHERE email     = #{email}
-		AND phoneNumber = #{phoneNumber}
-	</update>
 	
 	<update id="updateProfile">
 		UPDATE users  
@@ -65,6 +53,19 @@
 	<update id="updateProfileNopass">
 		UPDATE users  
 		SET nickname    = #{nickname}
+		WHERE email     = #{email}
+	</update>
+	
+	<select id="existsByUserIdAndEmail">
+		SELECT COUNT(*)  
+		FROM users 
+		WHERE email     = #{email} 
+		AND phoneNumber = #{phoneNumber}
+	</select>
+	
+	<update id="updateTempPassword">
+		UPDATE users  
+		SET password    = #{hashedTempPassword}
 		WHERE email     = #{email}
 	</update>
 	

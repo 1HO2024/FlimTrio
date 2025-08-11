@@ -137,11 +137,11 @@ public ResponseEntity<MovieResponse> searchMovies(@AuthenticationPrincipal UserD
     	        }
 
     	        if (refreshToken != null && jwtUtil.validateToken(refreshToken)) {
-    	            //403 Forbidden
+    	            //403 
     	            return ResponseEntity.status(HttpStatus.FORBIDDEN)
     	                .body(new MovieResponse(false, "Access Token 만료, 리프레시 토큰 유효"));
-    	        } else if(refreshToken == null && jwtUtil.validateToken(refreshToken)) {
-    	            //401 Unauthorized
+    	        }else{
+    	            //401 
     	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
     	                .body(new MovieResponse(false, "인증 정보 없음 또는 리프레시 토큰 만료"));
     	        }
@@ -151,6 +151,11 @@ public ResponseEntity<MovieResponse> searchMovies(@AuthenticationPrincipal UserD
         int userIdx = authService.getUserIdx(email);
 
         List<RecommendedMovieResponse> recommendMovie = recommendService.recommendMovie(userIdx);
+        
+        if (recommendMovie.isEmpty()) {
+            return ResponseEntity.ok(new MovieResponse(true, "추천 영화 없음", recommendMovie));
+        }
+
         return ResponseEntity.ok(new MovieResponse(true, "알고리즘", recommendMovie));
     }
 

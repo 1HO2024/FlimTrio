@@ -1,5 +1,7 @@
 package com.example.flim.mapper;
 
+import java.time.LocalDateTime;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,21 +18,35 @@ public interface AuthMapper {
 		String getNickname(String email);
 		String getPhonenumber(String email);
 		
-		//비밀번호 찾기
-		UserDTO findUserForPass(UserDTO userDTO);
-		UserDTO findUserByEmailPhone(UserDTO userDTO);
-		void updateTempPassword(@Param("email") String email,
-				                @Param("phoneNumber") String phoneNumber,
-				                @Param("hashedTempPassword") String hashedTempPassword);
-		
+	
 		//회원정보 수정
-		void updateProfile(@Param("email")String email, 
-				           @Param("nickname")String nickname, 
+		void updateProfile(@Param("email")          String email, 
+				           @Param("nickname")       String nickname, 
 				           @Param("hasedupdatePass")String hasedupdatePass);
 		//useridx 추출
 		int getUserIdx(String email);
 
-		void updateProfileNopass(@Param("email") String email,
-				           @Param("nickname") String nickname);
+		
+		void updateProfileNopass(@Param("email")    String email,
+				                 @Param("nickname") String nickname);
+		
+		//비빌번호찾기 ---------------------------------------------------
+		boolean existsByUserIdAndEmail(@Param("phoneNumber")String phoneNumber,
+				                       @Param("email")      String email);
+		
+		void updateTempPassword(@Param("email")              String email,
+                                @Param("hashedTempPassword") String hashedTempPassword);
+				
+		boolean insertVerificationCode(@Param("email")      String email,
+				                       @Param("code")       String code, 
+				                       @Param("purpose")    String purpose, 
+				                       @Param("expiresAt")  LocalDateTime expiresAt);
+		
+		String findVerificationCode(@Param("email")   String email,
+									@Param("purpose") String purpose);
+
+		void markUsedVerificationCode(@Param("email") String email, 
+				                     @Param("purpose") String purpose);
+		//--------------------------------------------------------------------
 	}
 
