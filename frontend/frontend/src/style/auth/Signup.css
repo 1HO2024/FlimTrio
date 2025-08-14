@@ -20,14 +20,59 @@
   margin-bottom: 15px;
 }
 
-.inputField input {
+  .inputField input {
+    width: 300px;
+    height: 20px;
+    padding: 10px;
+    border: none;
+    background-color: #f5f5f5;
+    border-radius: 5px; 
+  }
+
+.EmailInputField{
+  display: flex;
   width: 100%;
+  margin-right: 15px;
+  
+}
+
+.EmailInputField input {
+  width: 240px;
   height: 20px;
   padding: 10px;
+  padding-right: 63px;
   border: none;
   background-color: #f5f5f5;
   border-radius: 5px; 
+  margin-bottom: 15px;
 }
+
+.verificationButton {
+  text-align: center;
+  width: 80px;
+  height: 40px;
+  border-radius: 5px;
+  margin-left: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  font-size: 14px; /* 선택 사항 */
+}
+
+
+.signupVerificationMessage {
+ display: block;
+  width: 100%;
+  font-size: 0.9rem;
+  color: black;
+  text-align: left;
+  font-weight: bold;
+  font-size: 13px;
+  margin-top: -10px;
+}
+
+
 
 .error {
   color: red;

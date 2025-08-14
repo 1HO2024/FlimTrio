@@ -1,48 +1,89 @@
 import { useState } from "react";
 import signupApi from "../../api/auth/signup";
-import Swal from "sweetalert2";  
+import requestVerificationCodeApi from "../../api/auth/signupRequestVerification";
+import verifyCodeApi from "../../api/auth/singnupCheckVerifyCode";
+import Swal from "sweetalert2";
 
-const useSignup = (closeModal) => {  
-
-  // 회원가입 관련된 함수 로직들
+const useSignup = (closeModal) => {
+  // 사용자 입력 상태
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nickname, setNickname] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [error, setError] = useState("");
 
+  // 오류 및 이메일 인증 상태
+  const [error, setError] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [showVerificationInput, setShowVerificationInput] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [verificationStatusMessage, setVerificationStatusMessage] = useState("");
+
+  // 입력 핸들러
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
+    setIsEmailVerified(false); // 이메일 바꾸면 인증 다시 받아야 함
   };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
+  const handleNicknameChange = (e) => setNickname(e.target.value);
+
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value;
+    const formattedPhone = value
+      .replace(/[^0-9]/g, "")
+      .replace(/^(\d{3})(\d{3,4})(\d{4})$/, "$1-$2-$3");
+    setPhoneNumber(formattedPhone);
   };
 
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
+  // 이메일 인증 요청
+  const handleRequestVerificationCode = async () => {
+    try {
+      if (!email) {
+        setVerificationStatusMessage("이메일을 먼저 입력하세요.");
+        return;
+      }
+
+      await requestVerificationCodeApi(email); // 서버 호출
+      setShowVerificationInput(true);
+      setVerificationStatusMessage("인증번호가 이메일로 전송되었습니다.");
+    } catch (error) {
+      setVerificationStatusMessage("이메일을 잘못 입력하셨거나 등록되어 있은 이메일 입니다.");
+    }
   };
 
-  const handleNicknameChange = (e) => {
-    setNickname(e.target.value);
+  // 인증번호 입력 핸들러
+  const handleVerificationCodeChange = (e) => {
+    setVerificationCode(e.target.value);
   };
 
-    const handlePhoneNumberChange = (e) => {
-      const value = e.target.value;
-      // 전화번호 자동 포맷
-      const formattedPhone = value
-        .replace(/[^0-9]/g, "")
-        .replace(/^(\d{3})(\d{3,4})(\d{4})$/, "$1-$2-$3");
-      setPhoneNumber(formattedPhone);
-    };
+  // 인증번호 검증
+  const handleVerifyCode = async () => {
+    try {
+      const res = await verifyCodeApi(email, verificationCode);
+      if (res.success) {
+        setIsEmailVerified(true);
+        setVerificationStatusMessage("이메일 인증이 완료되었습니다.");
+      } else {
+        setVerificationStatusMessage("인증번호가 올바르지 않습니다.");
+      }
+    } catch (error) {
+      setVerificationStatusMessage("인증 실패: " + error.message);
+    }
+  };
 
+  // 회원가입 제출
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 유효성 검사
     if (!email || !password || !confirmPassword || !nickname || !phoneNumber) {
       setError("모든 입력창을 입력해주세요.");
+      return;
+    }
+
+    if (!isEmailVerified) {
+      setError("이메일 인증을 완료해주세요.");
       return;
     }
 
@@ -61,7 +102,7 @@ const useSignup = (closeModal) => {
       return;
     }
 
-    setError(""); 
+    setError("");
 
     try {
       await signupApi(nickname, email, password, phoneNumber);
@@ -74,9 +115,8 @@ const useSignup = (closeModal) => {
         confirmButtonColor: "#3085d6",
         confirmButtonText: "확인",
       });
-
     } catch (err) {
-      setError(err.message);  
+      setError(err.message);
     }
   };
 
@@ -87,11 +127,18 @@ const useSignup = (closeModal) => {
     nickname,
     phoneNumber,
     error,
+    verificationCode,
+    showVerificationInput,
+    isEmailVerified,
+    verificationStatusMessage,
     handleEmailChange,
     handlePasswordChange,
     handleConfirmPasswordChange,
     handleNicknameChange,
     handlePhoneNumberChange,
+    handleRequestVerificationCode,
+    handleVerificationCodeChange,
+    handleVerifyCode,
     handleSubmit,
   };
 };

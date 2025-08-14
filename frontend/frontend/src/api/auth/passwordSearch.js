@@ -1,10 +1,9 @@
 import axiosInstance from "../config/axiosConfig";
 
-const passwordApi = async (email, phoneNumber) => {
+const passwordApi = async (email) => {
   try {
-    const response = await axiosInstance.post("/api/v1/search-password", {
+    const response = await axiosInstance.post("/api/v1/search-password/temp-pass", {
       email,
-      phoneNumber,
     });
     return response.data;
   } catch (error) {

@@ -11,12 +11,19 @@ const Signup = ({ closeModal, openLoginModal }) => {
     nickname,
     phoneNumber,
     error,
+    verificationCode,
+    showVerificationInput,
+    isEmailVerified,
+    verificationStatusMessage,
     handleEmailChange,
     handlePasswordChange,
     handleConfirmPasswordChange,
     handleNicknameChange,
     handlePhoneNumberChange,
     handleSubmit,
+    handleRequestVerificationCode,
+    handleVerificationCodeChange,
+    handleVerifyCode,
   } = useSignup(closeModal);
 
   return (
@@ -28,7 +35,8 @@ const Signup = ({ closeModal, openLoginModal }) => {
       <form onSubmit={handleSubmit} className="signupForm">
         <h2 className="signuph2">회원가입</h2>
 
-        <div className="inputField">
+        {/* 이메일 입력 */}
+        <div className="EmailInputField">
           <input
             type="email"
             id="email"
@@ -38,8 +46,36 @@ const Signup = ({ closeModal, openLoginModal }) => {
             required
             placeholder="이메일"
           />
+        {/* 이메일 인증 요청 버튼 */}
+        <div className="inputField verificationField">
+          <button type="button" className="verificationButton" onClick={handleRequestVerificationCode}>
+            인증 요청
+          </button>
+        </div>
         </div>
 
+        {verificationStatusMessage && (
+                  <p className="signupVerificationMessage">{verificationStatusMessage}</p>
+                )}
+
+        {/* 인증번호 입력창 */}
+        {showVerificationInput && (
+          <div className="EmailInputField">
+            <input
+              type="text"
+              placeholder="인증번호 입력"
+              value={verificationCode}
+              onChange={handleVerificationCodeChange}
+            />
+            <div className="inputField verificationField">
+            <button type="button" className="verificationButton" onClick={handleVerifyCode}>
+              인증 확인
+            </button>
+            </div>
+          </div>
+        )}
+
+        {/* 나머지 회원가입 입력 필드 */}
         <div className="inputField">
           <input
             type="password"
@@ -88,7 +124,8 @@ const Signup = ({ closeModal, openLoginModal }) => {
           />
         </div>
 
-        <button type="submit" className="modalButton">
+        {/* 회원가입 버튼 - 이메일 인증이 완료되어야 활성화 */}
+        <button type="submit" className="modalButton" disabled={!isEmailVerified}>
           회원가입
         </button>
       </form>
