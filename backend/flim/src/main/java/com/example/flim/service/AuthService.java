@@ -20,9 +20,6 @@ import com.example.flim.mapper.AuthMapper;
 @Service
 public class AuthService implements UserDetailsService {
    
-	
-	
-	 
 	@Autowired
 	private AuthMapper authMapper;
 	
@@ -31,14 +28,19 @@ public class AuthService implements UserDetailsService {
 	private PasswordEncoder passwordEncoder;
 	
 	
-	
-	
 	//회원 가입
+	public boolean isSignup(String email) {
+		boolean isSignup = authMapper.isSignup(email);
+		return isSignup;
+	}
+	
 	public void registerUser(UserDTO userDTO) {
 		 // 비밀번호를 BCrypt로 암호화
 	    String hashedPassword =  passwordEncoder.encode(userDTO.getPassword());  // 비밀번호 암호화
 	    userDTO.setPassword(hashedPassword);
 		authMapper.insertUser(userDTO);
+        String purpose = "회원가입";
+        authMapper.markUsedVerificationCode(userDTO.getEmail(),purpose);
 	}
 	
 	// 이메일로 (닉네임,비번 가져오기)
@@ -92,6 +94,8 @@ public class AuthService implements UserDetailsService {
 		authMapper.updateProfileNopass(email,nickname);
 		return authMapper.findByEmail(email);
 	}
+
+
 
 	//비번찾기 authservice -> 이메일인증service 로 이동
 

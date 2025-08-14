@@ -45,6 +45,7 @@ public class SignController {
 	
 	@Autowired
 	private EmailVerificationService emailVerificationService;
+	
 	@Autowired
 	private RefreshTokenService refreshTokenService;
 	
@@ -52,6 +53,64 @@ public class SignController {
 	private JwtUtil jwtUtil;
 	
 
+	  //비밀번호 찾기	    
+	@PostMapping("/signup/send-code")
+	public ResponseEntity<SearchPassResponse> signupSendVerificationCode(@RequestBody UserDTO userDTO) {
+	    
+		boolean isSignup = authService.isSignup(userDTO.getEmail());
+		
+		if(isSignup) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+		            .body(new SearchPassResponse(false, "이미 가입된 이메일입니다."));
+		}
+		
+	    // 2.인증번호 발급
+	    String verificationCode = String.format("%06d", (int) (Math.random() * 1000000));
+
+	    // 3.인증번호 저장
+	     boolean saved  = emailVerificationService.SignupSaveVerificationCode(userDTO.getEmail(),
+	    		                                       verificationCode , "회원가입");
+	     
+	    if (!saved) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	            .body(new SearchPassResponse(false, "인증코드 저장 실패"));
+	    }
+	    
+	    // 4.이메일 발송
+	    try {
+	        String html = "<div style='font-family: Arial, sans-serif; padding: 20px;'>"
+	            + "<h2>\r\n"
+	            + "<span style=\"color: #1E90FF;  font-size: 32px; \">FLIM</span><span style=\"color: black;  font-size: 32px;\">TRIO</span>\r\n"
+	            + "</h2>"
+	            + "<h2>필름트리오 회원가입 을 위한 인증번호입니다.</h2>"
+	            + "<p>인증번호: <strong style='font-size: 24px; color: #1E90FF;'>" + verificationCode + "</strong></p>"
+	            + "<p>인증번호를 확인하여 이메일 주소 인증을 완료해 주세요.</p>"
+	            + "</div>";
+	        emailService.sendHtmlEmail(userDTO.getEmail(), "[FLIMTRIO] 회원가입 인증번호 ", html);
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(new SearchPassResponse(false, "이메일 발송에 실패했습니다."));
+	    }
+
+	    return ResponseEntity.ok(new SearchPassResponse(true, "인증코드가 이메일로 발송되었습니다."));
+	}
+	   
+	   
+	   @PostMapping("/signup/verify-code")
+	   public ResponseEntity<SearchPassResponse> signupVerifyCodeAndResetPassword(@RequestBody VerificationRequestDTO request) {
+	       
+		   //검증
+	       boolean isValid = emailVerificationService.singupVerifyCode(request.getEmail(), request.getCode(),"회원가입");
+	      
+	       if (!isValid) {
+	           return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                   .body(new SearchPassResponse(false, "인증코드가 유효하지 않거나 만료되었습니다."));
+	       }
+	       return ResponseEntity.ok(new SearchPassResponse(true, 
+	           "인증완료"));
+	   }
     
 	//회원가입
 	@PostMapping("/signup")
@@ -238,28 +297,12 @@ public class SignController {
 	}
 	
 
-	  //비밀번호 찾기
-	/*
-	   @PostMapping("/search-password")
-	   public ResponseEntity<SearchPassResponse> searchPassword(@RequestBody UserDTO userDTO){
-		  
-		   
-		   String tempPassword =  authService.searchPassword(userDTO); 
-		   
-		   if (tempPassword == null) {
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-		                .body(new SearchPassResponse(false, "사용자를 찾을 수 없습니다."));
-		    }
-
-		    return ResponseEntity.ok(new SearchPassResponse(true, "임시 비밀번호가 발급되었습니다. 로그인 후 꼭 변경해주세요", tempPassword));
-	   }
-	*/
-	    
+	  //비밀번호 찾기	    
 	@PostMapping("/search-password/send-code")
 	public ResponseEntity<SearchPassResponse> sendVerificationCode(@RequestBody UserDTO userDTO) {
 	    
 		// 1.유저 확인 
-	    boolean userExists = emailVerificationService.checkUserByPhoneNumberAndEmail(userDTO.getPhoneNumber(), userDTO.getEmail());
+	    boolean userExists = emailVerificationService.checkUserByPhoneNumberAndEmail(userDTO.getEmail());
 	    if (!userExists) {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
 	                .body(new SearchPassResponse(false, "사용자를 찾을 수 없습니다."));
@@ -283,7 +326,7 @@ public class SignController {
 	            + "<h2>\r\n"
 	            + "<span style=\"color: #1E90FF;  font-size: 32px; \">FLIM</span><span style=\"color: black;  font-size: 32px;\">TRIO</span>\r\n"
 	            + "</h2>"
-	            + "<h2>필름트리오 비밀번호 찾기를 위한 인증번호입니다.</h2>"
+	            + "<h2 style=\\\"color: black;>필름트리오 비밀번호 찾기를 위한 인증번호입니다.</h2>"
 	            + "<p>인증번호: <strong style='font-size: 24px; color: #1E90FF;'>" + verificationCode + "</strong></p>"
 	            + "<p>인증번호를 확인하여 이메일 주소 인증을 완료해 주세요.</p>"
 	            + "</div>";
@@ -309,16 +352,19 @@ public class SignController {
 	           return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 	                   .body(new SearchPassResponse(false, "인증코드가 유효하지 않거나 만료되었습니다."));
 	       }
-
+	       return ResponseEntity.ok(new SearchPassResponse(true, 
+	           "인증완료"));
+	   }
+	   
+	   
+	   @PostMapping("/search-password/temp-pass")
+	   public ResponseEntity<SearchPassResponse> getTempPassword(@RequestBody VerificationRequestDTO request) {
+	       
 	       //임시 비번 제공 및 DB 업데이트
 	       String tempPassword = emailVerificationService.resetPasswordToTemporary(request.getEmail());
 
 	       return ResponseEntity.ok(new SearchPassResponse(true, 
 	           "임시 비밀번호가 발급되었습니다. 로그인 후 꼭 변경해주세요", tempPassword));
 	   }
-	   
-	   
-	   
-	   
 	   
 }

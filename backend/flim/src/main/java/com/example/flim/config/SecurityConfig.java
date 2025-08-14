@@ -55,10 +55,13 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/signin",
                                 "/api/v1/refresh",
+                                "/api/v1/signup/send-code",
+                                "/api/v1/signup/verify-code",
                                 "/api/v1/signup",
                                 "/api/v1/recommend/**",
                                 "/api/v1/search-password/send-code",
                                 "/api/v1/search-password/verify-code",
+                                "/api/v1/search-password/temp-pass",
                                 "/api/v1/fetch-movies",
                                 "/api/v1/movies",
                                 "/api/v1/movies/{id}",

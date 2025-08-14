@@ -11,6 +11,7 @@ import com.example.flim.dto.UserDTO;
 public interface AuthMapper {
 	
         // 회원가입
+	    boolean isSignup(String email);
 		void insertUser(UserDTO userDTO);
 		
 		//회원정보 조회
@@ -31,8 +32,7 @@ public interface AuthMapper {
 				                 @Param("nickname") String nickname);
 		
 		//비빌번호찾기 ---------------------------------------------------
-		boolean existsByUserIdAndEmail(@Param("phoneNumber")String phoneNumber,
-				                       @Param("email")      String email);
+		boolean existsByUserIdAndEmail(@Param("email")      String email);
 		
 		void updateTempPassword(@Param("email")              String email,
                                 @Param("hashedTempPassword") String hashedTempPassword);
@@ -48,5 +48,8 @@ public interface AuthMapper {
 		void markUsedVerificationCode(@Param("email") String email, 
 				                     @Param("purpose") String purpose);
 		//--------------------------------------------------------------------
+
+
+
 	}
 
