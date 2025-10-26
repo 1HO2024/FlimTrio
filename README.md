@@ -4,7 +4,7 @@
 - 프로젝트 이름 : 필름트리오(FLIMTRIO)
 - 프로젝트 설명 : 개인 영화 추천 플랫폼 입니다.
 - 프로젝트 인원 : 프론트엔드 1명 백엔드 2명
-- 제작 기간 : 2025.03.23 ~ 06.03 ~ 8.14 (총 4개월)
+- 제작 기간 : 2025.03.23 ~ 06.03 ~ 8.14 (총 5개월)
 
 # 📚 사용기술
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
