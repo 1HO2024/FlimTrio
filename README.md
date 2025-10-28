@@ -41,13 +41,12 @@
 ### 2. 사용자 기반 추천 알고리즘
 
 > 사용자 가 관심을 가지고있는 영화들과 연관성이 있는 영화들을 , 인기도순으로 추천해줍니다.
-</br>
+</r>
 
 
 
 
-<details>
-<summary><h2>📝 전체시나리오</h2></summary>
+# 📝 전체시나리오
 
 <details>
 <summary><h3>로그인</h3></summary>
@@ -69,12 +68,13 @@
 
 <b>SMTP 를 통한 이메일 전송및 , 이메일 인증 을 통한 비밀번호 찾기 구현</b>
 </details>
+
 <details>
 <summary><h3>메인화면</h3></summary>
 
 <img width="600"  alt="비로그인 메인화면" src="https://github.com/user-attachments/assets/26ece012-8f72-4c06-aeaa-61cb0bc66853" />
 
-<b> 로그인 여부(토큰)인증여부 와 , 알고리즘 데이터의 유무 에 따라 예외처리 를 통한 추천</b>
+<b> 로그인 여부(토큰)인증여부,알고리즘 데이터의 유무 에 따라 제공되는 사용자 기반 추천 영화</b>
 
 <img width="600"  alt="image" src="https://github.com/user-attachments/assets/fc63a8ef-dfd0-4d0d-bea8-8b4891b9fd49" />
 
@@ -90,7 +90,7 @@
 </details>
 
 <details>
-<summary><h3>디테일</h3></summary>
+<summary><h3>영화 상세보기 페이지 </h3></summary>
 
 <img width="600"  alt="디테일" src="https://github.com/user-attachments/assets/ec5c3348-36f7-4526-8194-1a83a0d15665" />
 
@@ -100,7 +100,7 @@
 
 <img width="600"  alt="image" src="https://github.com/user-attachments/assets/4dd4cfa6-56d7-4769-9447-ed00c5e252ea" />
 
-<b> Python 으로 NLP 분석 -> 코사인 유사도를 통해 비슷한 내용을 가진 영화를 추출해서 가져옴 </b>
+<b>자연어처리 분석 을 통해 비슷한 내용을 가진 영화를 추출해서 제공 </b>
 
 <img width="300"  alt="리뷰작성폼" src="https://github.com/user-attachments/assets/012e35aa-c95c-45ff-97c0-bc33007019aa" />
 <img width="300"  alt="리뷰 조회폼" src="https://github.com/user-attachments/assets/9cb9e616-1ac6-4f48-87ae-258794c77105" />
@@ -117,7 +117,7 @@
 
 <img width="400"  alt="리뷰수정" src="https://github.com/user-attachments/assets/926c4cab-dae5-40da-8bc3-e01223c35b7a" />
 
-<b>리뷰 수정</b>
+<b>리뷰 수정 화면 </b>
 </details>
 
 <details>
