@@ -21,15 +21,10 @@
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
 
-# 📊 ERD & 아키텍처 & 프로젝트 문서 
+# 📊 ERD & 프로젝트 문서 
 <details>
 <summary><b>ERD</b></summary>
 <img width="800" height="617" alt="image" src="https://github.com/user-attachments/assets/9d51a235-d948-4b80-b1ab-21946bf43471" />
-</details>
-
-<details>
-<summary><b>아키텍처</b></summary>
-<img width="600"  alt="image" src="https://github.com/user-attachments/assets/1499e470-e053-4b92-8bbd-8436bba9b074" />
 </details>
 
 <details>
