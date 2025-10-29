@@ -21,7 +21,7 @@
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
 
-# 📊 ERD & 아키텍처
+# 📊 ERD & 아키텍처 & 프로젝트 문서 
 <details>
 <summary><b>ERD</b></summary>
 <img width="800" height="617" alt="image" src="https://github.com/user-attachments/assets/9d51a235-d948-4b80-b1ab-21946bf43471" />
@@ -32,6 +32,13 @@
 <img width="600"  alt="image" src="https://github.com/user-attachments/assets/1499e470-e053-4b92-8bbd-8436bba9b074" />
 </details>
 
+<details>
+<summary><b>프로젝트 문서</b></summary>
+  
+[노션 링크 (요구사항정의서, 기능명세서, API 연동 규격서) ](https://www.notion.so/1b91163f269680f18420fca46f783feb?v=1b91163f269681279c1c000c52d2f693&source=copy_link)
+
+ </details>
+ 
 # 🔑 핵심기능
 
 ### 1. 비슷한 영화 추천
